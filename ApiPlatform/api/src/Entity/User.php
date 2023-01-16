@@ -62,8 +62,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $lastname = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $birthdate = null;
+    #[ORM\Column(length: 255)]
+    private ?string $birthdate = null;
 
     public function getId(): ?int
     {
