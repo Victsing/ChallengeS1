@@ -1,4 +1,4 @@
-<? php
+<?php
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
 
 class UserDataPersister implements DataPersisterInterface {
