@@ -43,6 +43,7 @@ final class UserSubscriber implements EventSubscriberInterface
 
     public function sendMail(ViewEvent $event): void
     {
+        // TODO: Implement sendMail() method.
         $user = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
         $email = (new TemplatedEmail())
@@ -57,23 +58,7 @@ final class UserSubscriber implements EventSubscriberInterface
         ) {
             $this->mailer->send($email);
         }
-        $email->sendEmailConfirmation(
-            'app_verify_email',
-            $user,
-            (new TemplatedEmail())
-                ->from(new Address('test@test.com', 'Mailer registration'))
-                ->to($user->getEmail())
-                ->subject('Veuillez Confirmer votre Email')
-                ->htmlTemplate('registration/confirmation_email.html.twig')
-        );
 
-        $message = (new Email())
-            ->from('')
-            ->to('')
-            ->subject('A new book has been added')
-            ->text(sprintf('The book #%d has been added.', $book->getId()));
-
-        $this->mailer->send($message);
     }
 
 
