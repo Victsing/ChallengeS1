@@ -65,6 +65,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $birthdate = null;
 
+    #[ORM\Column]
+    private ?bool $isVerified;
+    /**
+     * @var false
+     */
+
+    public function __construct()
+    {
+        $this->roles = array('ROLE_USER');
+        $this->isVerified = false;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -183,14 +195,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getBirthdate(): ?\DateTimeInterface
+    public function getBirthdate(string $birthdate): self
     {
-        return $this->birthdate;
+        return $this->$birthdate;
     }
 
-    public function setBirthdate(\DateTimeInterface $birthdate): self
+    public function setBirthdate(string $birthdate): self
     {
         $this->birthdate = $birthdate;
+
+        return $this;
+    }
+
+    public function isVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }
