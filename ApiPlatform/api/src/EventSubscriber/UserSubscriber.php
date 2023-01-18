@@ -3,7 +3,6 @@
 namespace App\EventSubscriber;
 
 use App\Entity\User;
-use App\Security\Voter\EmailVerifier;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\Mailer;
@@ -12,21 +11,10 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
 use ApiPlatform\Symfony\EventListener\EventPriorities;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\Email;
 
 final class UserSubscriber implements EventSubscriberInterface
 {
-    /*
-        private $mailer;
-
-        public function __construct(MailerInterface $mailer)
-        {
-            $this->mailer = $mailer;
-        }
-    */
-    //private EmailVerifier $emailVerifier;
-    private  mailer $mailer;
+    private mailer $mailer;
 
     public function __construct(MailerInterface $mailer)
     {
@@ -36,15 +24,11 @@ final class UserSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => ['sendEmail', EventPriorities::POST_WRITE]
+            KernelEvents::VIEW => ['sendEmail', EventPriorities::POST_WRITE],
+            KernelEvents::VIEW => ['updatePassword', EventPriorities::PRE_WRITE]
         ];
     }
 
-    public static function sendEmailValidation(){
-        return [
-            KernelEvents::VIEW => ['sendEmail', EventPriorities::POST_WRITE]
-            ];
-}
     public function updatePassword(ViewEvent $event): void
     {
         $user = $event->getControllerResult();
@@ -72,7 +56,7 @@ final class UserSubscriber implements EventSubscriberInterface
         }
         $message = (new TemplatedEmail())
             ->from('ChallengeS1ESGI@gmail.com')
-            ->to('bergerun@live.fr')
+            ->to($user->getEmail())
             ->subject('test')
             ->text(sprintf('Test'))
             ->htmlTemplate('confirmation_email.html.twig');
