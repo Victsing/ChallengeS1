@@ -195,9 +195,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getBirthdate(string $birthdate): self
+    public function getBirthdate(): ?string
     {
-        return $this->$birthdate;
+        return $this->birthdate;
     }
 
     public function setBirthdate(string $birthdate): self
