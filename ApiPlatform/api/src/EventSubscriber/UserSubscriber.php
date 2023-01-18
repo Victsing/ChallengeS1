@@ -72,7 +72,7 @@ final class UserSubscriber implements EventSubscriberInterface
         }
         $message = (new TemplatedEmail())
             ->from('ChallengeS1ESGI@gmail.com')
-            ->to('ChallengeS1ESGI@gmail.com')
+            ->to('bergerun@live.fr')
             ->subject('test')
             ->text(sprintf('Test'))
             ->htmlTemplate('confirmation_email.html.twig');
