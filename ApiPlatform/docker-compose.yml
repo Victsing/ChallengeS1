@@ -84,10 +84,7 @@ services:
   mailcatcher:
     image: schickling/mailcatcher
     ports:
-      - 1080:1080
-# Mercure is installed as a Caddy module, prevent the Flex recipe from installing another service
-###> symfony/mercure-bundle ###
-###< symfony/mercure-bundle ###
+      - "1080:1080"
 
 volumes:
   php_socket:
