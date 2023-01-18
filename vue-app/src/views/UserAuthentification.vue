@@ -123,7 +123,6 @@ let loginPassword = ref("");
 let forgottenPasswordEmail = ref("");
 
 const register = async (e) => {
-  console.log(e);
   e.preventDefault();
   const response = await AuthentificationApi.register(
     firstname.value,
