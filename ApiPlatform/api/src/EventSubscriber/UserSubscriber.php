@@ -24,8 +24,8 @@ final class UserSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => ['sendEmail', EventPriorities::POST_WRITE],
-            KernelEvents::VIEW => ['updatePassword', EventPriorities::PRE_WRITE]
+            KernelEvents::VIEW => ['updatePassword', EventPriorities::PRE_WRITE],
+            KernelEvents::VIEW => ['sendEmail', EventPriorities::POST_WRITE]
         ];
     }
 
