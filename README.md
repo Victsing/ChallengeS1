@@ -35,4 +35,3 @@ docker-compose exec node npm i
 ```
 docker-compose exec node npm run dev
 ```
-blabla
