@@ -2,6 +2,10 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use App\Controller\EmailVerifier;
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\ResetPassword;
@@ -35,7 +39,6 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     uriTemplate: '/users/email/verification',
     controller: EmailVerifier::class
 )]
-
 #[Patch(
     denormalizationContext: ['groups' => ['user:write']],
     security: 'is_granted("ROLE_ADMIN") or object == user'
@@ -63,7 +66,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Groups(['user:read', 'user:write','user:getToken'])]
+    #[Groups(['user:read', 'user:write', 'user:getToken'])]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -130,7 +133,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**
