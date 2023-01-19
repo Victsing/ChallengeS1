@@ -6,6 +6,7 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[AsController]
@@ -17,6 +18,9 @@ class ResetPasswordToken extends AbstractController
     public function __invoke()
     {
         $email = json_decode($this->requestStack->getCurrentRequest()->getContent())->email;
+        if(!$email) {
+            throw new HttpException(401,'Missing email');
+        }
         $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
         if (!$user) {
             throw $this->createNotFoundException();
