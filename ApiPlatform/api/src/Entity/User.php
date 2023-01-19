@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Controller\EmailVerifier;
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\ResetPassword;
 use App\Controller\ResetPasswordToken;
@@ -23,13 +24,19 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     name: 'reset-password-token',
     uriTemplate: '/users/reset/password/token',
     controller: ResetPasswordToken::class,
-    
+
 )]
 #[Patch(
     name: 'reset-password',
     uriTemplate: '/users/reset/password',
     controller: ResetPassword::class
 )]
+#[Patch(
+    name: 'email-verification',
+    uriTemplate: '/users/email/verification',
+    controller: EmailVerifier::class
+)]
+
 #[Patch(
     security: 'is_granted("ROLE_ADMIN") or object == user or is_granted("PATCH_PWD_PUBLIC", object)',
 )]

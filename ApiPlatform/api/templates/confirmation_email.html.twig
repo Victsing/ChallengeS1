@@ -2,9 +2,10 @@
 
 {% block body %}
 <h1>Activez votre compte</h1>
-<p>Bonjour toi</p>
+<p>Bonjour {{ firstName }}</p>
 
 <p> Votre inscription sur le site est à valider en cliquant sur le lien suivant: </p>
-<p> <a href=""> Cliquez ici</a></p>
+    <a>{{ token }}</a>
+<p> <a href="{{ token }}"> Cliquez ici</a></p>
 <p> Ce lien expiera dans 3 heures</p>
 {% endblock %}
