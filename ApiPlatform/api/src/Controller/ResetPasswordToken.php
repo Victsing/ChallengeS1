@@ -9,24 +9,19 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[AsController]
-class ResetPassword extends AbstractController
+class ResetPasswordToken extends AbstractController
 {
 
-    public function __construct(private RequestStack $requestStack, private EntityManagerInterface $em)
-    {
-    }
+    public function __construct(private RequestStack $requestStack, private EntityManagerInterface $em) {}
 
     public function __invoke()
     {
-
-        $token = json_decode($this->requestStack->getCurrentRequest()->getContent())->token;
-        $password = json_decode($this->requestStack->getCurrentRequest()->getContent())->password;
-        $user = $this->em->getRepository(User::class)->findOneBy(['token' => $token]);
+        $email = json_decode($this->requestStack->getCurrentRequest()->getContent())->email;
+        $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
         if (!$user) {
             throw $this->createNotFoundException();
         }
-        $user->setToken(null);
-        $user->setPassword($password);
+        $user->setToken(bin2hex(random_bytes(32)));
 
         $this->em->flush();
         //Envoyer mail avec token

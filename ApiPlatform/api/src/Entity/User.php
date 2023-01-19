@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\ResetPassword;
+use App\Controller\ResetPasswordToken;
 use App\Repository\UserRepository;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
@@ -17,7 +18,13 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[ApiResource]
+#[ApiResource()]
+#[Patch(
+    name: 'reset-password-token',
+    uriTemplate: '/users/reset/password/token',
+    controller: ResetPasswordToken::class,
+    
+)]
 #[Patch(
     name: 'reset-password',
     uriTemplate: '/users/reset/password',
@@ -127,7 +134,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
