@@ -24,8 +24,8 @@ final class UserSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => ['sendEmail', EventPriorities::POST_WRITE],
-            KernelEvents::VIEW => ['updatePassword', EventPriorities::PRE_WRITE]
+            KernelEvents::VIEW => ['updatePassword', EventPriorities::PRE_WRITE],
+            KernelEvents::VIEW => ['sendEmail', EventPriorities::POST_WRITE]
         ];
     }
 
@@ -34,7 +34,7 @@ final class UserSubscriber implements EventSubscriberInterface
         $user = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
 
-        dump($event->getRequest());
+        // dump($user->);
 
         if (!$user instanceof User || Request::METHOD_PATCH !== $method) {
             return;
@@ -50,6 +50,7 @@ final class UserSubscriber implements EventSubscriberInterface
         $method = $event->getRequest()->getMethod();
 
         dump($event->getRequest());
+        dump($user);
 
         if (!$user instanceof User || Request::METHOD_POST !== $method) {
             return;
@@ -62,5 +63,4 @@ final class UserSubscriber implements EventSubscriberInterface
             ->htmlTemplate('confirmation_email.html.twig');
         $this->mailer->send($message);
     }
-
 }
