@@ -45,7 +45,7 @@ class ResetPasswordToken extends AbstractController
                 'url' => "{$_ENV['APP_URL']}/{$user->getToken()}/reset-password",
                 'firstname' => $user->getFirstname(),
             ])
-            ->htmlTemplate('confirmation_email.html.twig');
+            ->htmlTemplate('resetpassword_email.html.twig');
         $this->mailer->send($message);
         return $this->json('Success');
     }
