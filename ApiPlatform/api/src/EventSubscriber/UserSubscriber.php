@@ -36,13 +36,10 @@ final class UserSubscriber implements EventSubscriberInterface
 
         dump($event->getRequest());
 
-        if (!$user instanceof User || Request::METHOD_PATCH !== $method) {
-            return;
+        if ($user instanceof User && ($method === "POST" || $method=== "PATCH")) {
+            $user->setPassword(password_hash($user->getPassword(), PASSWORD_BCRYPT));
         }
-
-        $user->setPassword(password_hash($user->getPassword(), PASSWORD_BCRYPT));
     }
-
 
     public function sendEmail(ViewEvent $event): void
     {
@@ -58,7 +55,7 @@ final class UserSubscriber implements EventSubscriberInterface
             ->from('ChallengeS1ESGI@gmail.com')
             ->to($user->getEmail())
             ->subject('test')
-            ->text(sprintf('Test'))
+            ->text('Test')
             ->htmlTemplate('confirmation_email.html.twig');
         $this->mailer->send($message);
     }
