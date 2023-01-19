@@ -102,12 +102,22 @@
       </v-form>
     </v-window-item>
   </v-window>
+  <div class="text-center">
+    <BaseSnackbar
+    v-model="snackbar"
+    :text="snackbarText"
+    :color="snackbarColor"
+    :timeout="3000"
+    @close-snackbar="snackbar = false"
+    />
+  </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import BaseRoundButton from "../components/BaseRoundButton.vue";
 import AuthentificationApi from "../backend/AuthentificationApi";
+import BaseSnackbar from "@/components/BaseSnackbar.vue";
 
 const tab = ref("one");
 let firstname = ref("");
@@ -122,21 +132,44 @@ let loginPassword = ref("");
 
 let forgottenPasswordEmail = ref("");
 
-const register = async (e) => {
-  e.preventDefault();
-  const response = await AuthentificationApi.register(
+let snackbar = ref(false);
+let snackbarText = ref("");
+let snackbarColor = ref("");
+
+const register = async () => {
+  AuthentificationApi.register(
     firstname.value,
     lastname.value,
     birthday.value,
     email.value,
     password.value,
     new Date().toISOString()
-  );
-  console.log(response);
+  ).then((response) => {
+    console.log(response.data);
+    snackbar.value = true;
+    snackbarText.value = "Inscription réussie";
+    snackbarColor.value = "success";
+  }).catch(() => {
+    snackbar.value = true;
+    snackbarText.value = "Email déjà utilisé";
+    snackbarColor.value = "error";
+  });
 };
 
-const login = () => {
-  console.log("login");
+const login = async () => {
+  AuthentificationApi.login(
+    loginEmail.value,
+    loginPassword.value
+  ).then((response) => {
+    console.log(response.data);
+    snackbar.value = true;
+    snackbarText.value = "Connexion réussie";
+    snackbarColor.value = "success";
+  }).catch(() => {
+    snackbar.value = true;
+    snackbarText.value = "Email ou mot de passe incorrect";
+    snackbarColor.value = "error";
+  });
 };
 
 // onMounted(() => {

@@ -31,12 +31,6 @@ security:
                 check_path: /login_verification
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-        
-        /:
-            pattern: ^/
-            stateless: true
-            jwt: ~
-
         main:
             stateless: true
             provider: app_user_provider
@@ -47,11 +41,17 @@ security:
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
             jwt: ~
+        /:
+            pattern: ^/
+            stateless: true
+            jwt: ~
 
     access_control:
         - { path: ^/docs, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
         - { path: ^/authentication_token, roles: PUBLIC_ACCESS }
         - { path: ^/users/reset/password, roles: PUBLIC_ACCESS }
+        - { path: ^/users/reset/password/token, roles: PUBLIC_ACCESS }
+        - { path: ^/users/email/verification, roles: PUBLIC_ACCESS }
         - { path: ^/users, roles: IS_AUTHENTICATED_FULLY, methods: [GET, PUT, DELETE, PATCH] }
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         #- { path: ^/, roles: IS_AUTHENTICATED_FULLY }
