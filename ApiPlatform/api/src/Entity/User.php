@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Delete;
@@ -96,15 +95,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $birthdate = null;
 
     #[ORM\Column]
-    private ?bool $isVerified;
-    /**
-     * @var false
-     */
+    private ?bool $isVerified = false;
 
     public function __construct()
     {
         $this->roles = array('ROLE_USER');
-        $this->isVerified = false;
     }
 
     public function getId(): ?int
