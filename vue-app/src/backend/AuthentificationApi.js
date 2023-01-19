@@ -10,5 +10,11 @@ export default {
       password: userPassword,
       createdAt: userCreatedAt,
     });
+  },
+  login: (userEmail, userPassword) => {
+    return axios.post("/authentication_token", {
+      email: userEmail,
+      password: userPassword,
+    });
   }
 }

@@ -1,6 +1,6 @@
 // Composables
 import { createRouter, createWebHistory } from 'vue-router'
-import Authentification from '@/views/UserAuthentification.vue'
+import Authentication from '@/views/UserAuthentification.vue'
 import ResetPassword from '@/views/ResetPassword.vue'
 
 const routes = [
@@ -17,9 +17,9 @@ const routes = [
         component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
       },
       {
-        path: '/authentification',
-        name: 'Authentification',
-        component: Authentification
+        path: '/authentication',
+        name: 'authentication',
+        component: Authentication
       },
       {
         path: '/:token/reset-password',
