@@ -171,8 +171,4 @@ const login = async () => {
     snackbarColor.value = "error";
   });
 };
-
-// onMounted(() => {
-//   console.log(import.meta.env.VITE_API_URL);
-// });
 </script>
