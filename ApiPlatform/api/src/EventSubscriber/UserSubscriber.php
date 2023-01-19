@@ -14,18 +14,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class UserSubscriber implements EventSubscriberInterface
 {
-    private mailer $mailer;
-
-    public function __construct(MailerInterface $mailer)
-    {
-        $this->mailer = $mailer;
-    }
-
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => ['updatePassword', EventPriorities::PRE_WRITE],
-            KernelEvents::VIEW => ['sendEmail', EventPriorities::POST_WRITE]
+            KernelEvents::VIEW => ['updatePassword', EventPriorities::PRE_WRITE]
         ];
     }
 
@@ -34,33 +26,9 @@ final class UserSubscriber implements EventSubscriberInterface
         $user = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
 
-        // dump($user->);
-
-        if (!$user instanceof User || Request::METHOD_PATCH !== $method) {
-            return;
+        if ($user instanceof User && ($method === "POST" || $method=== "PATCH")) {
+            $user->setPassword(password_hash($user->getPassword(), PASSWORD_BCRYPT));
         }
-
-        $user->setPassword(password_hash($user->getPassword(), PASSWORD_BCRYPT));
     }
 
-
-    public function sendEmail(ViewEvent $event): void
-    {
-        $user = $event->getControllerResult();
-        $method = $event->getRequest()->getMethod();
-
-        dump($event->getRequest());
-        dump($user);
-
-        if (!$user instanceof User || Request::METHOD_POST !== $method) {
-            return;
-        }
-        $message = (new TemplatedEmail())
-            ->from('ChallengeS1ESGI@gmail.com')
-            ->to($user->getEmail())
-            ->subject('test')
-            ->text(sprintf('Test'))
-            ->htmlTemplate('confirmation_email.html.twig');
-        $this->mailer->send($message);
-    }
 }
