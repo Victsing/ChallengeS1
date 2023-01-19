@@ -11,7 +11,8 @@ final class JwtDecorator implements OpenApiFactoryInterface
 {
     public function __construct(
         private OpenApiFactoryInterface $decorated
-    ) {}
+    ) {
+    }
 
     public function __invoke(array $context = []): OpenApi
     {
@@ -79,6 +80,7 @@ final class JwtDecorator implements OpenApiFactoryInterface
                 security: [],
             ),
         );
+        dump($pathItem);
         $openApi->getPaths()->addPath('/authentication_token', $pathItem);
 
         return $openApi;
