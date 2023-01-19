@@ -39,7 +39,7 @@ class ResetPasswordToken extends AbstractController
         $message = (new TemplatedEmail())
             ->from('ChallengeS1ESGI@gmail.com')
             ->to($user->getEmail())
-            ->subject('Activation de votre compte sur le site')
+            ->subject('Réinitialisation de mot de passe')
             ->text('Test')
             ->context([
                 'url' => "{$_ENV['APP_URL']}/{$user->getToken()}/reset-password",
