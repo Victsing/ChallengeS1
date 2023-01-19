@@ -33,7 +33,7 @@ class ResetPassword extends AbstractController
         $user->setPassword(password_hash($password, PASSWORD_BCRYPT));
 
         $this->em->flush();
-        //Envoyer mail avec token
+
         return $this->json('Success');
     }
 }
