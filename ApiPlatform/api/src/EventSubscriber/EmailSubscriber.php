@@ -61,6 +61,7 @@ final class EmailSubscriber implements EventSubscriberInterface
             ->text('Test')
             ->htmlTemplate('confirmation_email.html.twig')
             ->context([ 'firstName'=> $user->getFirstname(),
+                'url' => "{$_ENV['APP_URL']}/{$user->getToken()}/email-verification",
                 'token' => $user->getToken()]);
         $this->mailer->send($message);
     }
