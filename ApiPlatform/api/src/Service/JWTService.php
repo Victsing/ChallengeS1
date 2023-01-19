@@ -3,9 +3,6 @@
 namespace App\Service;
 
 class JWTService {
-    /**
-     * @throws \JsonException
-     */
     public function createToken(array $header, array $payload, string $secret, int $validityTime = 3600): string
     {
         if ($validityTime <= 0){
@@ -28,8 +25,6 @@ class JWTService {
 
         $base64Signature = str_replace(['+', '/', '='], ['-', '_', ''], $base64Signature);
 
-        $jwt = $base64Header . '.' . $base64Payload . '.' . $base64Signature;
-
-        return $jwt;
+        return $base64Header . '.' . $base64Payload . '.' . $base64Signature;
     }
 }

@@ -2,80 +2,111 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use App\Controller\EmailVerifier;
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\ResetPassword;
 use App\Repository\UserRepository;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Post;
-use ApiPlatform\Metadata\Get;
+use App\Controller\ResetPasswordToken;
 use ApiPlatform\Metadata\GetCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\Context;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[ApiResource]
+#[ApiResource()]
 #[Patch(
+    denormalizationContext: ['groups' => ['user:getToken']],
+    name: 'reset-password-token',
+    uriTemplate: '/users/reset/password/token',
+    controller: ResetPasswordToken::class,
+)]
+#[Patch(
+    denormalizationContext: ['groups' => ['user:setPassword']],
     name: 'reset-password',
     uriTemplate: '/users/reset/password',
     controller: ResetPassword::class
 )]
 #[Patch(
-    security: 'is_granted("ROLE_ADMIN") or object == user or is_granted("PATCH_PWD_PUBLIC", object)',
+    name: 'email-verification',
+    uriTemplate: '/users/email/verification',
+    controller: EmailVerifier::class
 )]
-#[Post()]
-#[Get(
+#[Patch(
+    denormalizationContext: ['groups' => ['user:write']],
     security: 'is_granted("ROLE_ADMIN") or object == user'
 )]
-#[GetCollection()]
-#[Delete()]
+#[Post(
+    denormalizationContext: ['groups' => ['user:write']]
+)]
+#[Get(
+    security: 'is_granted("ROLE_ADMIN") or object == user',
+    normalizationContext: ['groups' => ['user:read']]
+)]
+#[GetCollection(
+    security: 'is_granted("ROLE_ADMIN")',
+    normalizationContext: ['groups' => ['user:read']]
+)]
+#[Delete(
+    security: 'is_granted("ROLE_ADMIN") or object == user'
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column()]
+    #[Groups(['user:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Groups(['user:read', 'user:write', 'user:getToken'])]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Groups(['user:setPassword', 'user:write'])]
     private ?string $password = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:setPassword'])]
     private ?string $token = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
+    #[Context([DateTimeNormalizer::FORMAT_KEY => 'Y-m-d'])]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $birthdate = null;
 
     #[ORM\Column]
-    private ?bool $isVerified;
-    /**
-     * @var false
-     */
+    private ?bool $isVerified = false;
 
     public function __construct()
     {
         $this->roles = array('ROLE_USER');
-        $this->isVerified = false;
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -102,7 +133,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**
@@ -127,7 +158,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
