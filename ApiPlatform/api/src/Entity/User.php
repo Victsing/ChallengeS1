@@ -2,9 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\ResetPassword;
 use App\Repository\UserRepository;
@@ -17,6 +14,9 @@ use ApiPlatform\Metadata\GetCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -30,7 +30,9 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     security: 'is_granted("ROLE_ADMIN") or object == user or is_granted("PATCH_PWD_PUBLIC", object)',
 )]
 #[Post()]
-#[Get()]
+#[Get(
+    security: 'is_granted("ROLE_ADMIN") or object == user'
+)]
 #[GetCollection()]
 #[Delete()]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -67,11 +69,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $birthdate = null;
 
+    #[ORM\Column]
+    private ?bool $isVerified= false;
+
     #[ORM\OneToMany(mappedBy: 'founder', targetEntity: Company::class)]
     private Collection $companies;
 
     public function __construct()
     {
+        $this->roles = array('ROLE_USER');
         $this->companies = new ArrayCollection();
     }
 
@@ -231,6 +237,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $company->setFounder(null);
             }
         }
+        return $this;
+    }
+    public function isVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }
