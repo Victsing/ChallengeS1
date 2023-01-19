@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\ResetPassword;
 use App\Repository\UserRepository;
@@ -28,7 +27,9 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     security: 'is_granted("ROLE_ADMIN") or object == user or is_granted("PATCH_PWD_PUBLIC", object)',
 )]
 #[Post()]
-#[Get()]
+#[Get(
+    security: 'is_granted("ROLE_ADMIN") or object == user'
+)]
 #[GetCollection()]
 #[Delete()]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
