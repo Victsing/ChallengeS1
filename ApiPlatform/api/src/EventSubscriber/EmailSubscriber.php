@@ -32,15 +32,13 @@ final class EmailSubscriber implements EventSubscriberInterface
         $user = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
 
-        dump($event->getRequest());
-
         if (!$user instanceof User || Request::METHOD_POST !== $method) {
             return;
         }
         $message = (new TemplatedEmail())
             ->from('ChallengeS1ESGI@gmail.com')
             ->to($user->getEmail())
-            ->subject('test')
+            ->subject('Activation de votre compte sur le site')
             ->text('Test')
             ->htmlTemplate('confirmation_email.html.twig');
         $this->mailer->send($message);
