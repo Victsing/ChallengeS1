@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Authentication from '@/views/UserAuthentification.vue'
 import ResetPassword from '@/views/ResetPassword.vue'
 import LandingPage from '@/views/LandingPage.vue'
+import UserProfile from '@/views/UserProfile.vue'
 
 const routes = [
   {
@@ -23,6 +24,11 @@ const routes = [
         path: '/:token/reset-password',
         name: 'ResetPassword',
         component: ResetPassword
+      },
+      {
+        path: '/profile',
+        name: 'UserProfile',
+        component: UserProfile
       },
     ],
   },
