@@ -1,9 +1,9 @@
 // Composables
-import { createRouter, createWebHistory } from 'vue-router'
-import Authentication from '@/views/UserAuthentification.vue'
-import ResetPassword from '@/views/ResetPassword.vue'
-import LandingPage from '@/views/LandingPage.vue'
-import UserProfile from '@/views/UserProfile.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import Authentication from '@/views/UserAuthentification.vue';
+import ResetPassword from '@/views/ResetPassword.vue';
+import LandingPage from '@/views/LandingPage.vue';
+import UserProfile from '@/views/UserProfile.vue';
 
 const routes = [
   {
@@ -30,13 +30,18 @@ const routes = [
         name: 'UserProfile',
         component: UserProfile
       },
-    ],
-  },
-]
+      {
+        path: '/admin',
+        name: 'Admin',
+        component: () => import('@/views/Admin.vue')
+      }
+    ]
+  }
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes,
-})
+  routes
+});
 
-export default router
+export default router;
