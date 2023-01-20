@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CompanyRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
@@ -55,6 +57,14 @@ class Company
     #[ORM\ManyToOne(inversedBy: 'companies')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $founder = null;
+
+    #[ORM\OneToMany(mappedBy: 'company', targetEntity: JobAds::class)]
+    private Collection $jobAds;
+
+    public function __construct()
+    {
+        $this->jobAds = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -165,6 +175,36 @@ class Company
     public function setFounder(?User $founder): self
     {
         $this->founder = $founder;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, JobAds>
+     */
+    public function getJobAds(): Collection
+    {
+        return $this->jobAds;
+    }
+
+    public function addJobAd(JobAds $jobAd): self
+    {
+        if (!$this->jobAds->contains($jobAd)) {
+            $this->jobAds[] = $jobAd;
+            $jobAd->setCompany($this);
+        }
+
+        return $this;
+    }
+
+    public function removeJobAd(JobAds $jobAd): self
+    {
+        if ($this->jobAds->removeElement($jobAd)) {
+            // set the owning side to null (unless already changed)
+            if ($jobAd->getCompany() === $this) {
+                $jobAd->setCompany(null);
+            }
+        }
 
         return $this;
     }
