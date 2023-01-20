@@ -20,13 +20,12 @@ import { useRouter } from 'vue-router'
 import { computed } from 'vue'
 
 const router = useRouter()
-// logout method that removes the token from the local storage and redirects to the login page
+
 const logout = () => {
   localStorage.removeItem('token');
   router.push('/');
 }
 
-// computed property that returns true if the user is logged in
 const isLoggedIn = computed(() => {
   return localStorage.getItem('token') !== null;
 })
