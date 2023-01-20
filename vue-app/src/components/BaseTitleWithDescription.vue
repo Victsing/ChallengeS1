@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="toto">
     <h3 class="mb-4">
       {{ props.title }}
     </h3>

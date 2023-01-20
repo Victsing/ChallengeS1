@@ -16,5 +16,36 @@ export default {
       email: userEmail,
       password: userPassword,
     });
+  },
+  validateAccount: (userToken) => {
+    return axios.patch("/users/email/verification", {
+      token: userToken,
+    },
+    {
+      headers: {
+        "Content-Type": "application/merge-patch+json",
+      }
+    });
+  },
+  newPassword: (userEmail) => {
+    return axios.patch("/users/reset/password/token", {
+      email: userEmail,
+    },
+    {
+      headers: {
+        "Content-Type": "application/merge-patch+json",
+      }
+    });
+  },
+  resetPassword: (userToken, userPassword) => {
+    return axios.patch("/users/reset/password", {
+      token: userToken,
+      password: userPassword,
+    },
+    {
+      headers: {
+        "Content-Type": "application/merge-patch+json",
+      }
+    });
   }
 }

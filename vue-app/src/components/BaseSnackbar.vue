@@ -1,5 +1,5 @@
 <template>
-  <v-snackbar v-bind="attrs" :timeout="props.timeout" :color="props.color">
+  <v-snackbar v-bind="$attrs" :timeout="props.timeout" :color="props.color">
     {{ props.text }}
     <template v-slot:actions>
       <v-btn
@@ -14,7 +14,10 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import {
+  defineProps,
+  defineEmits,
+} from 'vue';
 
 defineEmits(['closeSnackbar']);
 const props = defineProps({

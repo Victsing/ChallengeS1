@@ -4,6 +4,7 @@ import Authentication from '@/views/UserAuthentification.vue'
 import ResetPassword from '@/views/ResetPassword.vue'
 import LandingPage from '@/views/LandingPage.vue'
 import UserProfile from '@/views/UserProfile.vue'
+import ValidateAccount from '@/views/ValidateAccount.vue'
 
 const routes = [
   {
@@ -29,6 +30,11 @@ const routes = [
         path: '/profile',
         name: 'UserProfile',
         component: UserProfile
+      },
+      {
+        path: '/:token/email-verification',
+        name: 'ValidateAccount',
+        component: ValidateAccount
       },
     ],
   },
