@@ -25,7 +25,7 @@
       </v-form>
     </v-col>
     <v-col>
-      <v-img :src="FluFace" alt="flu_face" />
+      <v-img :src="FluFace" alt="flu_face" max-height="100vh" />
     </v-col>
   </v-row>
   <BaseSnackbar
@@ -44,7 +44,7 @@ import AuthentificationApi from '../backend/AuthentificationApi';
 import FluFace from '@/assets/flu_face.svg';
 import BaseSnackbar from '@/components/BaseSnackbar.vue';
 import { ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 let resetPassword = ref('');
 let confirmResetPassword = ref('');
@@ -53,6 +53,7 @@ let snackbar = ref(false);
 let snackbarColor = ref('');
 let snackbarText = ref('');
 
+const router = useRouter();
 const route = useRoute();
 const token = route.params.token;
 
@@ -60,12 +61,13 @@ const resetUserPassword = (e) => {
   e.preventDefault();
   if (resetPassword.value === confirmResetPassword.value) {
     AuthentificationApi.resetPassword(token, resetPassword.value)
-      .then((response) => {
+      .then(() => {
         snackbar.value = true;
-        snackbarText.value = "Password reset successfully!";
+        snackbarText.value = "Password reset successfully!, you will be redirected to login page";
         snackbarColor.value = 'success';
-        console.log(response.data);
-        console.log('Password reset successfully!');
+        setTimeout(() => {
+          router.push('/authentication');
+        }, 3000);
       })
       .catch((error) => {
         console.log(error);

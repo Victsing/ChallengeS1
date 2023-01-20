@@ -1,9 +1,7 @@
 <template>
   <BaseNaveBar color="black"/>
   <div class="text-center">
-    <h1>Validate Account</h1>
     <div v-if="validToken">
-      <img :src="HappyFace" alt="Happy Face" />
       <BaseStackedText>
         <template #topText>
           <h3>
@@ -16,9 +14,9 @@
           </div>
         </template>
       </BaseStackedText>
+      <v-img :src="HappyFace" alt="Happy Face" max-height="100vh" />
     </div>
     <div v-else>
-      <img :src="AngryFace" alt="Angry Face" />
       <BaseStackedText>
         <template #topText>
           <h3>
@@ -31,6 +29,7 @@
           </div>
         </template>
       </BaseStackedText>
+      <v-img :src="AngryFace" alt="Angry Face" max-height="100vh" />
     </div>
   </div>
 </template>
@@ -50,12 +49,11 @@ onMounted(() => {
   const route = useRoute();
   const token = route.params.token;
   AuthentificationApi.validateAccount(token)
-    .then((response) => {
-      console.log(response);
+    .then(() => {
       validToken.value = true;
     })
-    .catch((error) => {
-      console.log(error);
+    .catch(() => {
+      validToken.value = false;
     });
 });
 </script>

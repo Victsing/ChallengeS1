@@ -146,7 +146,6 @@ let snackbarText = ref("");
 let snackbarColor = ref("");
 
 const router = useRouter();
-router.p
 
 const register = async (e) => {
   e.preventDefault();
@@ -159,13 +158,15 @@ const register = async (e) => {
     new Date().toISOString()
   ).then((response) => {
     console.log(response.data);
-    this.$router.push("/");
     snackbar.value = true;
-    snackbarText.value = "Inscription réussie";
+    snackbarText.value = "Inscription réussie, vous allez recevoir un email pour valider votre compte. Vous allez être redirigé vers la page d'accueil dans 3 secondes.";
     snackbarColor.value = "success";
+    setTimeout(() => {
+      router.push("/");
+    }, 3000);
   }).catch(() => {
     snackbar.value = true;
-    snackbarText.value = "Email déjà utilisé";
+    snackbarText.value = "Il y a eu une erreur, veuillez recharger la page et réessayer.";
     snackbarColor.value = "error";
   });
 };
@@ -176,12 +177,8 @@ const login = async (e) => {
     loginEmail.value,
     loginPassword.value
   ).then((response) => {
-    console.log(response.data);
-    snackbar.value = true;
-    snackbarText.value = "Connexion réussie";
-    snackbarColor.value = "success";
-    // redirect to home
-    router.push("/");
+    localStorage.setItem("token", response.data.token);
+    router.push("/profile");
   }).catch(() => {
     snackbar.value = true;
     snackbarText.value = "Email ou mot de passe incorrect";
@@ -196,11 +193,14 @@ const newPassword = async (e) => {
   ).then((response) => {
     console.log(response.data);
     snackbar.value = true;
-    snackbarText.value = "Email envoyé";
+    snackbarText.value = "Email envoyé, veuillez ouvrir le lien que vous allez recevoir afin de réinitialiser votre mot de passe. Vous allez être redirigé vers la page d'accueil dans 3 secondes.";
     snackbarColor.value = "success";
+    setTimeout(() => {
+      router.push("/");
+    }, 3000);
   }).catch(() => {
     snackbar.value = true;
-    snackbarText.value = "Email incorrect";
+    snackbarText.value = "Il ya eu une erreur, veuillez recharger la page et réessayer.";
     snackbarColor.value = "error";
   });
 };
