@@ -11,13 +11,19 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 #[ORM\Entity(repositoryClass: CompanyRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['company:read']],
+)]
 #[Patch(
     security: 'is_granted("ROLE_ADMIN") or object.getFounder() == user',
 )]
-#[Post()]
+#[Post(
+    denormalizationContext: ['groups' => ['company:write']],
+)]
 #[Get()]
 #[GetCollection()]
 #[Delete()]
@@ -26,34 +32,44 @@ class Company
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column()]
+    #[Groups(['company:read', 'user:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read', 'company:read', 'user:write', 'company:write'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 25)]
+    #[Groups(['company:read', 'company:write'])]
     private ?string $size = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['company:read', 'company:write'])]
     private ?\DateTimeInterface $creationDate = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['company:read', 'company:write'])]
     private ?string $revenues = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['company:read', 'company:write'])]
     private ?string $address = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['company:read', 'company:write'])]
     private ?string $sector = null;
 
     #[ORM\Column(length: 100, nullable: true)]
+    #[Groups(['company:read', 'company:write'])]
     private ?string $website = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['company:read', 'company:write'])]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'companies')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['company:read', 'company:write'])]
     private ?User $founder = null;
 
     public function getId(): ?int
