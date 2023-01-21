@@ -4,8 +4,23 @@ namespace App\Entity;
 
 use App\Repository\JobAdsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+
 
 #[ORM\Entity(repositoryClass: JobAdsRepository::class)]
+#[ApiResource]
+#[Patch(
+    security: 'is_granted("ROLE_ADMIN") or object.getFounder() == user',
+)]
+#[Post()]
+#[Get()]
+#[GetCollection()]
+#[Delete()]
 class JobAds
 {
     #[ORM\Id]
