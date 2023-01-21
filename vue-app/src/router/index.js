@@ -5,6 +5,7 @@ import ResetPassword from '@/views/ResetPassword.vue'
 import LandingPage from '@/views/LandingPage.vue'
 import UserProfile from '@/views/UserProfile.vue'
 import ValidateAccount from '@/views/ValidateAccount.vue'
+import Home from '@/views/Home.vue'
 
 const isAuthenticated = () => {
   const token = localStorage.getItem('token');
@@ -23,6 +24,18 @@ const routes = [
         path: '',
         name: 'LandingPage',
         component: LandingPage
+      },
+      {
+        beforeEnter: (to, from, next) => {
+          if (isAuthenticated()) {
+            next();
+          } else {
+            next('/');
+          }
+        },
+        path: '/home',
+        name: 'Home',
+        component: Home
       },
       {
         path: '/authentication',

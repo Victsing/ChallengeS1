@@ -72,6 +72,10 @@ class Company
     #[Groups(['company:read', 'company:write'])]
     private ?User $founder = null;
 
+    #[ORM\Column]
+    #[Groups(['company:read', 'company:write'])]
+    private ?int $siret = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -181,6 +185,18 @@ class Company
     public function setFounder(?User $founder): self
     {
         $this->founder = $founder;
+
+        return $this;
+    }
+
+    public function getSiret(): ?int
+    {
+        return $this->siret;
+    }
+
+    public function setSiret(int $siret): self
+    {
+        $this->siret = $siret;
 
         return $this;
     }

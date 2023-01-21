@@ -126,9 +126,14 @@ import AuthentificationApi from "../backend/AuthentificationApi";
 import BaseNaveBar from '@/components/BaseNaveBar.vue';
 import PersonalInfo from '@/assets/personal_info.svg';
 import BaseSnackbar from "@/components/BaseSnackbar.vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 
-const tab = ref("one");
+const route = useRoute();
+
+// if route.query.tab exists, set tab to route.query.tab else set tab to "one"
+const tab = ref(route.query.tab ? route.query.tab : "one");
+
+// const tab = ref("one");
 let firstname = ref("");
 let lastname = ref("");
 let birthday = ref("");
@@ -178,7 +183,7 @@ const login = async (e) => {
     loginPassword.value
   ).then((response) => {
     localStorage.setItem("token", response.data.token);
-    router.push("/profile");
+    router.push("/home");
   }).catch(() => {
     snackbar.value = true;
     snackbarText.value = "Email ou mot de passe incorrect";
