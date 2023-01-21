@@ -4,6 +4,15 @@ import Authentication from '@/views/UserAuthentification.vue';
 import ResetPassword from '@/views/ResetPassword.vue';
 import LandingPage from '@/views/LandingPage.vue';
 import UserProfile from '@/views/UserProfile.vue';
+import ValidateAccount from '@/views/ValidateAccount.vue';
+
+const isAuthenticated = () => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    return true;
+  }
+  return false;
+};
 
 const routes = [
   {
@@ -26,21 +35,33 @@ const routes = [
         component: ResetPassword
       },
       {
+        beforeEnter: (to, from, next) => {
+          if (isAuthenticated()) {
+            next();
+          } else {
+            next('/authentication');
+          }
+        },
         path: '/profile',
         name: 'UserProfile',
         component: UserProfile
+      },
+      {
+        path: '/:token/email-verification',
+        name: 'ValidateAccount',
+        component: ValidateAccount
       },
       {
         path: '/admin',
         children: [
           {
             path: '',
-            component: () => import('@/views/admin/Admin.vue'),
+            component: () => import('@/views/admin/Admin.vue')
           },
           {
             path: '/list-users',
-            component: () => import('@/views/admin/ListUsers.vue'),
-          },
+            component: () => import('@/views/admin/ListUsers.vue')
+          }
         ]
       }
     ]
