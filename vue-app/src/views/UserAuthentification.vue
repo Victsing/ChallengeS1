@@ -166,9 +166,9 @@ const register = async (e) => {
     snackbar.value = true;
     snackbarText.value = "Inscription réussie, vous allez recevoir un email pour valider votre compte. Vous allez être redirigé vers la page d'accueil dans 3 secondes.";
     snackbarColor.value = "success";
-    setTimeout(() => {
-      router.push("/");
-    }, 3000);
+    router.push("/");
+    // setTimeout(() => {
+    // }, 3000);
   }).catch(() => {
     snackbar.value = true;
     snackbarText.value = "Il y a eu une erreur, veuillez recharger la page et réessayer.";

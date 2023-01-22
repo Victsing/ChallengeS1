@@ -1,11 +1,12 @@
 // Composables
 import { createRouter, createWebHistory } from 'vue-router'
 import Authentication from '@/views/UserAuthentification.vue'
-import ResetPassword from '@/views/ResetPassword.vue'
+import Home from '@/views/Home.vue'
 import LandingPage from '@/views/LandingPage.vue'
+import RegisterCompany from '@/views/RegisterCompany.vue'
+import ResetPassword from '@/views/ResetPassword.vue'
 import UserProfile from '@/views/UserProfile.vue'
 import ValidateAccount from '@/views/ValidateAccount.vue'
-import Home from '@/views/Home.vue'
 
 const isAuthenticated = () => {
   const token = localStorage.getItem('token');
@@ -46,6 +47,18 @@ const routes = [
         path: '/:token/reset-password',
         name: 'ResetPassword',
         component: ResetPassword
+      },
+      {
+        beforeEnter: (to, from, next) => {
+          if (isAuthenticated()) {
+            next();
+          } else {
+            next('/authentication');
+          }
+        },
+        path: '/register-company',
+        name: 'RegisterCompany',
+        component: RegisterCompany,
       },
       {
         beforeEnter: (to, from, next) => {

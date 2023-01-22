@@ -50,7 +50,7 @@
             prepend-icon="mdi-lock"
             variant="outlined"
             v-model="password"
-            :disabled="!emptyCurrentPassword"
+            :disabled="emptyCurrentPassword"
           />
           <v-text-field
             label="Confirm New Password"
@@ -58,12 +58,13 @@
             prepend-icon="mdi-lock"
             variant="outlined"
             v-model="confirmPassword"
-            :disabled="!emptyCurrentPassword"
+            :disabled="emptyCurrentPassword"
           />
           <BaseRoundButton
             @click="updateProfile"
             type="submit"
             color="black"
+            :disabled="disableButton"
           >
             Update
           </BaseRoundButton>
@@ -102,6 +103,8 @@ let snackbar = ref(false);
 let snackbarColor = ref('');
 let snackbarText = ref('');
 
+let disableButton = ref(false);
+
 let firstname = ref(decoded.firstname);
 let lastname = ref(decoded.lastname);
 let birthday = ref(decoded.birthdate);
@@ -114,15 +117,15 @@ let userId = ref(decoded.id);
 let validCurrentPassword = ref(false);
 
 const emptyCurrentPassword = computed(() => {
-  return currentPassword.value !== '';
+  return currentPassword.value === '';
 });
 
 const validPasswords = computed(() => {
   return password.value === confirmPassword.value;
 });
 
-const checkCurrentPassword = () => {
-  AuthentificationApi.login(
+const checkCurrentPassword = async () => {
+  await AuthentificationApi.login(
     email.value,
     currentPassword.value
   ).then((response) => {
@@ -134,8 +137,9 @@ const checkCurrentPassword = () => {
 
 const updateProfile = async (e) => {
   e.preventDefault();
-  if (emptyCurrentPassword.value) {
-    checkCurrentPassword();
+  disableButton.value = true;
+  if (!emptyCurrentPassword.value) {
+    await checkCurrentPassword();
     if (validCurrentPassword.value && validPasswords.value) {
       AuthentificationApi.updateUser(
         userId.value,
@@ -149,6 +153,7 @@ const updateProfile = async (e) => {
         snackbar.value = true;
         snackbarColor.value = 'success';
         snackbarText.value = 'Your profile has been updated, you will be redirected to the login page in 3 seconds';
+        currentPassword.value = '';
         setTimeout(() => {
           localStorage.removeItem('token');
           router.push('/authentication');
@@ -157,11 +162,13 @@ const updateProfile = async (e) => {
         snackbar.value = true;
         snackbarColor.value = 'error';
         snackbarText.value = 'An error occured, please try again';
+        disableButton.value = false;
       });
     } else {
       snackbar.value = true;
       snackbarColor.value = 'error';
       snackbarText.value = 'Please make sure that the passwords are the same and that the current password is correct';
+      disableButton.value = false;
     }
   } else {
     AuthentificationApi.updateUser(
@@ -171,11 +178,11 @@ const updateProfile = async (e) => {
         lastname: lastname.value,
         birthdate: birthday.value,
       }
-    ).then((response) => {
+    ).then(() => {
       snackbar.value = true;
       snackbarColor.value = 'success';
       snackbarText.value = 'Your profile has been updated, you will be redirected to the login page in 3 seconds';
-      console.log(response);
+      currentPassword.value = '';
       setTimeout(() => {
         localStorage.removeItem('token');
         router.push('/authentication');
@@ -184,6 +191,7 @@ const updateProfile = async (e) => {
       snackbar.value = true;
       snackbarColor.value = 'error';
       snackbarText.value = 'An error occured, please try again';
+      disableButton.value = false;
     });
   }
 };

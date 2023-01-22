@@ -26,7 +26,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 #[Get()]
 #[GetCollection()]
-#[Delete()]
+#[Delete(
+    security: 'is_granted("ROLE_ADMIN") or object == user'
+)]
 class Company
 {
     #[ORM\Id]
@@ -74,7 +76,11 @@ class Company
 
     #[ORM\Column]
     #[Groups(['company:read', 'company:write'])]
-    private ?int $siret = null;
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(type: Types::BIGINT)]
+    #[Groups(['company:read', 'company:write'])]
+    private ?string $siret = null;
 
     public function getId(): ?int
     {
@@ -189,12 +195,24 @@ class Company
         return $this;
     }
 
-    public function getSiret(): ?int
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getSiret(): ?string
     {
         return $this->siret;
     }
 
-    public function setSiret(int $siret): self
+    public function setSiret(string $siret): self
     {
         $this->siret = $siret;
 
