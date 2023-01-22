@@ -15,4 +15,4 @@ services:
 
   database:
     environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD: ${APP_SECRET}
