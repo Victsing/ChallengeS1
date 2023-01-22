@@ -9,13 +9,13 @@ import AdminCompanySectors from '@/views/admin/CompanySectors.vue'
 import AdminCompanyRevenues from '@/views/admin/CompanyRevenues.vue'
 
 import Authentication from '@/views/UserAuthentification.vue'
-import Home from '@/views/Home.vue'
 import LandingPage from '@/views/LandingPage.vue'
 import RegisterCompany from '@/views/RegisterCompany.vue'
 import ResetPassword from '@/views/ResetPassword.vue'
 import UserProfile from '@/views/UserProfile.vue'
 import ValidateAccount from '@/views/ValidateAccount.vue'
 import decodeMixin from '@/mixins/decode'
+import Home from '@/views/Home.vue';
 
 const isAuthenticated = () => {
   const token = localStorage.getItem('token');
@@ -23,7 +23,7 @@ const isAuthenticated = () => {
     return true;
   }
   return false;
-}
+};
 
 const isAdmin = () => {
   let tokenData = decodeMixin.getDataFromToken();
@@ -152,7 +152,7 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes,
-})
+  routes
+});
 
-export default router
+export default router;
