@@ -89,10 +89,27 @@ import BaseNaveBar from '@/components/BaseNaveBar.vue';
 import jwt_decode from 'jwt-decode';
 import ProfileInfo from '@/assets/profile_info.svg';
 import BaseRoundButton from '@/components/BaseRoundButton.vue';
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import AuthentificationApi from '@/backend/AuthentificationApi';
 import BaseSnackbar from '@/components/BaseSnackbar.vue';
 import { useRouter } from 'vue-router';
+
+
+let firstname = ref('');
+let lastname = ref('');
+let birthday = ref('');
+let email = ref('');
+onMounted(() => {
+  AuthentificationApi.getMe(decoded.id).then((response) => {
+    console.log(response.data);
+    firstname.value = response.data.firstname;
+    lastname.value = response.data.lastname;
+    birthday.value = response.data.birthdate;
+    email.value = response.data.email;
+  }).catch((error) => {
+    console.log(error);
+  });
+});
 
 const router = useRouter();
 
@@ -105,10 +122,6 @@ let snackbarText = ref('');
 
 let disableButton = ref(false);
 
-let firstname = ref(decoded.firstname);
-let lastname = ref(decoded.lastname);
-let birthday = ref(decoded.birthdate);
-let email = ref(decoded.email);
 let password = ref('');
 let currentPassword = ref('');
 let confirmPassword = ref('');
