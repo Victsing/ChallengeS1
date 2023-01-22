@@ -16,6 +16,8 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 # prevent the reinstallation of node modules at every changes in the source code
 COPY package.json yarn.lock ./
+# configure yarn with a timeout to prevent the build to fail
+RUN yarn config set network-timeout 600000
 RUN yarn
 
 COPY . ./
