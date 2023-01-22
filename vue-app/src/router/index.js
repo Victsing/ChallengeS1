@@ -1,20 +1,13 @@
 // Composables
-import { createRouter, createWebHistory } from 'vue-router'
-import AdminHome from '@/views/admin/Home.vue'
-import AdminNewCompanySize from '@/views/admin/NewCompanySize.vue'
-import NewCompanySector from '@/views/admin/NewCompanySector.vue'
-import NewCompanyRevenue from '@/views/admin/NewCompanyRevenue.vue'
-import AdminCompanySizes from '@/views/admin/CompanySizes.vue'
-import AdminCompanySectors from '@/views/admin/CompanySectors.vue'
-import AdminCompanyRevenues from '@/views/admin/CompanyRevenues.vue'
+import { createRouter, createWebHistory } from 'vue-router';
 
-import Authentication from '@/views/UserAuthentification.vue'
-import LandingPage from '@/views/LandingPage.vue'
-import RegisterCompany from '@/views/RegisterCompany.vue'
-import ResetPassword from '@/views/ResetPassword.vue'
-import UserProfile from '@/views/UserProfile.vue'
-import ValidateAccount from '@/views/ValidateAccount.vue'
-import decodeMixin from '@/mixins/decode'
+import Authentication from '@/views/UserAuthentification.vue';
+import LandingPage from '@/views/LandingPage.vue';
+import RegisterCompany from '@/views/RegisterCompany.vue';
+import ResetPassword from '@/views/ResetPassword.vue';
+import UserProfile from '@/views/UserProfile.vue';
+import ValidateAccount from '@/views/ValidateAccount.vue';
+import { getDataFromToken } from '@/mixins';
 import Home from '@/views/Home.vue';
 
 const isAuthenticated = () => {
@@ -26,12 +19,12 @@ const isAuthenticated = () => {
 };
 
 const isAdmin = () => {
-  let tokenData = decodeMixin.getDataFromToken();
+  let tokenData = getDataFromToken();
   if (tokenData.roles.includes('ROLE_ADMIN')) {
     return true;
   }
   return false;
-}
+};
 
 const routes = [
   {
@@ -85,7 +78,7 @@ const routes = [
         },
         path: '/register-company',
         name: 'RegisterCompany',
-        component: RegisterCompany,
+        component: RegisterCompany
       },
       {
         beforeEnter: (to, from, next) => {
@@ -112,43 +105,48 @@ const routes = [
             next('/authentication');
           }
         },
-        path: '/admin',
-        component: AdminHome,
-        name: 'AdminHome',
-      },
-      {
-        path: 'admin/company/sizes',
-        name: 'AdminCompanySizes',
-        component: AdminCompanySizes
-      },
-      {
-        path: 'admin/company/sectors',
-        name: 'AdminCompanySectors',
-        component: AdminCompanySectors
-      },
-      {
-        path: 'admin/company/revenues',
-        name: 'AdminCompanyRevenues',
-        component: AdminCompanyRevenues
-      },
-      {
-        path: 'admin/company/size/new',
-        name: 'AdminNewCompanySize',
-        component: AdminNewCompanySize
-      },
-      {
-        path: 'admin/company/sector/new',
-        name: 'AdminNewCompanySector',
-        component: NewCompanySector
-      },
-      {
-        path: 'admin/company/revenue/new',
-        name: 'AdminNewCompanyRevenue',
-        component: NewCompanyRevenue
-      },
-    ],
-  },
-]
+        path: '/admin/',
+        children: [
+          {
+            path: '',
+            component: () => import('@/views/admin/Home.vue'),
+            name: 'AdminHome'
+          },
+          {
+            path: 'company/sizes',
+            name: 'AdminCompanySizes',
+            component: () => import('@/views/admin/CompanySizes.vue')
+          },
+          {
+            path: 'company/sectors',
+            name: 'AdminCompanySectors',
+            component: () => import('@/views/admin/CompanySectors.vue')
+          },
+          {
+            path: 'company/revenues',
+            name: 'AdminCompanyRevenues',
+            component: () => import('@/views/admin/CompanyRevenues.vue')
+          },
+          {
+            path: 'company/size/new',
+            name: 'AdminNewCompanySize',
+            component: () => import('@/views/admin/NewCompanySize.vue')
+          },
+          {
+            path: 'company/sector/new',
+            name: 'AdminNewCompanySector',
+            component: () => import('@/views/admin/NewCompanySector.vue')
+          },
+          {
+            path: 'company/revenue/new',
+            name: 'AdminNewCompanyRevenue',
+            component: () => import('@/views/admin/NewCompanyRevenue.vue')
+          }
+        ]
+      }
+    ]
+  }
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
