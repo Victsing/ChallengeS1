@@ -27,7 +27,7 @@
               class="mb-16"
               v-model="loginPassword"
             />
-            <BaseRoundButton @click="login" type="submit" color="black"
+            <BaseRoundButton @click="login" type="submit" color="black" :disabled="disableButton"
               >Se connecter</BaseRoundButton
             >
           </v-form>
@@ -84,7 +84,7 @@
               v-model="confirmPassword"
               class="mb-16"
             />
-            <BaseRoundButton @click="register" type="submit" color="black"
+            <BaseRoundButton @click="register" type="submit" color="black" :disabled="disableButton"
               >S'inscrire</BaseRoundButton
             >
           </v-form>
@@ -99,7 +99,7 @@
               required
               v-model="forgottenPasswordEmail"
             />
-            <BaseRoundButton @click="newPassword" type="submit" color="black"
+            <BaseRoundButton @click="newPassword" type="submit" color="black" :disabled="disableButton"
               >Continuer</BaseRoundButton
             >
           </v-form>
@@ -126,15 +126,22 @@ import AuthentificationApi from "../backend/AuthentificationApi";
 import BaseNaveBar from '@/components/BaseNaveBar.vue';
 import PersonalInfo from '@/assets/personal_info.svg';
 import BaseSnackbar from "@/components/BaseSnackbar.vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 
-const tab = ref("one");
+const route = useRoute();
+
+// if route.query.tab exists, set tab to route.query.tab else set tab to "one"
+const tab = ref(route.query.tab ? route.query.tab : "one");
+
+// const tab = ref("one");
 let firstname = ref("");
 let lastname = ref("");
 let birthday = ref("");
 let email = ref("");
 let password = ref("");
 let confirmPassword = ref("");
+
+let disableButton = ref(false);
 
 let loginEmail = ref("");
 let loginPassword = ref("");
@@ -148,6 +155,7 @@ let snackbarColor = ref("");
 const router = useRouter();
 
 const register = async (e) => {
+  disableButton.value = true;
   e.preventDefault();
   AuthentificationApi.register(
     firstname.value,
@@ -168,25 +176,29 @@ const register = async (e) => {
     snackbar.value = true;
     snackbarText.value = "Il y a eu une erreur, veuillez recharger la page et réessayer.";
     snackbarColor.value = "error";
+    disableButton.value = false;
   });
 };
 
 const login = async (e) => {
+  disableButton.value = true;
   e.preventDefault();
   AuthentificationApi.login(
     loginEmail.value,
     loginPassword.value
   ).then((response) => {
     localStorage.setItem("token", response.data.token);
-    router.push("/profile");
+    router.push("/home");
   }).catch(() => {
     snackbar.value = true;
     snackbarText.value = "Email ou mot de passe incorrect";
     snackbarColor.value = "error";
+    disableButton.value = false;
   });
 };
 
 const newPassword = async (e) => {
+  disableButton.value = true;
   e.preventDefault();
   AuthentificationApi.newPassword(
     forgottenPasswordEmail.value
@@ -202,6 +214,7 @@ const newPassword = async (e) => {
     snackbar.value = true;
     snackbarText.value = "Il ya eu une erreur, veuillez recharger la page et réessayer.";
     snackbarColor.value = "error";
+    disableButton.value = false;
   });
 };
 </script>

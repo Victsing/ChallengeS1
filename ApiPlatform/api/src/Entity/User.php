@@ -18,6 +18,9 @@ use Symfony\Component\Serializer\Annotation\Context;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -62,11 +65,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column()]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'company:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Groups(['user:read', 'user:write', 'user:getToken'])]
+    #[Groups(['user:read', 'user:write', 'user:getToken', 'company:read'])]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -88,11 +91,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $token = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'company:read'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'company:read'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
@@ -103,9 +106,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $isVerified = false;
 
+    #[ORM\OneToMany(mappedBy: 'founder', targetEntity: Company::class)]
+    #[Groups(['user:read', 'user:write'])]
+    private Collection $companies;
+
     public function __construct()
     {
         $this->roles = array('ROLE_USER');
+        $this->companies = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
     }
 
@@ -239,6 +247,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @return Collection<int, Company>
+     */
+    public function getCompanies(): Collection
+    {
+        return $this->companies;
+    }
+
+    public function addCompany(Company $company): self
+    {
+        if (!$this->companies->contains($company)) {
+            $this->companies[] = $company;
+            $company->setFounder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCompany(Company $company): self
+    {
+        if ($this->companies->removeElement($company)) {
+            // set the owning side to null (unless already changed)
+            if ($company->getFounder() === $this) {
+                $company->setFounder(null);
+            }
+        }
+        return $this;
+    }
     public function isVerified(): ?bool
     {
         return $this->isVerified;

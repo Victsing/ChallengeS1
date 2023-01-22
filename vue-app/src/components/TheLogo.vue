@@ -12,7 +12,6 @@
 <script setup>
 import BaseTitle from './BaseTitle.vue';
 import AppLogo from '../assets/app_logo.svg';
-import { defineProps } from 'vue';
 const props = defineProps({
   title: {
     type: String,

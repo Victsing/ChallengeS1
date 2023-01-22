@@ -14,8 +14,8 @@ class JwtLoginSubscriber implements EventSubscriberInterface
         $data['id'] = $user->getId();
         $data['firstname'] = $user->getFirstname();
         $data['lastname'] = $user->getLastname();
+        $data['birthdate'] = $user->getBirthdate();
         $event->setData($data);
-
     }
 
     public static function getSubscribedEvents(): array
