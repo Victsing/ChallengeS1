@@ -181,11 +181,10 @@ const updateProfile = async (e) => {
     ).then(() => {
       snackbar.value = true;
       snackbarColor.value = 'success';
-      snackbarText.value = 'Your profile has been updated, you will be redirected to the login page in 3 seconds';
+      snackbarText.value = 'Your profile has been updated';
       currentPassword.value = '';
       setTimeout(() => {
-        localStorage.removeItem('token');
-        router.push('/authentication');
+        router.push('/home');
       }, 3000);
     }).catch(() => {
       snackbar.value = true;

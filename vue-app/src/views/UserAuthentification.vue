@@ -27,7 +27,7 @@
               class="mb-16"
               v-model="loginPassword"
             />
-            <BaseRoundButton @click="login" type="submit" color="black"
+            <BaseRoundButton @click="login" type="submit" color="black" :disabled="disableButton"
               >Se connecter</BaseRoundButton
             >
           </v-form>
@@ -84,7 +84,7 @@
               v-model="confirmPassword"
               class="mb-16"
             />
-            <BaseRoundButton @click="register" type="submit" color="black"
+            <BaseRoundButton @click="register" type="submit" color="black" :disabled="disableButton"
               >S'inscrire</BaseRoundButton
             >
           </v-form>
@@ -99,7 +99,7 @@
               required
               v-model="forgottenPasswordEmail"
             />
-            <BaseRoundButton @click="newPassword" type="submit" color="black"
+            <BaseRoundButton @click="newPassword" type="submit" color="black" :disabled="disableButton"
               >Continuer</BaseRoundButton
             >
           </v-form>
@@ -141,6 +141,8 @@ let email = ref("");
 let password = ref("");
 let confirmPassword = ref("");
 
+let disableButton = ref(false);
+
 let loginEmail = ref("");
 let loginPassword = ref("");
 
@@ -153,6 +155,7 @@ let snackbarColor = ref("");
 const router = useRouter();
 
 const register = async (e) => {
+  disableButton.value = true;
   e.preventDefault();
   AuthentificationApi.register(
     firstname.value,
@@ -166,17 +169,19 @@ const register = async (e) => {
     snackbar.value = true;
     snackbarText.value = "Inscription réussie, vous allez recevoir un email pour valider votre compte. Vous allez être redirigé vers la page d'accueil dans 3 secondes.";
     snackbarColor.value = "success";
-    router.push("/");
-    // setTimeout(() => {
-    // }, 3000);
+    setTimeout(() => {
+      router.push("/");
+    }, 3000);
   }).catch(() => {
     snackbar.value = true;
     snackbarText.value = "Il y a eu une erreur, veuillez recharger la page et réessayer.";
     snackbarColor.value = "error";
+    disableButton.value = false;
   });
 };
 
 const login = async (e) => {
+  disableButton.value = true;
   e.preventDefault();
   AuthentificationApi.login(
     loginEmail.value,
@@ -188,10 +193,12 @@ const login = async (e) => {
     snackbar.value = true;
     snackbarText.value = "Email ou mot de passe incorrect";
     snackbarColor.value = "error";
+    disableButton.value = false;
   });
 };
 
 const newPassword = async (e) => {
+  disableButton.value = true;
   e.preventDefault();
   AuthentificationApi.newPassword(
     forgottenPasswordEmail.value
@@ -207,6 +214,7 @@ const newPassword = async (e) => {
     snackbar.value = true;
     snackbarText.value = "Il ya eu une erreur, veuillez recharger la page et réessayer.";
     snackbarColor.value = "error";
+    disableButton.value = false;
   });
 };
 </script>
