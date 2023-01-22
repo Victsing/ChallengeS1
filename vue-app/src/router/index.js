@@ -1,12 +1,12 @@
 // Composables
 import { createRouter, createWebHistory } from 'vue-router'
 import Authentication from '@/views/UserAuthentification.vue'
-import Home from '@/views/Home.vue'
 import LandingPage from '@/views/LandingPage.vue'
 import RegisterCompany from '@/views/RegisterCompany.vue'
 import ResetPassword from '@/views/ResetPassword.vue'
 import UserProfile from '@/views/UserProfile.vue'
 import ValidateAccount from '@/views/ValidateAccount.vue'
+import Home from '@/views/Home.vue';
 
 const isAuthenticated = () => {
   const token = localStorage.getItem('token');
