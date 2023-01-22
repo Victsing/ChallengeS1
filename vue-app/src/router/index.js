@@ -2,8 +2,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AdminHome from '@/views/admin/Home.vue'
 import AdminNewCompanySize from '@/views/admin/NewCompanySize.vue'
-import AdminNewCompanySector from '@/views/admin/NewCompanySector.vue'
-import AdminNewCompanyRevenue from '@/views/admin/NewCompanyRevenue.vue'
+import NewCompanySector from '@/views/admin/NewCompanySector.vue'
+import NewCompanyRevenue from '@/views/admin/NewCompanyRevenue.vue'
 import AdminCompanySizes from '@/views/admin/CompanySizes.vue'
 import AdminCompanySectors from '@/views/admin/CompanySectors.vue'
 import AdminCompanyRevenues from '@/views/admin/CompanyRevenues.vue'
@@ -139,12 +139,12 @@ const routes = [
       {
         path: 'admin/company/sector/new',
         name: 'AdminNewCompanySector',
-        component: AdminNewCompanySector
+        component: NewCompanySector
       },
       {
         path: 'admin/company/revenue/new',
         name: 'AdminNewCompanyRevenue',
-        component: AdminNewCompanyRevenue
+        component: NewCompanyRevenue
       },
     ],
   },

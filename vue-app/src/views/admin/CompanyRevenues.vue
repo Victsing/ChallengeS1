@@ -11,6 +11,7 @@
   >
     New Company Revenue
   </v-btn>
+  <!-- Faire un tableau pour afficher la liste des revenus existants -->
 </template>
 
 <script setup>

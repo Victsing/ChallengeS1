@@ -11,6 +11,7 @@
   >
     New Company Size
   </v-btn>
+  <!-- Faire un tableau pour afficher la liste des tailles existantes -->
 </template>
 
 <script setup>

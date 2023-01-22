@@ -3,7 +3,7 @@
     title="Admin panel"
   />
   <h1>
-    CompanyRevenues
+    CompanySectors
   </h1>
   <v-btn
     color="primary"
@@ -11,6 +11,7 @@
   >
     New Company Sector
   </v-btn>
+  <!-- Faire un tableau pour afficher la liste des secteurs existants -->
 </template>
 
 <script setup>
