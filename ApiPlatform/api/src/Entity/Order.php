@@ -22,9 +22,6 @@ class Order
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $datetime = null;
 
-    #[ORM\ManyToOne(inversedBy: 'orders')]
-    private ?Customer $customer = null;
-
     #[ORM\OneToMany(mappedBy: 'orderDelivery', targetEntity: Detail::class)]
     private Collection $details;
 
@@ -49,18 +46,6 @@ class Order
     public function setDatetime(\DateTimeInterface $datetime): self
     {
         $this->datetime = $datetime;
-
-        return $this;
-    }
-
-    public function getCustomer(): ?Customer
-    {
-        return $this->customer;
-    }
-
-    public function setCustomer(?Customer $customer): self
-    {
-        $this->customer = $customer;
 
         return $this;
     }

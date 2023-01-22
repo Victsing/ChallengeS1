@@ -2,20 +2,18 @@
 
 namespace App\EventSubscriber;
 
-use ApiPlatform\Symfony\EventListener\EventPriorities;
-use App\Entity\Order;
 use App\Entity\User;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
+use ApiPlatform\Symfony\EventListener\EventPriorities;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class UserSubscriber implements EventSubscriberInterface
 {
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW => ['updatePassword', EventPriorities::PRE_WRITE],
+            KernelEvents::VIEW => ['updatePassword', EventPriorities::PRE_WRITE]
         ];
     }
 
@@ -23,13 +21,9 @@ final class UserSubscriber implements EventSubscriberInterface
     {
         $user = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
-
-        dump($event->getRequest());
-
-        if (!$user instanceof User || Request::METHOD_PATCH !== $method) {
-            return;
+        $decoded = json_decode($event->getRequest()->getContent(), true);
+        if ($user instanceof User && ($method === "POST" || $method === "PATCH") && isset($decoded['password'])) {
+            $user->setPassword(password_hash($user->getPassword(), PASSWORD_BCRYPT));
         }
-
-        $user->setPassword(password_hash($user->getPassword(), PASSWORD_BCRYPT));
     }
 }
