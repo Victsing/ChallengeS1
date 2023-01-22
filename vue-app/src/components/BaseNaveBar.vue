@@ -5,6 +5,11 @@
       {{ title }}
     </v-app-bar-title>
     <template v-slot:append>
+      <div v-if="admin">
+        <v-btn
+          @click="this.$router.push('/admin/companies')"
+          >Gérer les entreprises</v-btn>
+      </div>
       <div v-if="isLoggedIn">
         <v-btn
           icon="mdi-account"
@@ -26,6 +31,8 @@ import { computed } from 'vue'
 
 const router = useRouter()
 
+defineEmits(['navbarHome']);
+
 defineProps({
   title: {
     type: String,
@@ -34,6 +41,11 @@ defineProps({
   color: {
     type: String,
     default: 'black'
+  },
+  admin:
+  {
+    type: Boolean,
+    default: false
   }
 })
 

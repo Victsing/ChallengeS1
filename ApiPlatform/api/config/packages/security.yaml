@@ -55,6 +55,12 @@ security:
         - { path: ^/users, roles: IS_AUTHENTICATED_FULLY, methods: [GET, PUT, DELETE, PATCH] }
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ˆ/companies, roles: IS_AUTHENTICATED_FULLY, methods: [GET, PUT, DELETE, PATCH] }
+        - { path: ˆ/company_size_options, roles: IS_AUTHENTICATED_FULLY, methods: [GET] }
+        - { path: ˆ/company_size_options, roles: ROLE_ADMIN, methods: [DELETE, PATCH, POST] }
+        - { path: ˆ/company_sector_options, roles: ROLE_ADMIN, methods: [DELETE, PATCH, POST] }
+        - { path: ˆ/company_sector_options, roles: IS_AUTHENTICATED_FULLY, methods: [GET] }
+        - { path: ˆ/company_revenue_options, roles: ROLE_ADMIN, methods: [DELETE, PATCH, POST] }
+        - { path: ˆ/company_revenue_options, roles: IS_AUTHENTICATED_FULLY, methods: [GET] }
         #- { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 
     role_hierarchy: 

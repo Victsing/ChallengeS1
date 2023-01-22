@@ -127,6 +127,7 @@ import BaseNaveBar from '@/components/BaseNaveBar.vue';
 import PersonalInfo from '@/assets/personal_info.svg';
 import BaseSnackbar from "@/components/BaseSnackbar.vue";
 import { useRouter, useRoute } from "vue-router";
+import decodeMixin from "@/mixins/decode";
 
 const route = useRoute();
 
@@ -166,9 +167,9 @@ const register = async (e) => {
     snackbar.value = true;
     snackbarText.value = "Inscription réussie, vous allez recevoir un email pour valider votre compte. Vous allez être redirigé vers la page d'accueil dans 3 secondes.";
     snackbarColor.value = "success";
-    router.push("/");
-    // setTimeout(() => {
-    // }, 3000);
+    setTimeout(() => {
+      router.push("/");
+    }, 3000);
   }).catch(() => {
     snackbar.value = true;
     snackbarText.value = "Il y a eu une erreur, veuillez recharger la page et réessayer.";
@@ -183,11 +184,18 @@ const login = async (e) => {
     loginPassword.value
   ).then((response) => {
     localStorage.setItem("token", response.data.token);
-    router.push("/home");
-  }).catch(() => {
+    let data = decodeMixin.getDataFromToken();
+    console.log(data.roles.includes("ROLE_ADMIN"));
+    if (data.roles.includes("ROLE_ADMIN")) {
+      router.push("/admin");
+    } else {
+      router.push("/home");
+    }
+  }).catch((error) => {
     snackbar.value = true;
     snackbarText.value = "Email ou mot de passe incorrect";
     snackbarColor.value = "error";
+    console.log(error);
   });
 };
 
