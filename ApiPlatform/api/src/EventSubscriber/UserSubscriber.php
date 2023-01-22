@@ -21,10 +21,9 @@ final class UserSubscriber implements EventSubscriberInterface
     {
         $user = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
-        // dump($user);
-        if ($user instanceof User && ($method === "POST" || $method === "PATCH")) {
+        $decoded = json_decode($event->getRequest()->getContent(), true);
+        if ($user instanceof User && ($method === "POST" || $method === "PATCH") && isset($decoded['password'])) {
             $user->setPassword(password_hash($user->getPassword(), PASSWORD_BCRYPT));
         }
     }
-
 }
