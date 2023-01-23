@@ -190,17 +190,17 @@ const login = async (e) => {
   ).then((response) => {
     localStorage.setItem("token", response.data.token);
     let data = getDataFromToken();
+    console.log(data);
     console.log(data.roles.includes("ROLE_ADMIN"));
     if (data.roles.includes("ROLE_ADMIN")) {
       router.push("/admin");
     } else {
       router.push("/home");
     }
-  }).catch((error) => {
+  }).catch(() => {
     snackbar.value = true;
     snackbarText.value = "Email ou mot de passe incorrect";
     snackbarColor.value = "error";
-    console.log(error);
     disableButton.value = false;
   });
 };

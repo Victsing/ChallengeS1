@@ -41,25 +41,13 @@ class Company
     #[Groups(['user:read', 'company:read', 'user:write', 'company:write'])]
     private ?string $name = null;
 
-    #[ORM\Column(length: 25)]
-    #[Groups(['company:read', 'company:write'])]
-    private ?string $size = null;
-
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Groups(['company:read', 'company:write'])]
     private ?\DateTimeInterface $creationDate = null;
 
-    #[ORM\Column(length: 50)]
-    #[Groups(['company:read', 'company:write'])]
-    private ?string $revenues = null;
-
     #[ORM\Column(length: 255)]
     #[Groups(['company:read', 'company:write'])]
     private ?string $address = null;
-
-    #[ORM\Column(length: 100)]
-    #[Groups(['company:read', 'company:write'])]
-    private ?string $sector = null;
 
     #[ORM\Column(length: 100, nullable: true)]
     #[Groups(['company:read', 'company:write'])]
@@ -82,6 +70,21 @@ class Company
     #[Groups(['company:read', 'company:write'])]
     private ?string $siret = null;
 
+    #[ORM\ManyToOne(inversedBy: 'companies')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['company:read', 'company:write'])]
+    private ?CompanySizeOptions $size = null;
+
+    #[ORM\ManyToOne(inversedBy: 'companies')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['company:read', 'company:write'])]
+    private ?CompanyRevenueOptions $revenue = null;
+
+    #[ORM\ManyToOne(inversedBy: 'companies')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['company:read', 'company:write'])]
+    private ?CompanySectorOptions $sector = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -99,18 +102,6 @@ class Company
         return $this;
     }
 
-    public function getSize(): ?string
-    {
-        return $this->size;
-    }
-
-    public function setSize(string $size): self
-    {
-        $this->size = $size;
-
-        return $this;
-    }
-
     public function getCreationDate(): ?\DateTimeInterface
     {
         return $this->creationDate;
@@ -123,18 +114,6 @@ class Company
         return $this;
     }
 
-    public function getRevenues(): ?string
-    {
-        return $this->revenues;
-    }
-
-    public function setRevenues(string $revenues): self
-    {
-        $this->revenues = $revenues;
-
-        return $this;
-    }
-
     public function getAddress(): ?string
     {
         return $this->address;
@@ -143,18 +122,6 @@ class Company
     public function setAddress(string $address): self
     {
         $this->address = $address;
-
-        return $this;
-    }
-
-    public function getSector(): ?string
-    {
-        return $this->sector;
-    }
-
-    public function setSector(string $sector): self
-    {
-        $this->sector = $sector;
 
         return $this;
     }
@@ -215,6 +182,42 @@ class Company
     public function setSiret(string $siret): self
     {
         $this->siret = $siret;
+
+        return $this;
+    }
+
+    public function getSize(): ?CompanySizeOptions
+    {
+        return $this->size;
+    }
+
+    public function setSize(?CompanySizeOptions $size): self
+    {
+        $this->size = $size;
+
+        return $this;
+    }
+
+    public function getRevenue(): ?CompanyRevenueOptions
+    {
+        return $this->revenue;
+    }
+
+    public function setRevenue(?CompanyRevenueOptions $revenue): self
+    {
+        $this->revenue = $revenue;
+
+        return $this;
+    }
+
+    public function getSector(): ?CompanySectorOptions
+    {
+        return $this->sector;
+    }
+
+    public function setSector(?CompanySectorOptions $sector): self
+    {
+        $this->sector = $sector;
 
         return $this;
     }

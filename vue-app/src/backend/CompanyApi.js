@@ -6,7 +6,7 @@ export default {
       name: companyName,
       size: companySize,
       creationDate: companyCreationDate,
-      revenues: companyRevenues,
+      revenue: companyRevenues,
       address: companyAddress,
       sector: companySecor,
       website: companyWebsite,
@@ -21,5 +21,14 @@ export default {
         "Authorization": `Bearer ${localStorage.getItem("token")}`
       }
     });
+  },
+  getCompanySizes() {
+    return axios.get("/company_size_options");
+  },
+  getCompanySectors() {
+    return axios.get("/company_sector_options");
+  },
+  getCompanyRevenues() {
+    return axios.get("/company_revenue_options");
   },
 }
