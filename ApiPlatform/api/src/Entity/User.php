@@ -65,15 +65,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column()]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'company:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Groups(['user:read', 'user:write', 'user:getToken'])]
+    #[Groups(['user:read', 'user:write', 'user:getToken', 'company:read'])]
     private ?string $email = null;
 
     #[ORM\Column]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:write'])]
     private array $roles = [];
 
     /**
@@ -91,11 +91,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $token = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'company:read'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'company:read'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
@@ -104,9 +104,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $birthdate = null;
 
     #[ORM\Column]
-    private ?bool $isVerified= false;
+    private ?bool $isVerified = false;
 
     #[ORM\OneToMany(mappedBy: 'founder', targetEntity: Company::class)]
+    #[Groups(['user:read', 'user:write'])]
     private Collection $companies;
 
     public function __construct()

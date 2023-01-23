@@ -14,7 +14,7 @@
           <BaseRoundButton color="geekblue-6" to="/authentication"
             >Se connecter</BaseRoundButton
           >
-          <BaseRoundButton color="neutral-1" variant="outlined" class="ml-2" to="/authentication"
+          <BaseRoundButton color="neutral-1" variant="outlined" class="ml-2" to="/authentication?tab=two"
             >S'inscrire</BaseRoundButton
           >
         </BaseTitleWithDescription>

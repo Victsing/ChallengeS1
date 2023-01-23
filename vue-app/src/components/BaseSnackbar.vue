@@ -14,10 +14,6 @@
 </template>
 
 <script setup>
-import {
-  defineProps,
-  defineEmits,
-} from 'vue';
 
 defineEmits(['closeSnackbar']);
 const props = defineProps({

@@ -11,9 +11,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ApiResource(
-    normalizationContext: ['groups' => ['ingredient_read']]
-)]
+// #[ApiResource(
+//     normalizationContext: ['groups' => ['ingredient_read']]
+// )]
 #[Get]
 #[GetCollection]
 #[ORM\Entity(repositoryClass: IngredientRepository::class)]

@@ -47,5 +47,26 @@ export default {
         "Content-Type": "application/merge-patch+json",
       }
     });
-  }
+  },
+  updateUser: (userId, body) => {
+    return axios.patch(`/users/${userId}`, body,
+    {
+      headers: {
+        "Content-Type": "application/merge-patch+json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+      }
+    });
+  },
+  addRoleEmployer: (userId) => {
+    return axios.patch(`/users/${userId}`,
+    {
+      "roles": ["ROLE_EMPLOYER"]
+    },
+    {
+      headers: {
+        "Content-Type": "application/merge-patch+json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+      }
+    });
+  },
 }

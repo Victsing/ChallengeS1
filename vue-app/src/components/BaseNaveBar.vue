@@ -1,15 +1,25 @@
 <template>
-  <v-app-bar flat>
-    <img :src="AppLogo" alt="logo" class="ml-4" @click="this.$router.push('/')" />
+  <v-app-bar flat :color="color">
+    <img :src="AppLogo" alt="logo" class="ml-4" @click="this.$router.push('/home')" />
     <v-app-bar-title>
-      Welcome to the Challenge Stack
+      {{ title }}
     </v-app-bar-title>
     <template v-slot:append>
-      <v-btn
-        v-if="isLoggedIn"
-        icon="mdi-logout"
-        @click="logout"
-      />
+      <div v-if="admin">
+        <v-btn
+          @click="this.$router.push('/admin/companies')"
+          >Gérer les entreprises</v-btn>
+      </div>
+      <div v-if="isLoggedIn">
+        <v-btn
+          icon="mdi-account"
+          @click="this.$router.push('/profile')"
+        />
+        <v-btn
+          icon="mdi-logout"
+          @click="logout"
+        />
+      </div>
     </template>
   </v-app-bar>
 </template>
@@ -20,13 +30,30 @@ import { useRouter } from 'vue-router'
 import { computed } from 'vue'
 
 const router = useRouter()
-// logout method that removes the token from the local storage and redirects to the login page
+
+defineEmits(['navbarHome']);
+
+defineProps({
+  title: {
+    type: String,
+    default: 'Welcome to the Challenge Stack'
+  },
+  color: {
+    type: String,
+    default: 'black'
+  },
+  admin:
+  {
+    type: Boolean,
+    default: false
+  }
+})
+
 const logout = () => {
   localStorage.removeItem('token');
   router.push('/');
 }
 
-// computed property that returns true if the user is logged in
 const isLoggedIn = computed(() => {
   return localStorage.getItem('token') !== null;
 })

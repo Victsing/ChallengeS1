@@ -21,7 +21,7 @@
           class="mb-16"
           v-model="confirmResetPassword"
         />
-        <BaseRoundButton @click="resetUserPassword" type="submit" color="black">Confirmer</BaseRoundButton>
+        <BaseRoundButton :disable="disableButton" @click="resetUserPassword" color="black" type="submit">Confirmer</BaseRoundButton>
       </v-form>
     </v-col>
     <v-col>
@@ -46,8 +46,11 @@ import BaseSnackbar from '@/components/BaseSnackbar.vue';
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
+
 let resetPassword = ref('');
 let confirmResetPassword = ref('');
+
+let disableButton = ref(false);
 
 let snackbar = ref(false);
 let snackbarColor = ref('');
@@ -57,7 +60,8 @@ const router = useRouter();
 const route = useRoute();
 const token = route.params.token;
 
-const resetUserPassword = (e) => {
+const resetUserPassword = async (e) => {
+  disableButton.value = true;
   e.preventDefault();
   if (resetPassword.value === confirmResetPassword.value) {
     AuthentificationApi.resetPassword(token, resetPassword.value)
@@ -74,11 +78,13 @@ const resetUserPassword = (e) => {
         snackbar.value = true;
         snackbarText.value = "Password reset failed!";
         snackbarColor.value = 'error';
+        disableButton.value = false;
       });
   } else {
     snackbar.value = true;
     snackbarText.value = "Passwords do not match!";
     snackbarColor.value = 'error';
+    disableButton.value = false;
   }
 };
 
