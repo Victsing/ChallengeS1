@@ -88,6 +88,7 @@ class Company
     private ?CompanySectorOptions $sector = null;
 
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: JobAds::class)]
+    #[Groups(['company:read', 'job_ads:read'])]
     private Collection $jobAds;
 
     public function __construct()

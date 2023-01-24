@@ -61,6 +61,8 @@ security:
         - { path: ˆ/company_sector_options, roles: IS_AUTHENTICATED_FULLY, methods: [GET] }
         - { path: ˆ/company_revenue_options, roles: ROLE_ADMIN, methods: [DELETE, PATCH, POST] }
         - { path: ˆ/company_revenue_options, roles: IS_AUTHENTICATED_FULLY, methods: [GET] }
+        - { path: ˆ/job_ads, roles: [IS_AUTHENTICATED_FULLY, ROLE_EMPLOYER, ROLE_ADMIN], methods: [POST, PUT, DELETE] }
+        - { path: ˆ/job_ads, roles: IS_AUTHENTICATED_FULLY, methods: [GET, PATCH] }
         #- { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 
     role_hierarchy: 

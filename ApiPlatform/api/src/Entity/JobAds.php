@@ -10,10 +10,14 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 #[ORM\Entity(repositoryClass: JobAdsRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['job_ads:read']],
+    denormalizationContext: ['groups' => ['job_ads:write']],
+)]
 #[Patch(
     security: 'is_granted("ROLE_ADMIN") or object.getFounder() == user',
 )]
@@ -26,43 +30,58 @@ class JobAds
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column()]
+    #[Groups(['job_ads:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['job_ads:read', 'job_ads:write'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['job_ads:read', 'job_ads:write'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $location = null;
-
-    #[ORM\Column(length: 255)]
+    #[Groups(['job_ads:read', 'job_ads:write'])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['job_ads:read', 'job_ads:write'])]
     private ?string $country = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['job_ads:read', 'job_ads:write'])]
     private ?string $contractType = null;
 
     #[ORM\Column]
+    #[Groups(['job_ads:read', 'job_ads:write'])]
     private ?float $salary = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['job_ads:read', 'job_ads:write'])]
     private ?string $missionDuration = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['job_ads:read', 'job_ads:write'])]
     private ?string $jobAdStatus = null;
 
     #[ORM\Column]
+    #[Groups(['job_ads:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
+    #[Groups(['job_ads:read'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'jobAds')]
+    #[Groups(['job_ads:read'])]
     private ?Company $company = null;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -89,18 +108,6 @@ class JobAds
     public function setDescription(string $description): self
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getLocation(): ?string
-    {
-        return $this->location;
-    }
-
-    public function setLocation(string $location): self
-    {
-        $this->location = $location;
 
         return $this;
     }
