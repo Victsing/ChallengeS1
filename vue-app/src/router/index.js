@@ -26,6 +26,14 @@ const isAdmin = () => {
   return false;
 };
 
+const isEmployer = () => {
+  let tokenData = getDataFromToken();
+  if (tokenData.roles.includes('ROLE_EMPLOYER')) {
+    return true;
+  }
+  return false;
+};
+
 const routes = [
   {
     path: '/',
@@ -142,6 +150,63 @@ const routes = [
             name: 'AdminNewCompanyRevenue',
             component: () => import('@/views/admin/NewCompanyRevenue.vue')
           }
+        ]
+      },
+      {
+        beforeEnter: (to, from, next) => {
+          if (isEmployer()) {
+            next();
+          } else {
+            next('/authentication');
+          }
+        },
+        path: '/employer/',
+        children: [
+          {
+            path: '',
+            component: () => import('@/views/employer/Home.vue'),
+            name: 'EmployerHome'
+          },
+          {
+            path: 'companies/',
+            children: [
+              {
+                path: '',
+              name: 'EmployerCompanies',
+              component: () => import('@/views/employer/Companies.vue')
+              },
+              {
+                path: 'new',
+                name: 'EmployerNewCompany',
+                component: () => import('@/views/employer/NewCompany.vue')
+              },
+            ]
+          },
+          {
+            path: 'company/:id/',
+            children: [
+              {
+                path: '',
+                name: 'EmployerCompany',
+                component: () => import('@/views/employer/Company.vue'),
+              },
+              {
+                path: 'jobs',
+                children: [
+                  {
+                    path: '',
+                    name: 'EmployerCompanyJobs',
+                    component: () => import('@/views/employer/CompanyJobs.vue')
+                  },
+                  {
+                    path: 'new',
+                    name: 'EmployerNewCompanyJob',
+                    component: () => import('@/views/employer/NewCompanyJob.vue')
+                  }
+                ]
+              },
+            ]
+          },
         ]
       }
     ]

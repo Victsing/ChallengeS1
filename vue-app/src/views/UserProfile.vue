@@ -99,9 +99,11 @@ let firstname = ref('');
 let lastname = ref('');
 let birthday = ref('');
 let email = ref('');
+let me = ref({});
 onMounted(() => {
   AuthentificationApi.getMe(decoded.id).then((response) => {
     console.log(response.data);
+    me.value = response.data;
     firstname.value = response.data.firstname;
     lastname.value = response.data.lastname;
     birthday.value = response.data.birthdate;

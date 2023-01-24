@@ -30,40 +30,36 @@ class JobAds
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column()]
-    #[Groups(['job_ads:read'])]
+    #[Groups(['job_ads:read', 'company:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['job_ads:read', 'job_ads:write'])]
+    #[Groups(['job_ads:read', 'job_ads:write', 'company:read'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['job_ads:read', 'job_ads:write'])]
+    #[Groups(['job_ads:read', 'job_ads:write', 'company:read'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['job_ads:read', 'job_ads:write'])]
+    #[Groups(['job_ads:read', 'job_ads:write', 'company:read'])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['job_ads:read', 'job_ads:write'])]
+    #[Groups(['job_ads:read', 'job_ads:write', 'company:read'])]
     private ?string $country = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['job_ads:read', 'job_ads:write'])]
+    #[Groups(['job_ads:read', 'job_ads:write', 'company:read'])]
     private ?string $contractType = null;
 
     #[ORM\Column]
-    #[Groups(['job_ads:read', 'job_ads:write'])]
-    private ?float $salary = null;
+    #[Groups(['job_ads:read', 'job_ads:write', 'company:read'])]
+    private ?string $salary = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['job_ads:read', 'job_ads:write'])]
+    #[Groups(['job_ads:read', 'job_ads:write', 'company:read'])]
     private ?string $missionDuration = null;
-
-    #[ORM\Column(length: 255)]
-    #[Groups(['job_ads:read', 'job_ads:write'])]
-    private ?string $jobAdStatus = null;
 
     #[ORM\Column]
     #[Groups(['job_ads:read'])]
@@ -74,7 +70,7 @@ class JobAds
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'jobAds')]
-    #[Groups(['job_ads:read'])]
+    #[Groups(['job_ads:read', 'job_ads:write', 'company:read'])]
     private ?Company $company = null;
 
     public function __construct()
@@ -148,12 +144,12 @@ class JobAds
         return $this;
     }
 
-    public function getSalary(): ?float
+    public function getSalary(): ?string
     {
         return $this->salary;
     }
 
-    public function setSalary(float $salary): self
+    public function setSalary(string $salary): self
     {
         $this->salary = $salary;
 
@@ -168,18 +164,6 @@ class JobAds
     public function setMissionDuration(string $missionDuration): self
     {
         $this->missionDuration = $missionDuration;
-
-        return $this;
-    }
-
-    public function getJobAdStatus(): ?string
-    {
-        return $this->jobAdStatus;
-    }
-
-    public function setJobAdStatus(string $jobAdStatus): self
-    {
-        $this->jobAdStatus = $jobAdStatus;
 
         return $this;
     }

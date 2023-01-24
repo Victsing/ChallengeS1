@@ -31,4 +31,15 @@ export default {
   getCompanyRevenues() {
     return axios.get("/company_revenue_options");
   },
+  createJob(job) {
+    return axios.post("/job_ads", job, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    });
+  },
+  getCompany(companyId) {
+    return axios.get(`/companies/${companyId}`);
+  }
 }

@@ -48,15 +48,15 @@ class Company
     private ?\DateTimeInterface $creationDate = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['company:read', 'company:write'])]
+    #[Groups(['company:read', 'company:write', 'user:read'])]
     private ?string $address = null;
 
     #[ORM\Column(length: 100, nullable: true)]
-    #[Groups(['company:read', 'company:write'])]
+    #[Groups(['company:read', 'company:write', 'user:read'])]
     private ?string $website = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['company:read', 'company:write'])]
+    #[Groups(['company:read', 'company:write', 'user:read'])]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'companies')]
@@ -74,17 +74,17 @@ class Company
 
     #[ORM\ManyToOne(inversedBy: 'companies')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['company:read', 'company:write'])]
+    #[Groups(['company:read', 'company:write', 'user:read'])]
     private ?CompanySizeOptions $size = null;
 
     #[ORM\ManyToOne(inversedBy: 'companies')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['company:read', 'company:write'])]
+    #[Groups(['company:read', 'company:write', 'user:read'])]
     private ?CompanyRevenueOptions $revenue = null;
 
     #[ORM\ManyToOne(inversedBy: 'companies')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['company:read', 'company:write'])]
+    #[Groups(['company:read', 'company:write', 'user:read'])]
     private ?CompanySectorOptions $sector = null;
 
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: JobAds::class)]

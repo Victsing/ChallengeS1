@@ -10,6 +10,12 @@
           @click="this.$router.push('/admin/companies')"
           >Gérer les entreprises</v-btn>
       </div>
+      <div v-if="employer">
+        <v-btn
+          @click="this.$router.push('/employer/companies')"
+          icon="mdi-domain"
+          />
+      </div>
       <div v-if="isLoggedIn">
         <v-btn
           icon="mdi-account"
@@ -43,6 +49,11 @@ defineProps({
     default: 'black'
   },
   admin:
+  {
+    type: Boolean,
+    default: false
+  },
+  employer:
   {
     type: Boolean,
     default: false

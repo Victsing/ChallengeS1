@@ -1,5 +1,5 @@
 <template>
-  <BaseNaveBar :title="`Welcome ${decoded.firstname} ${decoded.lastname}`"/>
+  <BaseNaveBar :title="`Welcome ${decoded.firstname} ${decoded.lastname}`" :admin="isAdmin" :employer="isEmployer" />
   <div class="text-center">
     <h2 class="mb-4">Larudakoté</h2>
     <v-row>
@@ -43,9 +43,18 @@
 import BaseNaveBar from '@/components/BaseNaveBar.vue';
 import jwt_decode from 'jwt-decode';
 import HomeImage from '@/assets/home_image.svg';
+import { computed } from 'vue';
 
 const token = localStorage.getItem('token');
 const decoded = jwt_decode(token);
+
+const isAdmin = computed(() => {
+  return decoded.roles.includes('ROLE_ADMIN');
+});
+
+const isEmployer = computed(() => {
+  return decoded.roles.includes('ROLE_EMPLOYER');
+});
 </script>
 
 <style scoped>
