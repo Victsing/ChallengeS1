@@ -69,4 +69,13 @@ export default {
       }
     });
   },
+  getMe(userId) {
+    return axios.get(`/users/${userId}`,
+      {
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
+        }
+      }
+    );
+  },
 }
