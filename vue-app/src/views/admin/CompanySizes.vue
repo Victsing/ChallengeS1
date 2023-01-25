@@ -32,14 +32,14 @@
       <v-col cols="6" v-if="showForm">
         <v-form ref="form">
           <v-text-field v-model="editElement.title" :rules="rules" required outlined dense></v-text-field>
-          <v-btn class="mr-3" color="primary" @click="edit">Ajouter</v-btn>
+          <v-btn class="mr-3" color="primary" @click="edit">Modifier</v-btn>
           <v-btn variant="flat" color="error" @click="closeEdit">Close</v-btn>
         </v-form>
       </v-col>
     </v-row>
     <v-row>
       <v-col>
-        <v-btn color="primary" to="/admin/company/size/new"> New Company Size </v-btn>
+        <v-btn color="primary" @click="newDialog = true"> New Company Size </v-btn>
       </v-col>
     </v-row>
     <base-snack-bar
@@ -64,13 +64,21 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <!-- <v-alert color="warning" icon="$warning">
-      Vous vous apprétez à <strong>supprimer</strong> cette élément <strong></strong>. Cette action est irréversible.
-      Êtes-vous sûr de vouloir continuer ?
-    </v-alert> -->
+    <v-dialog v-model="newDialog">
+      <v-card>
+        <v-card-text>
+          <v-form>
+            <v-text-field v-model="newSize" placeholder="Nom de la nouvelle taille (ex: [501-1000])" outlined dense />
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="newDialog = false">Non</v-btn>
+          <v-btn color="warning" @click="addSize(); newDialog = false">Oui</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
-
-  <!-- Faire un tableau pour afficher la liste des tailles existantes -->
 </template>
 
 <script setup>
@@ -87,6 +95,8 @@ const showForm = ref(false);
 const isLoading = ref(false);
 let dialogElement = reactive({});
 let editElement = ref({ title: '', id: null });
+let newDialog = ref(false);
+let newSize = ref('');
 const rules = [
   (v) => !!v || 'Required',
   (v) => v.length >= 3 || 'Must be superior 3 characters'
@@ -95,6 +105,21 @@ const rules = [
 onMounted(async () => {
   await fetchCompagnySizes();
 });
+
+const addSize = () => {
+  AdminApi.createCompanySize(newSize.value).then((response) => {
+    if (response.status === 201) {
+      snackbarText.value = 'Taille ajoutée avec succès';
+      snackbarColor.value = 'success';
+      snackbar.value = true;
+      fetchCompagnySizes();
+    } else {
+      snackbarText.value = 'Une erreur est survenue';
+      snackbarColor.value = 'error';
+      snackbar.value = true;
+    }
+  });
+};
 
 const handleDialog = (value) => {
   dialog.value = value;
@@ -107,7 +132,6 @@ const fetchCompagnySizes = async() => {
   isLoading.value = true;
   const response = await AdminApi.getCompanySizes();
   if (response.status === 200) {
-    console.log(response.data['hydra:member']);
     companySizes.value = response.data['hydra:member'];
   } else {
     console.error('Error while fetching company sizes');
@@ -173,9 +197,15 @@ const remove = async () => {
       snackbar.value = true;
     }
   } catch (error) {
-    snackbarText.value = 'Une erreur est survenue';
-    snackbarColor.value = 'error';
-    snackbar.value = true;
+    if (error.response.data["hydra:description"].includes('Foreign key violation')) {
+      snackbarText.value = 'La taille est peut-être utilisée par une entreprise, veuillez vérifier avant de supprimer';
+      snackbarColor.value = 'error';
+      snackbar.value = true;
+    } else {
+      snackbarText.value = 'Une erreur est survenue';
+      snackbarColor.value = 'error';
+      snackbar.value = true;
+    }
   }
 
   dialog.value = false;

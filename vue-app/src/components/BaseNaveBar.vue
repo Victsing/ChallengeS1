@@ -18,6 +18,10 @@
       </div>
       <div v-if="isLoggedIn">
         <v-btn
+          icon="mdi-email"
+          @click="this.$router.push('/job-applications')"
+        />
+        <v-btn
           icon="mdi-account"
           @click="this.$router.push('/profile')"
         />

@@ -60,6 +60,43 @@ const routes = [
         beforeEnter: (to, from, next) => {
           if (isAuthenticated()) {
             if (isAdmin()) {
+              next('/admin/jobs');
+            }
+            next();
+          } else {
+            next('/authentication');
+          }
+        },
+        path: '/jobs',
+        children: [
+          {
+            path: '',
+            name: 'Jobs',
+            component: () => import('@/views/Jobs.vue')
+          },
+          {
+            path: ':id',
+            name: 'Job',
+            component: () => import('@/views/Job.vue')
+          }
+        ]
+      },
+      {
+        beforeEnter: (to, from, next) => {
+          if (isAuthenticated()) {
+            next();
+          } else {
+            next('/authentication');
+          }
+        },
+        path: '/job-applications',
+        name: 'JobApplications',
+        component: () => import('@/views/JobApplications.vue')
+      },
+      {
+        beforeEnter: (to, from, next) => {
+          if (isAuthenticated()) {
+            if (isAdmin()) {
               next('/admin');
             }
             next('/home');

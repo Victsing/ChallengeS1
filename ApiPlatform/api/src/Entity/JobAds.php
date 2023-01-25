@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\JobAdsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
@@ -30,35 +32,35 @@ class JobAds
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column()]
-    #[Groups(['job_ads:read', 'company:read'])]
+    #[Groups(['job_ads:read', 'company:read', 'user:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['job_ads:read', 'job_ads:write', 'company:read'])]
+    #[Groups(['job_ads:read', 'job_ads:write', 'company:read', 'user:read'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['job_ads:read', 'job_ads:write', 'company:read'])]
+    #[Groups(['job_ads:read', 'job_ads:write', 'company:read', 'user:read'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['job_ads:read', 'job_ads:write', 'company:read'])]
+    #[Groups(['job_ads:read', 'job_ads:write', 'company:read', 'user:read'])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['job_ads:read', 'job_ads:write', 'company:read'])]
+    #[Groups(['job_ads:read', 'job_ads:write', 'company:read', 'user:read'])]
     private ?string $country = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['job_ads:read', 'job_ads:write', 'company:read'])]
+    #[Groups(['job_ads:read', 'job_ads:write', 'company:read', 'user:read'])]
     private ?string $contractType = null;
 
     #[ORM\Column]
-    #[Groups(['job_ads:read', 'job_ads:write', 'company:read'])]
+    #[Groups(['job_ads:read', 'job_ads:write', 'company:read', 'user:read'])]
     private ?string $salary = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['job_ads:read', 'job_ads:write', 'company:read'])]
+    #[Groups(['job_ads:read', 'job_ads:write', 'company:read', 'user:read'])]
     private ?string $missionDuration = null;
 
     #[ORM\Column]
@@ -73,10 +75,15 @@ class JobAds
     #[Groups(['job_ads:read', 'job_ads:write', 'company:read'])]
     private ?Company $company = null;
 
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'jobApplications')]
+    #[Groups(['job_ads:read', 'job_ads:write'])]
+    private Collection $candidates;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
+        $this->candidates = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -200,6 +207,30 @@ class JobAds
     public function setCompany(?Company $company): self
     {
         $this->company = $company;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getCandidates(): Collection
+    {
+        return $this->candidates;
+    }
+
+    public function addCandidate(User $candidate): self
+    {
+        if (!$this->candidates->contains($candidate)) {
+            $this->candidates[] = $candidate;
+        }
+
+        return $this;
+    }
+
+    public function removeCandidate(User $candidate): self
+    {
+        $this->candidates->removeElement($candidate);
 
         return $this;
     }
