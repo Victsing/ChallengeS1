@@ -1,5 +1,5 @@
 <template>
-  <BaseNaveBar title="Admin panel" />
+  <BaseNaveBar title="Admin panel" :admin="admin" />
   <v-container>
     <v-row>
       <v-col>
@@ -27,7 +27,6 @@
           </v-list-item>
         </v-list>
         <h3 v-else class="mb-5">Vous n'avez pas encore incrit de valeurs.</h3>
-        <!-- <v-list class="mb-4" :items="companySizesList" /> -->
       </v-col>
       <v-col cols="6" v-if="showForm">
         <v-form ref="form">
@@ -73,8 +72,8 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="newDialog = false">Non</v-btn>
-          <v-btn color="warning" @click="addSize(); newDialog = false">Oui</v-btn>
+          <v-btn @click="newDialog = false">Annuler</v-btn>
+          <v-btn color="warning" @click="addSize(); newDialog = false">Ajouter</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -85,7 +84,12 @@
 import { BaseNaveBar, BaseTitle, BaseSnackBar } from '@/components';
 import AdminApi from '@/backend/AdminApi';
 import { onMounted, ref, computed, reactive } from 'vue';
+import { getDataFromToken } from '@/mixins';
 
+let tokenData = getDataFromToken();
+let admin = computed(() => {
+  return tokenData.roles.includes('ROLE_ADMIN');
+});
 const companySizes = ref([]);
 const snackbar = ref(false);
 const snackbarText = ref('');

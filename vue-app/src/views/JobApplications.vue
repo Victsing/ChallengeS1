@@ -3,7 +3,13 @@
     title="Job Applications"
     :employer="employer"
   />
-  <v-table>
+  <!-- if jobApplications is empty, display a message -->
+  <div v-if="jobApplications.length === 0">
+    <h2>
+      You have not applied for any job yet.
+    </h2>
+  </div>
+  <v-table v-else>
     <thead>
       <tr>
         <th>Job Title</th>

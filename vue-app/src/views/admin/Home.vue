@@ -1,5 +1,5 @@
 <template>
-  <BaseNaveBar title="Admin panel" />
+  <BaseNaveBar title="Admin panel" :admin="admin" />
   <div class="text-center">
     <v-img max-height="40vh" :src="AdminImage" />
   </div>
@@ -32,6 +32,12 @@
 import { BaseNaveBar, BaseTitle } from '@/components';
 import { getDataFromToken } from '@/mixins';
 import AdminImage from '@/assets/admin_image.svg';
+import { computed } from 'vue';
+
+let tokenData = getDataFromToken();
+let admin = computed(() => {
+  return tokenData.roles.includes('ROLE_ADMIN');
+});
 
 const cardsContent = [
   {
@@ -42,7 +48,7 @@ const cardsContent = [
   {
     title: "Panel d'administration des offres",
     text: 'Vous pouvez accéder à la liste des offres, les modifier ou les supprimer.',
-    link: '/admin/offers'
+    link: '/admin/jobs'
   },
   {
     title: "Panel d'administration des entreprises",
@@ -59,6 +65,11 @@ const cardsContent = [
     text: 'Vous pouvez accéder à la liste des tailles d\'entreprise, les modifier ou les supprimer.',
     link: '/admin/company/sizes'
   },
+  {
+    title: "Panel d'administration des chiffres d'affaires d'entreprise",
+    text: 'Vous pouvez accéder à la liste des chiffres d\'affaires d\'entreprise, les modifier ou les supprimer.',
+    link: '/admin/company/revenues'
+  }
 ];
 
 </script>

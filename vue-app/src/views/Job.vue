@@ -23,9 +23,26 @@
       @click="dialog = true"
       color="primary"
       class="mb-16 ml-4"
+      v-if="!isAdmin"
     >
       Apply
     </v-btn>
+    <div v-else>
+      <v-btn
+        @click="this.$router.push(`/admin/jobs/${job.id}/edit`)"
+        color="primary"
+        class="mb-16 ml-4"
+      >
+        Edit
+      </v-btn>
+      <v-btn
+        @click="deleteJob(job.id)"
+        color="error"
+        class="mb-16 ml-4"
+      >
+        Delete
+      </v-btn>
+    </div>
     <v-btn
       @click="this.$router.push(`/jobs`)"
       color="error"
@@ -87,7 +104,8 @@ const isCandidate = computed(() => {
 });
 
 const candidate = () => {
-  if (isCandidate) {
+  debugger;
+  if (isCandidate === true) {
     console.log('Vous avez déjà postulé pour ce job');
     snackbar.value = true;
     snackbarText = 'Vous avez déjà postulé pour ce job';
@@ -105,7 +123,6 @@ onMounted(() => {
   JobsApi.getJob(route.params.id).then((response) => {
     job.value = response.data;
     candidates.value = response.data.candidates;
-    console.log(job);
   }).catch((error) => {
     console.log(error);
   });
@@ -115,5 +132,11 @@ const isEmployer = computed(() => {
   const token = localStorage.getItem('token');
   const decoded = jwt_decode(token);
   return decoded.roles.includes('ROLE_EMPLOYER');
+});
+
+const isAdmin = computed(() => {
+  const token = localStorage.getItem('token');
+  const decoded = jwt_decode(token);
+  return decoded.roles.includes('ROLE_ADMIN');
 });
 </script>

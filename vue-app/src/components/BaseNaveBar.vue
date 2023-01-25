@@ -1,16 +1,16 @@
 <template>
-  <v-app-bar flat :color="color">
-    <img :src="AppLogo" alt="logo" class="ml-4" @click="this.$router.push('/home')" />
+  <v-app-bar flat :color="props.color">
+    <img :src="AppLogo" alt="logo" class="ml-4" @click="logoRedirect" />
     <v-app-bar-title>
-      {{ title }}
+      {{ props.title }}
     </v-app-bar-title>
     <template v-slot:append>
-      <div v-if="admin">
+      <div v-if="props.admin">
         <v-btn
           @click="this.$router.push('/admin/companies')"
           >Gérer les entreprises</v-btn>
       </div>
-      <div v-if="employer">
+      <div v-if="props.employer">
         <v-btn
           @click="this.$router.push('/employer/companies')"
           icon="mdi-domain"
@@ -43,7 +43,7 @@ const router = useRouter()
 
 defineEmits(['navbarHome']);
 
-defineProps({
+const props = defineProps({
   title: {
     type: String,
     default: 'Welcome to the Challenge Stack'
@@ -72,4 +72,12 @@ const logout = () => {
 const isLoggedIn = computed(() => {
   return localStorage.getItem('token') !== null;
 })
+
+const logoRedirect = () => {
+  if (props.admin) {
+    router.push('/admin');
+  } else {
+    router.push('/home');
+  }
+}
 </script>

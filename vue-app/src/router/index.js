@@ -59,9 +59,6 @@ const routes = [
       {
         beforeEnter: (to, from, next) => {
           if (isAuthenticated()) {
-            if (isAdmin()) {
-              next('/admin/jobs');
-            }
             next();
           } else {
             next('/authentication');
@@ -156,6 +153,21 @@ const routes = [
             path: '',
             component: () => import('@/views/admin/Home.vue'),
             name: 'AdminHome'
+          },
+          {
+            path: 'jobs',
+            children: [
+              {
+                path: '',
+                name: 'AdminJobs',
+                component: () => import('@/views/Jobs.vue')
+              },
+              {
+                path: ':id',
+                name: 'AdminJob',
+                component: () => import('@/views/Job.vue')
+              }
+            ],
           },
           {
             path: 'company/sizes',

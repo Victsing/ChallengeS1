@@ -24,29 +24,60 @@
         <td>{{ job.contractType }}</td>
         <td>
           <v-btn
-            @click="this.$router.push(`/jobs/${job.id}`)"
+            @click="isAdmin ? this.$router.push(`/admin/jobs/${job.id}`) : this.$router.push(`/jobs/${job.id}`)"
             icon="mdi-eye"
           />
           <v-btn
-            @click="deleteJob(job.id)"
+            @click="dialog = true; selectedJob = job"
             icon="mdi-email"
-            class=""
+            v-if="!isAdmin"
           />
         </td>
       </tr>
     </tbody>
   </v-table>
+  <v-dialog v-model="dialog" persistent>
+    <v-card>
+      <v-card-text>
+        Vous allez postuler pour ce job, êtes-vous sûr ?
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn @click="dialog = false; selectedJob = {}">Non</v-btn>
+        <v-btn color="warning" @click="candidate(); dialog = false">Oui</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  <BaseSnackBar
+    v-model="snackbar"
+    :snackbar="snackbar"
+    :text="snackbarText"
+    :color="snackbarColor"
+    @closeSnackbar="snackbar = false"
+  />
 </template>
 
 <script setup>
-import { BaseNaveBar, BaseTitle, BaseSnackBar } from '@/components';
-import AdminApi from '@/backend/AdminApi';
-import { onMounted, ref, computed, reactive } from 'vue';
+import { BaseNaveBar, BaseSnackBar } from '@/components';
+import UserApi from '@/backend/UserApi';
+import { onMounted, ref, computed } from 'vue';
 import JobsApi from '@/backend/JobsApi';
 import jwt_decode from 'jwt-decode';
 import { useRoute, useRouter } from 'vue-router';
 
+const route = useRoute();
+const router = useRouter();
+
+let decoded = jwt_decode(localStorage.getItem('token'));
+
+
 const jobs = ref([]);
+let dialog = ref(false);
+let selectedJob = ref({});
+
+let snackbar = ref(false);
+let snackbarText = '';
+let snackbarColor = '';
 
 onMounted(async () => {
   await JobsApi.getJobs().then((response) => {
@@ -54,9 +85,34 @@ onMounted(async () => {
   });
 });
 
+const candidate = () => {
+  if (isCandidate()) {
+    console.log('Vous avez déjà postulé pour ce job');
+    snackbar.value = true;
+    snackbarText = 'Vous avez déjà postulé pour ce job';
+    snackbarColor = 'error';
+  } else {
+    UserApi.apply(decoded.id, selectedJob.value.id).then(() => {
+      router.push('/job-applications');
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+};
+
+const isCandidate = (() => {
+  return selectedJob.value.candidates.some((candidate) => candidate.id === decoded.id);
+});
+
 let isEmployer = computed(() => {
   const token = localStorage.getItem('token');
   const decoded = jwt_decode(token);
   return decoded.roles.includes('ROLE_EMPLOYER');
+});
+
+let isAdmin = computed(() => {
+  const token = localStorage.getItem('token');
+  const decoded = jwt_decode(token);
+  return decoded.roles.includes('ROLE_ADMIN');
 });
 </script>
