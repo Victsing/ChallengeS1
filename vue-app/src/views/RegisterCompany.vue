@@ -166,10 +166,11 @@ const registerCompany = async () => {
       if (response.status === 201) {
         await AuthentificationApi.addRoleEmployer(decoded.id);
         snackbar.value = true;
-        snackbarText.value = 'Company registered successfully';
+        snackbarText.value = 'Company registered successfully, you will be redirected to the login page';
         snackbarColor.value = 'success';
         setTimeout(() => {
-          router.push('/home');
+          localStorage.removeItem('token');
+          router.push('/authentication');
         }, 3000);
       } else {
         snackbar.value = true;

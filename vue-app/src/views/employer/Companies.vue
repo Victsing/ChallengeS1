@@ -5,13 +5,6 @@
   />
   <div class="d-flex">
     <h1>Employer Companies</h1>
-    <v-btn
-      @click="this.$router.push('/employer/companies/new')"
-      color="primary"
-      class="mb-16 ml-4"
-    >
-      Create a new company
-    </v-btn>
   </div>
   <v-table>
     <thead>
