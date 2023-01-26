@@ -46,5 +46,5 @@ jobs:
           password: 'locman123-'
           script: |
             cd ChallengeS1/vue-app
-            docker compose -d exec node npm run dev
+            docker compose exec -d node npm run dev
     needs: install
