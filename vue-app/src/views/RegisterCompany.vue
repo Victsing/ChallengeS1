@@ -15,10 +15,12 @@
         <v-select
           label="Company size"
           variant="outlined"
-          v-model="companySize"
           required
           type="select"
-          :items="companySizeOptions"
+          :items="companySizes"
+          v-model="companySize"
+          item-value="id"
+          item-title="size"
         />
         <v-text-field
           label="Company creation date"
@@ -30,10 +32,12 @@
         <v-select
           label="Company revenues"
           variant="outlined"
-          v-model="companyRevenues"
+          v-model="companyRevenue"
           required
           type="select"
-          :items="companyRevenuesOptions"
+          :items="companyRevenues"
+          item-value="id"
+          item-title="revenue"
         />
         <v-text-field
           label="Company address"
@@ -47,7 +51,9 @@
           v-model="companySector"
           required
           type="select"
-          :items="companySectorOptions"
+          :items="companySectors"
+          item-value="id"
+          item-title="sector"
         />
         <v-text-field
           label="Company website"
@@ -83,15 +89,33 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import BaseNaveBar from '@/components/BaseNaveBar.vue';
 import BaseSnackbar from '@/components/BaseSnackbar.vue';
 import jwt_decode from 'jwt-decode';
 import CompanyImage from '@/assets/company_image.svg';
 import CompanyApi from '@/backend/CompanyApi';
+import AuthentificationApi from '@/backend/AuthentificationApi';
+
 
 const router = useRouter();
+
+let companySizes = ref([]);
+let companyRevenues = ref([]);
+let companySectors = ref([]);
+
+onMounted(() => {
+  CompanyApi.getCompanySizes().then((response) => {
+    companySizes.value = response.data['hydra:member']
+  });
+  CompanyApi.getCompanyRevenues().then((response) => {
+    companyRevenues.value = response.data['hydra:member']
+  });
+  CompanyApi.getCompanySectors().then((response) => {
+    companySectors.value = response.data['hydra:member']
+  });
+});
 
 let snackbar = ref(false);
 let snackbarText = ref('');
@@ -105,7 +129,7 @@ const decoded = jwt_decode(token);
 let companyName = ref('');
 let companySize = ref('');
 let companyCreationDate = ref('');
-let companyRevenues = ref('');
+let companyRevenue = ref('');
 let companyAddress = ref('');
 let companySector = ref('');
 let companyWebsite = ref('');
@@ -118,73 +142,48 @@ const rules = [
   (v) => /^\d+$/.test(v) || 'Must be digits',
 ];
 
-const companySizeOptions = [
-  '1-10',
-  '11-50',
-  '51-200',
-  '201-500',
-  '501-1000',
-  '1001-5000',
-  '5001-10000',
-  '10001+'
-]
-
-const companyRevenuesOptions = [
-  '0-100k',
-  '100k-500k',
-  '500k-1M',
-  '1M-5M',
-  '5M-10M',
-  '10M-50M',
-  '50M-100M',
-  '100M+'
-]
-
-const companySectorOptions = [
-  'Tech',
-  'Health',
-  'Finance',
-  'Education',
-  'Energy',
-  'Food',
-  'Retail',
-  'Transport',
-  'Other'
-]
-
 const registerCompany = async () => {
   disableButton.value = true;
-  CompanyApi.register(
-    companyName.value,
-    companySize.value,
-    companyCreationDate.value,
-    companyRevenues.value,
-    companyAddress.value,
-    companySector.value,
-    companyWebsite.value,
-    companyDescription.value,
-    `/users/${decoded.id}`,
-    companySiret.value,
-    new Date().toISOString()
-  ).then((response) => {
-    if (response.status === 201) {
-      snackbar.value = true;
-      snackbarText.value = 'Company registered successfully';
-      snackbarColor.value = 'success';
-      setTimeout(() => {
-        router.push('/home');
-      }, 3000);
-    } else {
+  if (companySiret.value.length > 14 || !/^\d+$/.test(companySiret.value)) {
+    snackbar.value = true;
+    snackbarText.value = 'SIRET must be 14 digits';
+    snackbarColor.value = 'error';
+    disableButton.value = false;
+  } else {
+    CompanyApi.register(
+      companyName.value,
+      `/company_size_options/${companySize.value}`,
+      companyCreationDate.value,
+      `/company_revenue_options/${companyRevenue.value}`,
+      companyAddress.value,
+      `/company_sector_options/${companySector.value}`,
+      companyWebsite.value,
+      companyDescription.value,
+      `/users/${decoded.id}`,
+      companySiret.value,
+      new Date().toISOString()
+    ).then(async (response) => {
+      if (response.status === 201) {
+        await AuthentificationApi.addRoleEmployer(decoded.id);
+        snackbar.value = true;
+        snackbarText.value = 'Company registered successfully, you will be redirected to the login page';
+        snackbarColor.value = 'success';
+        setTimeout(() => {
+          localStorage.removeItem('token');
+          router.push('/authentication');
+        }, 3000);
+      } else {
+        snackbar.value = true;
+        snackbarText.value = 'Une erreur est survenue, veuillez réessayer'
+        snackbarColor.value = 'error';
+        disableButton.value = false;
+      }
+    }).catch(() => {
       snackbar.value = true;
       snackbarText.value = 'Une erreur est survenue, veuillez réessayer'
       snackbarColor.value = 'error';
       disableButton.value = false;
-    }
-  }).catch(() => {
-    snackbar.value = true;
-    snackbarText.value = 'Une erreur est survenue, veuillez réessayer'
-    snackbarColor.value = 'error';
-    disableButton.value = false;
-  });
+    });
+  }
 }
 </script>

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CompanyRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
@@ -34,39 +36,27 @@ class Company
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column()]
-    #[Groups(['company:read', 'user:read'])]
+    #[Groups(['company:read', 'user:read', 'job_ads:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:read', 'company:read', 'user:write', 'company:write'])]
+    #[Groups(['user:read', 'company:read', 'user:write', 'company:write', 'job_ads:read'])]
     private ?string $name = null;
-
-    #[ORM\Column(length: 25)]
-    #[Groups(['company:read', 'company:write'])]
-    private ?string $size = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Groups(['company:read', 'company:write'])]
     private ?\DateTimeInterface $creationDate = null;
 
-    #[ORM\Column(length: 50)]
-    #[Groups(['company:read', 'company:write'])]
-    private ?string $revenues = null;
-
     #[ORM\Column(length: 255)]
-    #[Groups(['company:read', 'company:write'])]
+    #[Groups(['company:read', 'company:write', 'user:read', 'job_ads:read'])]
     private ?string $address = null;
 
-    #[ORM\Column(length: 100)]
-    #[Groups(['company:read', 'company:write'])]
-    private ?string $sector = null;
-
     #[ORM\Column(length: 100, nullable: true)]
-    #[Groups(['company:read', 'company:write'])]
+    #[Groups(['company:read', 'company:write', 'user:read', 'job_ads:read'])]
     private ?string $website = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['company:read', 'company:write'])]
+    #[Groups(['company:read', 'company:write', 'user:read'])]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'companies')]
@@ -81,6 +71,30 @@ class Company
     #[ORM\Column(type: Types::BIGINT)]
     #[Groups(['company:read', 'company:write'])]
     private ?string $siret = null;
+
+    #[ORM\ManyToOne(inversedBy: 'companies')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['company:read', 'company:write', 'user:read'])]
+    private ?CompanySizeOptions $size = null;
+
+    #[ORM\ManyToOne(inversedBy: 'companies')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['company:read', 'company:write', 'user:read'])]
+    private ?CompanyRevenueOptions $revenue = null;
+
+    #[ORM\ManyToOne(inversedBy: 'companies')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['company:read', 'company:write', 'user:read', 'job_ads:read'])]
+    private ?CompanySectorOptions $sector = null;
+
+    #[ORM\OneToMany(mappedBy: 'company', targetEntity: JobAds::class)]
+    #[Groups(['company:read', 'job_ads:read'])]
+    private Collection $jobAds;
+
+    public function __construct()
+    {
+        $this->jobAds = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -99,18 +113,6 @@ class Company
         return $this;
     }
 
-    public function getSize(): ?string
-    {
-        return $this->size;
-    }
-
-    public function setSize(string $size): self
-    {
-        $this->size = $size;
-
-        return $this;
-    }
-
     public function getCreationDate(): ?\DateTimeInterface
     {
         return $this->creationDate;
@@ -123,18 +125,6 @@ class Company
         return $this;
     }
 
-    public function getRevenues(): ?string
-    {
-        return $this->revenues;
-    }
-
-    public function setRevenues(string $revenues): self
-    {
-        $this->revenues = $revenues;
-
-        return $this;
-    }
-
     public function getAddress(): ?string
     {
         return $this->address;
@@ -143,18 +133,6 @@ class Company
     public function setAddress(string $address): self
     {
         $this->address = $address;
-
-        return $this;
-    }
-
-    public function getSector(): ?string
-    {
-        return $this->sector;
-    }
-
-    public function setSector(string $sector): self
-    {
-        $this->sector = $sector;
 
         return $this;
     }
@@ -195,6 +173,23 @@ class Company
         return $this;
     }
 
+    /**
+     * @return Collection<int, JobAds>
+     */
+    public function getJobAds(): Collection
+    {
+        return $this->jobAds;
+    }
+
+    public function addJobAd(JobAds $jobAd): self
+    {
+        if (!$this->jobAds->contains($jobAd)) {
+            $this->jobAds[] = $jobAd;
+            $jobAd->setCompany($this);
+        }
+
+        return $this;
+    }
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
@@ -207,6 +202,17 @@ class Company
         return $this;
     }
 
+
+    public function removeJobAd(JobAds $jobAd): self
+    {
+        if ($this->jobAds->removeElement($jobAd)) {
+            // set the owning side to null (unless already changed)
+            if ($jobAd->getCompany() === $this) {
+                $jobAd->setCompany(null);
+            }
+        }
+        return $this;
+    }
     public function getSiret(): ?string
     {
         return $this->siret;
@@ -215,6 +221,42 @@ class Company
     public function setSiret(string $siret): self
     {
         $this->siret = $siret;
+
+        return $this;
+    }
+
+    public function getSize(): ?CompanySizeOptions
+    {
+        return $this->size;
+    }
+
+    public function setSize(?CompanySizeOptions $size): self
+    {
+        $this->size = $size;
+
+        return $this;
+    }
+
+    public function getRevenue(): ?CompanyRevenueOptions
+    {
+        return $this->revenue;
+    }
+
+    public function setRevenue(?CompanyRevenueOptions $revenue): self
+    {
+        $this->revenue = $revenue;
+
+        return $this;
+    }
+
+    public function getSector(): ?CompanySectorOptions
+    {
+        return $this->sector;
+    }
+
+    public function setSector(?CompanySectorOptions $sector): self
+    {
+        $this->sector = $sector;
 
         return $this;
     }

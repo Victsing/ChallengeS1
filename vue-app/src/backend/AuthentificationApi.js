@@ -57,6 +57,18 @@ export default {
       }
     });
   },
+  addRoleEmployer: (userId) => {
+    return axios.patch(`/users/${userId}`,
+    {
+      "roles": ["ROLE_EMPLOYER"]
+    },
+    {
+      headers: {
+        "Content-Type": "application/merge-patch+json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+      }
+    });
+  },
   getMe(userId) {
     return axios.get(`/users/${userId}`,
       {

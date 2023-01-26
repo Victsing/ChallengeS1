@@ -65,15 +65,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column()]
-    #[Groups(['user:read', 'company:read'])]
+    #[Groups(['user:read', 'company:read', 'job_ads:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Groups(['user:read', 'user:write', 'user:getToken', 'company:read'])]
+    #[Groups(['user:read', 'user:write', 'user:getToken', 'company:read', 'job_ads:read'])]
     private ?string $email = null;
 
     #[ORM\Column]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:write'])]
     private array $roles = [];
 
     /**
@@ -91,11 +91,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $token = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:read', 'user:write', 'company:read'])]
+    #[Groups(['user:read', 'user:write', 'company:read', 'job_ads:read'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:read', 'user:write', 'company:read'])]
+    #[Groups(['user:read', 'user:write', 'company:read', 'job_ads:read'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
@@ -110,11 +110,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read', 'user:write'])]
     private Collection $companies;
 
+    #[ORM\ManyToMany(targetEntity: JobAds::class, mappedBy: 'candidates')]
+    #[Groups(['user:read', 'user:write'])]
+    private Collection $jobApplications;
+
     public function __construct()
     {
         $this->roles = array('ROLE_USER');
         $this->companies = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
+        $this->jobApplications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -283,6 +288,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, JobAds>
+     */
+    public function getJobApplications(): Collection
+    {
+        return $this->jobApplications;
+    }
+
+    public function addJobApplication(JobAds $jobApplication): self
+    {
+        if (!$this->jobApplications->contains($jobApplication)) {
+            $this->jobApplications[] = $jobApplication;
+            $jobApplication->addCandidate($this);
+        }
+
+        return $this;
+    }
+
+    public function removeJobApplication(JobAds $jobApplication): self
+    {
+        if ($this->jobApplications->removeElement($jobApplication)) {
+            $jobApplication->removeCandidate($this);
+        }
 
         return $this;
     }

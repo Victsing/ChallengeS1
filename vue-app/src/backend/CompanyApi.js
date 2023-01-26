@@ -6,7 +6,7 @@ export default {
       name: companyName,
       size: companySize,
       creationDate: companyCreationDate,
-      revenues: companyRevenues,
+      revenue: companyRevenues,
       address: companyAddress,
       sector: companySecor,
       website: companyWebsite,
@@ -22,4 +22,24 @@ export default {
       }
     });
   },
+  getCompanySizes() {
+    return axios.get("/company_size_options");
+  },
+  getCompanySectors() {
+    return axios.get("/company_sector_options");
+  },
+  getCompanyRevenues() {
+    return axios.get("/company_revenue_options");
+  },
+  createJob(job) {
+    return axios.post("/job_ads", job, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    });
+  },
+  getCompany(companyId) {
+    return axios.get(`/companies/${companyId}`);
+  }
 }
