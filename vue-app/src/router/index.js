@@ -9,7 +9,6 @@ import UserProfile from '@/views/UserProfile.vue';
 import ValidateAccount from '@/views/ValidateAccount.vue';
 import { getDataFromToken } from '@/mixins';
 import Home from '@/views/Home.vue';
-import AdminNewCompanySize from '@/views/admin/NewCompanySize.vue';
 
 const isAuthenticated = () => {
   const token = localStorage.getItem('token');
@@ -186,11 +185,6 @@ const routes = [
             component: () => import('@/views/admin/CompanyRevenues.vue')
           },
           {
-            path: 'company/size/new',
-            name: 'AdminNewCompanySize',
-            component: AdminNewCompanySize
-          },
-          {
             path: 'company/sector/new',
             name: 'AdminNewCompanySector',
             component: () => import('@/views/admin/NewCompanySector.vue')
@@ -225,11 +219,6 @@ const routes = [
               name: 'EmployerCompanies',
               component: () => import('@/views/employer/Companies.vue')
               },
-              // {
-              //   path: 'new',
-              //   name: 'EmployerNewCompany',
-              //   component: () => import('@/views/employer/NewCompany.vue')
-              // },
             ]
           },
           {
