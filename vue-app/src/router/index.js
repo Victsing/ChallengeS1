@@ -9,7 +9,6 @@ import UserProfile from '@/views/UserProfile.vue';
 import ValidateAccount from '@/views/ValidateAccount.vue';
 import { getDataFromToken } from '@/mixins';
 import Home from '@/views/Home.vue';
-import NewCompanySize from '@/views/admin/NewCompanySize.vue';
 
 const isAuthenticated = () => {
   const token = localStorage.getItem('token');
@@ -188,7 +187,7 @@ const routes = [
           {
             path: 'company/size/new',
             name: 'AdminNewCompanySize',
-            component: NewCompanySize
+            component: () => import('@/views/admin/NewCompanySize.vue')
           },
           {
             path: 'company/sector/new',
