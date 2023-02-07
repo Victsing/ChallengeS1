@@ -32,6 +32,7 @@ jobs:
           script: |
             cd ChallengeS1/vue-app
             docker compose down
+            docker compose up -d
             docker compose exec node npm install
     needs: update
 
