@@ -127,6 +127,7 @@ import BaseNaveBar from '@/components/BaseNaveBar.vue';
 import PersonalInfo from '@/assets/personal_info.svg';
 import BaseSnackbar from "@/components/BaseSnackbar.vue";
 import { useRouter, useRoute } from "vue-router";
+import { getDataFromToken } from "@/mixins";
 
 const route = useRoute();
 
@@ -188,7 +189,14 @@ const login = async (e) => {
     loginPassword.value
   ).then((response) => {
     localStorage.setItem("token", response.data.token);
-    router.push("/home");
+    let data = getDataFromToken();
+    console.log(data);
+    console.log(data.roles.includes("ROLE_ADMIN"));
+    if (data.roles.includes("ROLE_ADMIN")) {
+      router.push("/admin");
+    } else {
+      router.push("/home");
+    }
   }).catch(() => {
     snackbar.value = true;
     snackbarText.value = "Email ou mot de passe incorrect";

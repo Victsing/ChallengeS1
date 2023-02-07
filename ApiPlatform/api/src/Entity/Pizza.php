@@ -20,10 +20,10 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
 
-#[ApiResource(
-    normalizationContext: ['groups' => ['pizza_read']],
-    denormalizationContext: ['groups' => ['pizza_write']]
-)]
+// #[ApiResource(
+//     normalizationContext: ['groups' => ['pizza_read']],
+//     denormalizationContext: ['groups' => ['pizza_write']]
+// )]
 #[Get(
     normalizationContext: ['groups' => ['pizza_get', 'pizza_read']]
 )]
