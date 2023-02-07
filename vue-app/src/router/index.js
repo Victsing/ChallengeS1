@@ -224,11 +224,11 @@ const routes = [
               name: 'EmployerCompanies',
               component: () => import('@/views/employer/Companies.vue')
               },
-              {
-                path: 'new',
-                name: 'EmployerNewCompany',
-                component: () => import('@/views/employer/NewCompany.vue')
-              },
+              // {
+              //   path: 'new',
+              //   name: 'EmployerNewCompany',
+              //   component: () => import('@/views/employer/NewCompany.vue')
+              // },
             ]
           },
           {
