@@ -18,7 +18,7 @@ jobs:
           script: |
             cd ChallengeS1
             git pull
-            
+
   install:
     name: Installing new packages
     runs-on: ubuntu-latest
@@ -32,7 +32,8 @@ jobs:
           script: |
             cd ChallengeS1/vue-app
             docker compose exec node npm install
-            
+    needs: update
+
   run:
     name: Executing app
     runs-on: ubuntu-latest
@@ -46,3 +47,4 @@ jobs:
           script: |
             cd ChallengeS1/vue-app
             docker compose exec node npm run dev
+    needs: install
