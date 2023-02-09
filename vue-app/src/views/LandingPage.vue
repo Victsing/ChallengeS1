@@ -3,11 +3,13 @@
 <template>
   <div class="bground">
     <div class="landing-container">
-      <TheLogo class="logo-margin" />
-      <div class="d-flex justify-space-between mb-16">
-        <BaseTitleWithDescription title="Challenge Stack S1">
+      <!-- <TheLogo class="logo-margin" /> -->
+      <BaseNaveBar color="white" class=" font-weight-black mb-16" />
+
+      <div class="d-flex justify-space-between mt-16 mb-16">
+        <BaseTitleWithDescription title="Challenge Stack S1" class="mt-8">
           <div class="red--text mb-12">
-            Projet réalisé par Pierre BERGER, Mustapha Boukhatem, Locman DIawadoh et Clarence Potel.
+            Projet réalisé par Pierre BERGER, Mustapha Boukhatem, Locman Diawadoh et Clarence Potel.
             Ce projet à pour but de chercher et de postuler des offres d'emploi. Ce projet est réalisé
             avec la stack suivante : VueJS et Api Platform.
           </div>
@@ -54,6 +56,7 @@
 
 <script setup>
 import TheLogo from '../components/TheLogo.vue';
+import BaseNaveBar from '../components/BaseNaveBar.vue';
 import BaseTitleWithDescription from '../components/BaseTitleWithDescription.vue';
 import BaseRoundButton from '../components/BaseRoundButton.vue';
 import LandingImage from '../assets/landing_image.png';

@@ -1,9 +1,9 @@
 <template>
-  <div class="d-flex align-center py-4">
+  <div class="d-flex align-center ">
     <div>
       <v-img height="32" width="32" :src="AppLogo" />
     </div>
-    <div class="ml-4">
+    <div class="ml-4 ">
       <BaseTitle>{{ props.title }}</BaseTitle>
     </div>
   </div>
