@@ -6,12 +6,15 @@
     "dev": "vite --host --port 3000",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint . --fix --ignore-path .gitignore"
+    "lint": "eslint . --fix --ignore-path .gitignore",
+    "server": "nodemon ./server"
   },
   "dependencies": {
     "@mdi/font": "7.0.96",
     "axios": "^1.2.3",
     "core-js": "^3.8.3",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
     "jwt-decode": "^3.1.2",
     "roboto-fontface": "*",
     "vue": "^3.2.13",
@@ -23,6 +26,7 @@
     "@vitejs/plugin-vue": "^3.0.3",
     "eslint": "^8.22.0",
     "eslint-plugin-vue": "^9.3.0",
+    "nodemon": "^2.0.20",
     "prettier": "2.8.3",
     "sass": "^1.55.0",
     "vite": "^3.1.9",
