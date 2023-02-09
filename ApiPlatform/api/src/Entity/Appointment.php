@@ -35,25 +35,25 @@ class Appointment
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column()]
-    #[Groups(['appointment:read'])]
+    #[Groups(['appointment:read', 'user:read', 'job_ads:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'appointments')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['appointment:read'])]
+    #[Groups(['appointment:read', 'user:read', 'job_ads:read'])]
     private ?User $candidate = null;
 
     #[ORM\ManyToOne(inversedBy: 'appointments')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['appointment:read'])]
+    #[Groups(['appointment:read', 'user:read', 'job_ads:read'])]
     private ?JobAds $job = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['appointment:read'])]
+    #[Groups(['appointment:read', 'user:read', 'job_ads:read'])]
     private ?\DateTimeInterface $time = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['appointment:read'])]
+    #[Groups(['appointment:read', 'user:read', 'job_ads:read'])]
     private ?bool $accepted = null;
 
     public function getId(): ?int

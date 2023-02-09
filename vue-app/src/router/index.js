@@ -166,7 +166,12 @@ const routes = [
                 path: ':id',
                 name: 'AdminJob',
                 component: () => import('@/views/Job.vue')
-              }
+              },
+              {
+                path: 'candidates',
+                name: 'AdminJobCandidates',
+                component: () => import('@/views/Candidates.vue')
+              },
             ],
           },
           {
@@ -251,6 +256,32 @@ const routes = [
                     path: 'new',
                     name: 'EmployerNewCompanyJob',
                     component: () => import('@/views/employer/NewCompanyJob.vue')
+                  },
+                  {
+                    path: ':jobId',
+                    name: 'EmployerCompanyJob',
+                    children: [
+                      {
+                        path: '',
+                        name: 'EmployerCompanyJobDetails',
+                        component: () => import('@/views/Job.vue')
+                      },
+                      {
+                        path: 'edit',
+                        name: 'EmployerCompanyJobEdit',
+                        component: () => import('@/views/employer/NewCompanyJob.vue')
+                      },
+                      {
+                        path: 'candidates',
+                        name: 'EmployerCompanyJobCandidates',
+                        component: () => import('@/views/Candidates.vue')
+                      },
+                      {
+                        path: 'appointments',
+                        name: 'EmployerCompanyJobAppointments',
+                        component: () => import('@/views/employer/Appointments.vue')
+                      }
+                    ],
                   }
                 ]
               },

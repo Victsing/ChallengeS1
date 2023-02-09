@@ -21,7 +21,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     denormalizationContext: ['groups' => ['job_ads:write']],
 )]
 #[Patch(
-    security: 'is_granted("ROLE_ADMIN") or object.getFounder() == user',
+    security: 'is_granted("ROLE_ADMIN") or object.getCompany().getFounder() == user',
 )]
 #[Post()]
 #[Get()]
@@ -80,6 +80,7 @@ class JobAds
     private Collection $candidates;
 
     #[ORM\OneToMany(mappedBy: 'job', targetEntity: Appointment::class)]
+    #[Groups(['job_ads:read', 'job_ads:write'])]
     private Collection $appointments;
 
     public function __construct()

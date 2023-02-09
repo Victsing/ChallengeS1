@@ -115,6 +115,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $jobApplications;
 
     #[ORM\OneToMany(mappedBy: 'candidate', targetEntity: Appointment::class)]
+    #[Groups(['user:read', 'user:write', 'appointment:read'])]
     private Collection $appointments;
 
     public function __construct()

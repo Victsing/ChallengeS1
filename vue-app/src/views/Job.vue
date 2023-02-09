@@ -23,13 +23,13 @@
       @click="dialog = true"
       color="primary"
       class="mb-16 ml-4"
-      v-if="!isAdmin"
+      v-if="!isAdmin && !isEmployer"
     >
       Apply
     </v-btn>
     <div v-else>
       <v-btn
-        @click="this.$router.push(`/admin/jobs/${job.id}/edit`)"
+        @click="isAdmin ? this.$router.push(`/admin/jobs/${job.id}/edit`) : this.$router.push(`/employer/company/${route.params.id}/jobs/${job.id}/edit`)"
         color="primary"
         class="mb-16 ml-4"
       >
@@ -44,11 +44,18 @@
       </v-btn>
     </div>
     <v-btn
-      @click="this.$router.push(`/jobs`)"
+      @click="isAdmin ? this.$router.push('jobs') : this.$router.push(`/employer/company/${route.params.id}/jobs`)"
       color="error"
       class="mb-16 ml-4"
     >
       Back
+    </v-btn>
+    <v-btn
+      @click="isAdmin ? this.$router.push(`/admin/jobs/${job.id}/candidates`) : this.$router.push(`/employer/company/${route.params.id}/jobs/${job.id}/candidates`)"
+      color="primary"
+      class="mb-16 ml-4"
+    >
+      Candidates
     </v-btn>
   </div>
   <v-dialog v-model="dialog" persistent>
@@ -119,8 +126,21 @@ const candidate = () => {
   }
 }
 
+const deleteJob = (id) => {
+  JobsApi.deleteJob(id).then((response) => {
+    if (isAdmin.value) {
+      router.push('/admin/jobs');
+    } else {
+      router.push(`/employer/company/${route.params.id}/jobs`);
+    }
+  }).catch((error) => {
+    console.log(error);
+  });
+};
+
 onMounted(() => {
-  JobsApi.getJob(route.params.id).then((response) => {
+  const id = isAdmin.value ? route.params.id : route.params.jobId;
+  JobsApi.getJob(id).then((response) => {
     job.value = response.data;
     candidates.value = response.data.candidates;
   }).catch((error) => {

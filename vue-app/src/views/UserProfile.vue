@@ -2,6 +2,7 @@
   <div>
     <BaseNaveBar
       :title="`Welcome ${decoded.firstname} ${decoded.lastname}`"
+      :employer="isEmployer"
     />
     <v-row class="align-center">
       <v-col>
@@ -209,4 +210,7 @@ const updateProfile = async (e) => {
     });
   }
 };
+const isEmployer = computed(() => {
+  return decoded.roles.includes('ROLE_EMPLOYER');
+});
 </script>

@@ -12,9 +12,7 @@
         <th>Name</th>
         <th>Address</th>
         <th>Website</th>
-        <th>Candidates</th>
         <th>Job Offers</th>
-        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -22,23 +20,11 @@
         <td>{{ company.name }}</td>
         <td>{{ company.address }}</td>
         <td>{{ company.website }}</td>
-        <td>Candidates</td>
         <td>
           <v-btn
             @click="this.$router.push(`/employer/company/${company.id}/jobs`)"
             icon="mdi-briefcase"
           />
-        </td>
-        <td>
-          <!-- <v-btn
-            @click="this.$router.push(`/employer/companies/${company.id}`)"
-            icon="mdi-pencil"
-          />
-          <v-btn
-            @click="deleteCompany(company.id)"
-            icon="mdi-delete"
-          /> -->
-          Actions
         </td>
       </tr>
     </tbody>
