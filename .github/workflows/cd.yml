@@ -19,7 +19,7 @@ jobs:
             cd ChallengeS1
             git pull
             cd ApiPlatform
-            docker compose exec php bin/console doctrine:schema:update --force
+            docker compose exec php bin/console d:s:u --force
 
   install:
     name: Installing new packages
@@ -51,4 +51,5 @@ jobs:
           script: |
             cd ChallengeS1/vue-app
             docker compose exec -d node npm run dev
+            docker compose exec -d node npm run server
     needs: install

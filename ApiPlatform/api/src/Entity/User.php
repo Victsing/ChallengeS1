@@ -65,11 +65,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column()]
-    #[Groups(['user:read', 'company:read', 'job_ads:read'])]
+    #[Groups(['user:read', 'company:read', 'job_ads:read', 'appointment:read', 'job_ads:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Groups(['user:read', 'user:write', 'user:getToken', 'company:read', 'job_ads:read'])]
+    #[Groups(['user:read', 'user:write', 'user:getToken', 'company:read', 'job_ads:read', 'appointment:read', 'job_ads:write'])]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -91,11 +91,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $token = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:read', 'user:write', 'company:read', 'job_ads:read'])]
+    #[Groups(['user:read', 'user:write', 'company:read', 'job_ads:read', 'appointment:read', 'job_ads:write'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:read', 'user:write', 'company:read', 'job_ads:read'])]
+    #[Groups(['user:read', 'user:write', 'company:read', 'job_ads:read', 'appointment:read', 'job_ads:write'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
@@ -114,12 +114,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read', 'user:write'])]
     private Collection $jobApplications;
 
+    #[ORM\OneToMany(mappedBy: 'candidate', targetEntity: Appointment::class)]
+    #[Groups(['user:read', 'user:write', 'appointment:read'])]
+    private Collection $appointments;
+
     public function __construct()
     {
         $this->roles = array('ROLE_USER');
         $this->companies = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
         $this->jobApplications = new ArrayCollection();
+        $this->appointments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -314,6 +319,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->jobApplications->removeElement($jobApplication)) {
             $jobApplication->removeCandidate($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Appointment>
+     */
+    public function getAppointments(): Collection
+    {
+        return $this->appointments;
+    }
+
+    public function addAppointment(Appointment $appointment): self
+    {
+        if (!$this->appointments->contains($appointment)) {
+            $this->appointments[] = $appointment;
+            $appointment->setCandidate($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAppointment(Appointment $appointment): self
+    {
+        if ($this->appointments->removeElement($appointment)) {
+            // set the owning side to null (unless already changed)
+            if ($appointment->getCandidate() === $this) {
+                $appointment->setCandidate(null);
+            }
         }
 
         return $this;

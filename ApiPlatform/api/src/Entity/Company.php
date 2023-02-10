@@ -27,7 +27,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
     denormalizationContext: ['groups' => ['company:write']],
 )]
 #[Get()]
-#[GetCollection()]
+#[GetCollection(
+    security: 'is_granted("ROLE_ADMIN") or object.getFounder() == user',
+    normalizationContext: ['groups' => ['company:read']],
+)]
 #[Delete(
     security: 'is_granted("ROLE_ADMIN") or object == user'
 )]

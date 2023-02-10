@@ -1,5 +1,5 @@
 <template>
-  <BaseNaveBar :title="`Welcome ${decoded.firstname} ${decoded.lastname}`" :admin="isAdmin" :employer="isEmployer" />
+  <BaseNaveBar :title="`Welcome ${decoded.firstname} ${decoded.lastname}`" :admin="isAdmin" :employer="isEmployer" :user="isUser" />
   <div class="text-center">
     <h2 class="mb-4">Larudakoté</h2>
     <v-row>
@@ -29,7 +29,7 @@
           <v-btn
             color="primary"
             class="mt-4"
-            @click="this.$router.push('/register-company')"
+            @click="handleHasCompany()"
           >
             Enregister mon entreprise
           </v-btn>
@@ -37,23 +37,68 @@
     </v-row>
       <v-img :src="HomeImage" alt="home image" max-height="66vh" />
   </div>
+  <BaseSnackbar
+    v-model="snackbar"
+    :text="snackbarText"
+    :color="snackbarColor"
+    :timeout="30000"
+    @close-snackbar="snackbar = false"
+  />
 </template>
 
 <script setup>
 import BaseNaveBar from '@/components/BaseNaveBar.vue';
 import jwt_decode from 'jwt-decode';
 import HomeImage from '@/assets/home_image.svg';
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import AuthentificationApi from '@/backend/AuthentificationApi';
+import BaseSnackbar from '@/components/BaseSnackbar.vue';
+import { useRouter, useRoute } from 'vue-router';
 
 const token = localStorage.getItem('token');
 const decoded = jwt_decode(token);
 
+const router = useRouter();
+const route = useRoute();
+
+let snackbar = ref(false);
+let snackbarText = ref('');
+let snackbarColor = ref('success');
+
+const me = ref({});
+
+const handleHasCompany = () => {
+  console.log('has');
+  if (hasCompnany == true) {
+    snackbar.value = true;
+    snackbarText.value = 'Vous avez déjà enregistré une entreprise';
+    snackbarColor.value = 'error';
+  } else {
+    console.log('no company');
+    router.push('/register-company')
+  }
+};
 const isAdmin = computed(() => {
   return decoded.roles.includes('ROLE_ADMIN');
 });
 
 const isEmployer = computed(() => {
   return decoded.roles.includes('ROLE_EMPLOYER');
+});
+const isUser = computed(() => {
+  return decoded.roles.includes('ROLE_USER');
+});
+
+const hasCompnany = computed(() => {
+  return me.value.companies.length > 0;
+});
+onMounted(() => {
+  AuthentificationApi.getMe(decoded.id).then((response) => {
+    console.log(response.data);
+    me.value = response.data;
+  }).catch((error) => {
+    console.log(error);
+  });
 });
 </script>
 

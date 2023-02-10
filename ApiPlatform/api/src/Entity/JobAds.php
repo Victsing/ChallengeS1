@@ -21,7 +21,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
     denormalizationContext: ['groups' => ['job_ads:write']],
 )]
 #[Patch(
-    security: 'is_granted("ROLE_ADMIN") or object.getFounder() == user',
+    security: 'is_granted("ROLE_ADMIN") or object.getCompany().getFounder() == user',
+    denormalizationContext: ['groups' => ['job_ads:write']],
 )]
 #[Post()]
 #[Get()]
@@ -32,35 +33,35 @@ class JobAds
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column()]
-    #[Groups(['job_ads:read', 'company:read', 'user:read'])]
+    #[Groups(['job_ads:read', 'company:read', 'user:read', 'appointment:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['job_ads:read', 'job_ads:write', 'company:read', 'user:read'])]
+    #[Groups(['job_ads:read', 'job_ads:write', 'company:read', 'user:read', 'appointment:read'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['job_ads:read', 'job_ads:write', 'company:read', 'user:read'])]
+    #[Groups(['job_ads:read', 'job_ads:write', 'company:read', 'user:read', 'appointment:read'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['job_ads:read', 'job_ads:write', 'company:read', 'user:read'])]
+    #[Groups(['job_ads:read', 'job_ads:write', 'company:read', 'user:read', 'appointment:read'])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['job_ads:read', 'job_ads:write', 'company:read', 'user:read'])]
+    #[Groups(['job_ads:read', 'job_ads:write', 'company:read', 'user:read', 'appointment:read'])]
     private ?string $country = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['job_ads:read', 'job_ads:write', 'company:read', 'user:read'])]
+    #[Groups(['job_ads:read', 'job_ads:write', 'company:read', 'user:read', 'appointment:read'])]
     private ?string $contractType = null;
 
     #[ORM\Column]
-    #[Groups(['job_ads:read', 'job_ads:write', 'company:read', 'user:read'])]
+    #[Groups(['job_ads:read', 'job_ads:write', 'company:read', 'user:read', 'appointment:read'])]
     private ?string $salary = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['job_ads:read', 'job_ads:write', 'company:read', 'user:read'])]
+    #[Groups(['job_ads:read', 'job_ads:write', 'company:read', 'user:read', 'appointment:read'])]
     private ?string $missionDuration = null;
 
     #[ORM\Column]
@@ -79,11 +80,16 @@ class JobAds
     #[Groups(['job_ads:read', 'job_ads:write'])]
     private Collection $candidates;
 
+    #[ORM\OneToMany(mappedBy: 'job', targetEntity: Appointment::class)]
+    #[Groups(['job_ads:read', 'job_ads:write', 'appointment:read'])]
+    private Collection $appointments;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
         $this->candidates = new ArrayCollection();
+        $this->appointments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -231,6 +237,36 @@ class JobAds
     public function removeCandidate(User $candidate): self
     {
         $this->candidates->removeElement($candidate);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Appointment>
+     */
+    public function getAppointments(): Collection
+    {
+        return $this->appointments;
+    }
+
+    public function addAppointment(Appointment $appointment): self
+    {
+        if (!$this->appointments->contains($appointment)) {
+            $this->appointments[] = $appointment;
+            $appointment->setJob($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAppointment(Appointment $appointment): self
+    {
+        if ($this->appointments->removeElement($appointment)) {
+            // set the owning side to null (unless already changed)
+            if ($appointment->getJob() === $this) {
+                $appointment->setJob(null);
+            }
+        }
 
         return $this;
     }

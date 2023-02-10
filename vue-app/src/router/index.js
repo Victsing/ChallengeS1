@@ -1,6 +1,8 @@
 // Composables
 import { createRouter, createWebHistory } from 'vue-router';
 
+import AuthentificationApi from '@/backend/AuthentificationApi';
+
 import Authentication from '@/views/UserAuthentification.vue';
 import LandingPage from '@/views/LandingPage.vue';
 import RegisterCompany from '@/views/RegisterCompany.vue';
@@ -12,10 +14,10 @@ import Home from '@/views/Home.vue';
 
 const isAuthenticated = () => {
   const token = localStorage.getItem('token');
-  if (token) {
-    return true;
-  }
-  return false;
+  const today = new Date().getTime();
+  if (!token) return false;
+  const data = getDataFromToken();
+  return today < data.exp * 1000;
 };
 
 const isAdmin = () => {
@@ -31,6 +33,16 @@ const isEmployer = () => {
   if (tokenData.roles.includes('ROLE_EMPLOYER')) {
     return true;
   }
+  return false;
+};
+
+const hasCompany = async () => {
+  let tokenData = getDataFromToken();
+  await AuthentificationApi.getMe(tokenData.id).then((response) => {
+    if (response.data.companies.length > 0) {
+      return true;
+    }
+  });
   return false;
 };
 
@@ -113,7 +125,11 @@ const routes = [
       {
         beforeEnter: (to, from, next) => {
           if (isAuthenticated()) {
-            next();
+            if (!hasCompany()) {
+              next('/home');
+            } else {
+              next();
+            }
           } else {
             next('/authentication');
           }
@@ -138,6 +154,18 @@ const routes = [
         path: '/:token/email-verification',
         name: 'ValidateAccount',
         component: ValidateAccount
+      },
+      {
+        beforeEnter: (to, from, next) => {
+          if (isAuthenticated()) {
+            next();
+          } else {
+            next('/authentication');
+          }
+        },
+        path: '/appointments',
+        name: 'UserAppointments',
+        component: () => import('@/views/UserAppointments.vue')
       },
       {
         beforeEnter: (to, from, next) => {
@@ -166,7 +194,12 @@ const routes = [
                 path: ':id',
                 name: 'AdminJob',
                 component: () => import('@/views/Job.vue')
-              }
+              },
+              {
+                path: 'candidates',
+                name: 'AdminJobCandidates',
+                component: () => import('@/views/Candidates.vue')
+              },
             ],
           },
           {
@@ -212,13 +245,13 @@ const routes = [
             name: 'EmployerHome'
           },
           {
-            path: 'companies/',
+            path: 'company/',
             children: [
               {
                 path: '',
-              name: 'EmployerCompanies',
-              component: () => import('@/views/employer/Companies.vue')
-              },
+                name: 'EmployerCompanies',
+                component: () => import('@/views/employer/Companies.vue')
+              }
             ]
           },
           {
@@ -227,7 +260,7 @@ const routes = [
               {
                 path: '',
                 name: 'EmployerCompany',
-                component: () => import('@/views/employer/Company.vue'),
+                component: () => import('@/views/employer/Company.vue')
               },
               {
                 path: 'jobs',
@@ -241,11 +274,37 @@ const routes = [
                     path: 'new',
                     name: 'EmployerNewCompanyJob',
                     component: () => import('@/views/employer/NewCompanyJob.vue')
+                  },
+                  {
+                    path: ':jobId',
+                    name: 'EmployerCompanyJob',
+                    children: [
+                      {
+                        path: '',
+                        name: 'EmployerCompanyJobDetails',
+                        component: () => import('@/views/Job.vue')
+                      },
+                      {
+                        path: 'edit',
+                        name: 'EmployerCompanyJobEdit',
+                        component: () => import('@/views/employer/NewCompanyJob.vue')
+                      },
+                      {
+                        path: 'candidates',
+                        name: 'EmployerCompanyJobCandidates',
+                        component: () => import('@/views/Candidates.vue')
+                      },
+                      {
+                        path: 'appointments',
+                        name: 'EmployerCompanyJobAppointments',
+                        component: () => import('@/views/employer/Appointments.vue')
+                      }
+                    ],
                   }
                 ]
-              },
+              }
             ]
-          },
+          }
         ]
       }
     ]

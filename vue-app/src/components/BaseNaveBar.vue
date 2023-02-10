@@ -12,8 +12,14 @@
       </div>
       <div v-if="props.employer">
         <v-btn
-          @click="this.$router.push('/employer/companies')"
+          @click="this.$router.push('/employer/company')"
           icon="mdi-domain"
+          />
+      </div>
+      <div v-if="props.user">
+        <v-btn
+          @click="this.$router.push('/appointments')"
+          icon="mdi-calendar-clock"
           />
       </div>
       <div v-if="isLoggedIn">
@@ -58,6 +64,11 @@ const props = defineProps({
     default: false
   },
   employer:
+  {
+    type: Boolean,
+    default: false
+  },
+  user:
   {
     type: Boolean,
     default: false

@@ -1,5 +1,3 @@
-
-
 <template>
   <div class="bground">
     <div class="landing-container">
@@ -37,12 +35,7 @@
           Administrateurs
         </div>
         <div class="d-flex flex-column text-center">
-          <v-img
-            height="104"
-            width="104"
-            :src="LandingConstraints"
-            class="mb-8"
-          />
+          <v-img height="104" width="104" :src="LandingConstraints" class="mb-8" />
           Contraintes
         </div>
         <div class="d-flex flex-column text-center">

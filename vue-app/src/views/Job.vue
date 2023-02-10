@@ -23,13 +23,13 @@
       @click="dialog = true"
       color="primary"
       class="mb-16 ml-4"
-      v-if="!isAdmin"
+      v-if="!isAdmin && !isEmployer"
     >
       Apply
     </v-btn>
     <div v-else>
       <v-btn
-        @click="this.$router.push(`/admin/jobs/${job.id}/edit`)"
+        @click="isAdmin ? this.$router.push(`/admin/jobs/${job.id}/edit`) : this.$router.push(`/employer/company/${route.params.id}/jobs/${job.id}/edit`)"
         color="primary"
         class="mb-16 ml-4"
       >
@@ -44,11 +44,19 @@
       </v-btn>
     </div>
     <v-btn
-      @click="this.$router.push(`/jobs`)"
+      @click="isAdmin ? this.$router.push('jobs') : this.$router.push(`/employer/company/${route.params.id}/jobs`)"
       color="error"
       class="mb-16 ml-4"
     >
       Back
+    </v-btn>
+    <v-btn
+      @click="isAdmin ? this.$router.push(`/admin/jobs/${job.id}/candidates`) : this.$router.push(`/employer/company/${route.params.id}/jobs/${job.id}/candidates`)"
+      color="primary"
+      class="mb-16 ml-4"
+      v-if="isEmployer"
+    >
+      Candidates
     </v-btn>
   </div>
   <v-dialog v-model="dialog" persistent>
@@ -78,7 +86,7 @@ import JobsApi from '@/backend/JobsApi';
 import UserApi from '@/backend/UserApi';
 import jwt_decode from 'jwt-decode';
 import { useRoute, useRouter } from 'vue-router';
-import { BaseNaveBar, BaseTitle, BaseSnackBar } from '@/components';
+import { BaseNaveBar, BaseSnackBar } from '@/components';
 
 const route = useRoute();
 const router = useRouter();
@@ -94,17 +102,28 @@ let dialog = ref(false);
 let token = localStorage.getItem('token');
 let decoded = jwt_decode(token);
 
-let test = () => {
-  console.log('test');
-};
-
 // check if decoded.id is in toto
 const isCandidate = computed(() => {
   return candidates.value.some((candidate) => candidate.id === decoded.id);
 });
 
+const isUser = computed(() => {
+  return decoded.roles.includes('ROLE_USER');
+});
+
+const isEmployer = computed(() => {
+  const token = localStorage.getItem('token');
+  const decoded = jwt_decode(token);
+  return decoded.roles.includes('ROLE_EMPLOYER');
+});
+
+const isAdmin = computed(() => {
+  const token = localStorage.getItem('token');
+  const decoded = jwt_decode(token);
+  return decoded.roles.includes('ROLE_ADMIN');
+});
+
 const candidate = () => {
-  debugger;
   if (isCandidate === true) {
     console.log('Vous avez déjà postulé pour ce job');
     snackbar.value = true;
@@ -119,24 +138,25 @@ const candidate = () => {
   }
 }
 
+const deleteJob = (id) => {
+  JobsApi.deleteJob(id).then((response) => {
+    if (isAdmin.value) {
+      router.push('/admin/jobs');
+    } else {
+      router.push(`/employer/company/${route.params.id}/jobs`);
+    }
+  }).catch((error) => {
+    console.log(error);
+  });
+};
+
 onMounted(() => {
-  JobsApi.getJob(route.params.id).then((response) => {
+  const id = (isAdmin.value || isUser.value) ? route.params.id : route.params.jobId;
+  JobsApi.getJob(id).then((response) => {
     job.value = response.data;
     candidates.value = response.data.candidates;
   }).catch((error) => {
     console.log(error);
   });
-});
-
-const isEmployer = computed(() => {
-  const token = localStorage.getItem('token');
-  const decoded = jwt_decode(token);
-  return decoded.roles.includes('ROLE_EMPLOYER');
-});
-
-const isAdmin = computed(() => {
-  const token = localStorage.getItem('token');
-  const decoded = jwt_decode(token);
-  return decoded.roles.includes('ROLE_ADMIN');
 });
 </script>

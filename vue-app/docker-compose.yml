@@ -10,5 +10,6 @@ services:
     working_dir: /home/node
     ports:
       - 3000:3000
+      - 5111:5111
     volumes:
       - .:/home/node
