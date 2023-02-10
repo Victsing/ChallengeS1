@@ -1,16 +1,20 @@
 <template>
-  <div class="bg-grey">
+  <div class="bground">
     <div class="landing-container">
-      <TheLogo class="logo-margin" />
-      <div class="d-flex justify-space-between mb-16">
-        <BaseTitleWithDescription title="Challenge Stack S1">
+      <!-- <TheLogo class="logo-margin" /> -->
+      <BaseNaveBar color="white" class=" font-weight-black mb-16" />
+
+      <div class="d-flex justify-space-between mt-16 mb-16">
+        <BaseTitleWithDescription title="Challenge Stack S1" class="mt-8">
           <div class="red--text mb-12">
-            Projet réalisé par Pierre BERGER, Mustapha Boukhatem, Locman DIawadoh et Clarence Potel. Ce projet à pour
-            but de chercher et de postuler des offres d'emploi. Ce projet est réalisé avec la stack suivante : VueJS et
-            Api Platform.
+            Projet réalisé par Pierre BERGER, Mustapha Boukhatem, Locman Diawadoh et Clarence Potel.
+            Ce projet à pour but de chercher et de postuler des offres d'emploi. Ce projet est réalisé
+            avec la stack suivante : VueJS et Api Platform.
           </div>
-          <BaseRoundButton color="geekblue-6" to="/authentication">Se connecter</BaseRoundButton>
-          <BaseRoundButton color="neutral-1" variant="outlined" class="ml-2" to="/authentication?tab=two"
+          <BaseRoundButton to="/authentication"
+            >Se connecter</BaseRoundButton
+          >
+          <BaseRoundButton color="pink darken-3" to="/authentication?tab=two"
             >S'inscrire</BaseRoundButton
           >
         </BaseTitleWithDescription>
@@ -35,8 +39,8 @@
           Contraintes
         </div>
         <div class="d-flex flex-column text-center">
-          <v-img height="104" width="104" :src="LandingChatbot" class="mb-8" />
-          ChatBot
+          <v-img height="104" width="104" :src="LandingPremium" class="mb-8" />
+          Premium
         </div>
       </div>
     </div>
@@ -45,16 +49,19 @@
 
 <script setup>
 import TheLogo from '../components/TheLogo.vue';
+import BaseNaveBar from '../components/BaseNaveBar.vue';
 import BaseTitleWithDescription from '../components/BaseTitleWithDescription.vue';
 import BaseRoundButton from '../components/BaseRoundButton.vue';
-import LandingImage from '../assets/landing_image.svg';
-import LandingChatbot from '../assets/landing_chatbot.svg';
-import LandingUser from '../assets/landing_user.svg';
-import LandingAdmin from '../assets/landing_admin.svg';
-import LandingConstraints from '../assets/landing_constraints.svg';
+import LandingImage from '../assets/landing_image.png';
+import LandingPremium from '../assets/landing_premium.png';
+import LandingUser from '../assets/landing_user.png';
+import LandingAdmin from '../assets/landing_admin.png';
+import LandingConstraints from '../assets/landing_constraints.png';
 </script>
 
 <style lang="scss" scoped>
+
+
 .landing-container {
   margin-left: 144px !important;
   margin-right: 144px;

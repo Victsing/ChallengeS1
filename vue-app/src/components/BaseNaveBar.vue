@@ -1,6 +1,6 @@
 <template>
   <v-app-bar flat :color="props.color">
-    <img :src="AppLogo" alt="logo" class="ml-4" @click="logoRedirect" />
+    <!-- <img :src="AppLogo" alt="logo" class="ml-4" @click="logoRedirect" /> -->
     <v-app-bar-title>
       {{ props.title }}
     </v-app-bar-title>
@@ -52,7 +52,7 @@ defineEmits(['navbarHome']);
 const props = defineProps({
   title: {
     type: String,
-    default: 'Welcome to the Challenge Stack'
+    default: 'Larudakoté'
   },
   color: {
     type: String,
