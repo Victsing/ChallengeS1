@@ -1,5 +1,3 @@
-
-
 <template>
   <div class="bg-grey">
     <div class="landing-container">
@@ -7,13 +5,11 @@
       <div class="d-flex justify-space-between mb-16">
         <BaseTitleWithDescription title="Challenge Stack S1">
           <div class="red--text mb-12">
-            Projet réalisé par Pierre BERGER, Mustapha Boukhatem, Locman DIawadoh et Clarence Potel.
-            Ce projet à pour but de chercher et de postuler des offres d'emploi. Ce projet est réalisé
-            avec la stack suivante : VueJS et Api Platform.
+            Projet réalisé par Pierre BERGER, Mustapha Boukhatem, Locman DIawadoh et Clarence Potel. Ce projet à pour
+            but de chercher et de postuler des offres d'emploi. Ce projet est réalisé avec la stack suivante : VueJS et
+            Api Platform.
           </div>
-          <BaseRoundButton color="geekblue-6" to="/authentication"
-            >Se connecter</BaseRoundButton
-          >
+          <BaseRoundButton color="geekblue-6" to="/authentication">Se connecter</BaseRoundButton>
           <BaseRoundButton color="neutral-1" variant="outlined" class="ml-2" to="/authentication?tab=two"
             >S'inscrire</BaseRoundButton
           >
@@ -35,18 +31,14 @@
           Administrateurs
         </div>
         <div class="d-flex flex-column text-center">
-          <v-img
-            height="104"
-            width="104"
-            :src="LandingConstraints"
-            class="mb-8"
-          />
+          <v-img height="104" width="104" :src="LandingConstraints" class="mb-8" />
           Contraintes
         </div>
         <div class="d-flex flex-column text-center">
           <v-img height="104" width="104" :src="LandingChatbot" class="mb-8" />
           ChatBot
         </div>
+        <v-btn @click="test">ddd</v-btn>
       </div>
     </div>
   </div>
