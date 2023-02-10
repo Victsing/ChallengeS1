@@ -153,11 +153,8 @@ const setAppointment = () => {
   });
 };
 
-// function to check if appointment.time already exists in appointments
 const checkAppointment = (time) => {
-  // add +00:00 to time
   time = time + ':00+00:00';
-  console.log(time);
   const index = appointments.value.findIndex((appointment) => appointment.time === time);
   if (index !== -1) {
     return true;
@@ -165,11 +162,9 @@ const checkAppointment = (time) => {
   return false;
 };
 
-// function to check if date is in the past
 const checkDate = (date) => {
   const today = new Date();
   const dateToCheck = new Date(date);
-  console.log(today);
   if (dateToCheck < today) {
     return true;
   }

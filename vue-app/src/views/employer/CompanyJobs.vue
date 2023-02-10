@@ -85,15 +85,12 @@ const decoded = jwt_decode(token);
 onMounted(() => {
   AuthentificationApi.getMe(decoded.id).then((response) => {
     me.value = response.data;
-    console.log(me);
   }).catch((error) => {
     console.log(error);
   });
   CompanyApi.getCompany(route.params.id).then((response) => {
-    console.log(response);
     company.value = response.data;
     jobs.value = company.value.jobAds;
-    console.log(company);
   }).catch((error) => {
     console.log(error);
   });
@@ -105,7 +102,6 @@ let isEmployer = computed(() => {
 
 const deleteJob = (id) => {
   JobsApi.deleteJob(id).then((response) => {
-    console.log(response);
     router.go(0);
   }).catch((error) => {
     console.log(error);

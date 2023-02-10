@@ -68,13 +68,11 @@ let snackbarColor = ref('success');
 const me = ref({});
 
 const handleHasCompany = () => {
-  console.log('has');
   if (hasCompnany == true) {
     snackbar.value = true;
     snackbarText.value = 'Vous avez déjà enregistré une entreprise';
     snackbarColor.value = 'error';
   } else {
-    console.log('no company');
     router.push('/register-company')
   }
 };
@@ -94,7 +92,6 @@ const hasCompnany = computed(() => {
 });
 onMounted(() => {
   AuthentificationApi.getMe(decoded.id).then((response) => {
-    console.log(response.data);
     me.value = response.data;
   }).catch((error) => {
     console.log(error);

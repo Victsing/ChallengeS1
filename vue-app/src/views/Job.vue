@@ -102,7 +102,6 @@ let dialog = ref(false);
 let token = localStorage.getItem('token');
 let decoded = jwt_decode(token);
 
-// check if decoded.id is in toto
 const isCandidate = computed(() => {
   return candidates.value.some((candidate) => candidate.id === decoded.id);
 });
@@ -125,7 +124,6 @@ const isAdmin = computed(() => {
 
 const candidate = () => {
   if (isCandidate === true) {
-    console.log('Vous avez déjà postulé pour ce job');
     snackbar.value = true;
     snackbarText = 'Vous avez déjà postulé pour ce job';
     snackbarColor = 'error';

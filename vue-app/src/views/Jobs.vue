@@ -87,7 +87,6 @@ onMounted(async () => {
 
 const candidate = () => {
   if (isCandidate()) {
-    console.log('Vous avez déjà postulé pour ce job');
     snackbar.value = true;
     snackbarText = 'Vous avez déjà postulé pour ce job';
     snackbarColor = 'error';

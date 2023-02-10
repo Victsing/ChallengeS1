@@ -92,9 +92,7 @@ const isEditRoute = computed(() => {
 onMounted(() => {
   if (isEditRoute) {
     const jobid = isEmployer ? route.params.jobId : route.params.id;
-    console.log(jobid);
     JobsApi.getJob(jobid).then((response) => {
-      console.log(response.data);
       job.value = response.data;
     }).catch((error) => {
       console.log(error);
@@ -129,7 +127,6 @@ let contractTypes = [
 const addJob = () => {
   disableButton.value = true;
   CompanyApi.createJob(job.value).then((response) => {
-    console.log(response);
     router.push(`/employer/company/${route.params.id}/jobs`);
   }).catch((error) => {
     console.log(error);
@@ -149,7 +146,6 @@ const updateJob = () => {
     salary: job.value.salary,
     missionDuration: job.value.missionDuration,
   }).then((response) => {
-    console.log(response);
     if (isEmployer) {
       router.push(`/employer/company/${route.params.id}/jobs`);
     } else {

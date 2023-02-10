@@ -136,7 +136,6 @@ const setAppointment = () => {
       (appointment) => appointment.id === appointmentId.value
     );
     if (appointmentStatus.value) {
-      console.log(response);
       appointments.value[index].accepted = true;
       snackbar.value = true;
       snackbarText.value = "Appointment accepted";

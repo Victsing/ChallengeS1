@@ -103,7 +103,6 @@ let email = ref('');
 let me = ref({});
 onMounted(() => {
   AuthentificationApi.getMe(decoded.id).then((response) => {
-    console.log(response.data);
     me.value = response.data;
     firstname.value = response.data.firstname;
     lastname.value = response.data.lastname;

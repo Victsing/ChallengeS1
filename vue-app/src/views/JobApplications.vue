@@ -2,8 +2,9 @@
   <BaseNaveBar
     title="Job Applications"
     :employer="employer"
+    :user="isUser"
   />
-  <!-- if jobApplications is empty, display a message -->
+
   <div v-if="jobApplications.length === 0">
     <h2>
       You have not applied for any job yet.
@@ -61,5 +62,9 @@ onMounted(async () => {
 
 let employer = computed(() => {
   return decoded.roles.includes('ROLE_EMPLOYER');
+});
+
+const isUser = computed(() => {
+  return decoded.roles.includes('ROLE_USER');
 });
 </script>

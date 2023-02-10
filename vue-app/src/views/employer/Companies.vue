@@ -50,12 +50,9 @@ const getUser = async () => {
 const companyId = ref(null);
 let company = ref({});
 onMounted( async () => {
-  // wait until getUser is done
   await getUser();
   await CompanyApi.getCompany(companyId.value).then((response) => {
-    console.log(response);
     company.value = response.data;
-    console.log(company);
   }).catch((error) => {
     console.log(error);
   });
