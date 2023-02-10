@@ -86,7 +86,7 @@ import JobsApi from '@/backend/JobsApi';
 import UserApi from '@/backend/UserApi';
 import jwt_decode from 'jwt-decode';
 import { useRoute, useRouter } from 'vue-router';
-import { BaseNaveBar, BaseTitle, BaseSnackBar } from '@/components';
+import { BaseNaveBar, BaseSnackBar } from '@/components';
 
 const route = useRoute();
 const router = useRouter();
@@ -102,17 +102,28 @@ let dialog = ref(false);
 let token = localStorage.getItem('token');
 let decoded = jwt_decode(token);
 
-let test = () => {
-  console.log('test');
-};
-
 // check if decoded.id is in toto
 const isCandidate = computed(() => {
   return candidates.value.some((candidate) => candidate.id === decoded.id);
 });
 
+const isUser = computed(() => {
+  return decoded.roles.includes('ROLE_USER');
+});
+
+const isEmployer = computed(() => {
+  const token = localStorage.getItem('token');
+  const decoded = jwt_decode(token);
+  return decoded.roles.includes('ROLE_EMPLOYER');
+});
+
+const isAdmin = computed(() => {
+  const token = localStorage.getItem('token');
+  const decoded = jwt_decode(token);
+  return decoded.roles.includes('ROLE_ADMIN');
+});
+
 const candidate = () => {
-  debugger;
   if (isCandidate === true) {
     console.log('Vous avez déjà postulé pour ce job');
     snackbar.value = true;
@@ -140,24 +151,12 @@ const deleteJob = (id) => {
 };
 
 onMounted(() => {
-  const id = isAdmin.value ? route.params.id : route.params.jobId;
+  const id = (isAdmin.value || isUser.value) ? route.params.id : route.params.jobId;
   JobsApi.getJob(id).then((response) => {
     job.value = response.data;
     candidates.value = response.data.candidates;
   }).catch((error) => {
     console.log(error);
   });
-});
-
-const isEmployer = computed(() => {
-  const token = localStorage.getItem('token');
-  const decoded = jwt_decode(token);
-  return decoded.roles.includes('ROLE_EMPLOYER');
-});
-
-const isAdmin = computed(() => {
-  const token = localStorage.getItem('token');
-  const decoded = jwt_decode(token);
-  return decoded.roles.includes('ROLE_ADMIN');
 });
 </script>
