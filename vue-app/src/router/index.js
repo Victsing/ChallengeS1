@@ -251,6 +251,11 @@ const routes = [
                 path: '',
                 name: 'EmployerCompanies',
                 component: () => import('@/views/employer/Companies.vue')
+              },
+              {
+                path: 'premiumSubscription',
+                name: 'SubscriptionToPremium',
+                component: () => import('@/views/employer/SubscriptionRegister.vue')
               }
             ]
           },
