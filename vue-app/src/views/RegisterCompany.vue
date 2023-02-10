@@ -127,7 +127,12 @@ const registerCompany = async () => {
     snackbarText.value = 'SIRET must be 14 digits';
     snackbarColor.value = 'error';
     disableButton.value = false;
-  } else {
+  } else if (companyCreationDate.value > new Date().toISOString().split('T')[0]) {
+    snackbar.value = true;
+    snackbarText.value = 'Company creation date must be before today';
+    snackbarColor.value = 'error';
+    disableButton.value = false;
+  }  else {
     let compagnyCheck;
     try {
       compagnyCheck = await CompanyApi.checkCompany(

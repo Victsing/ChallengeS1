@@ -17,7 +17,7 @@
       <p>Nombre d'employé: {{ company?.size?.size }}</p>
       <p>Fondateur: {{ company?.founder?.firstname }} {{ company?.founder?.lastname }}</p>
       <div>
-        Candidatures: 
+        Offres d'emploi: 
         <v-btn
         @click="this.$router.push(`/employer/company/${company.id}/jobs`)"
         icon="mdi-briefcase"

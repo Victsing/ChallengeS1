@@ -54,6 +54,7 @@
       @click="isAdmin ? this.$router.push(`/admin/jobs/${job.id}/candidates`) : this.$router.push(`/employer/company/${route.params.id}/jobs/${job.id}/candidates`)"
       color="primary"
       class="mb-16 ml-4"
+      v-if="isEmployer"
     >
       Candidates
     </v-btn>
