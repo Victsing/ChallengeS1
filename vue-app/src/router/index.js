@@ -14,10 +14,10 @@ import Home from '@/views/Home.vue';
 
 const isAuthenticated = () => {
   const token = localStorage.getItem('token');
-  if (token) {
-    return true;
-  }
-  return false;
+  const today = new Date().getTime();
+  if (!token) return false;
+  const data = getDataFromToken();
+  return today < data.exp * 1000;
 };
 
 const isAdmin = () => {
@@ -38,7 +38,7 @@ const isEmployer = () => {
 
 const hasCompany = async () => {
   let tokenData = getDataFromToken();
-  await AuthentificationApi.getCompany(tokenData.id).then((response) => {
+  await AuthentificationApi.getMe(tokenData.id).then((response) => {
     if (response.data.companies.length > 0) {
       return true;
     }
@@ -125,7 +125,7 @@ const routes = [
       {
         beforeEnter: (to, from, next) => {
           if (isAuthenticated()) {
-            if (hasCompany()) {
+            if (!hasCompany()) {
               next('/home');
             } else {
               next();
@@ -218,11 +218,6 @@ const routes = [
             component: () => import('@/views/admin/CompanyRevenues.vue')
           },
           {
-            path: 'company/size/new',
-            name: 'AdminNewCompanySize',
-            component: () => import('@/views/admin/NewCompanySize.vue')
-          },
-          {
             path: 'company/sector/new',
             name: 'AdminNewCompanySector',
             component: () => import('@/views/admin/NewCompanySector.vue')
@@ -254,14 +249,9 @@ const routes = [
             children: [
               {
                 path: '',
-              name: 'EmployerCompanies',
-              component: () => import('@/views/employer/Companies.vue')
-              },
-              {
-                path: 'new',
-                name: 'EmployerNewCompany',
-                component: () => import('@/views/employer/NewCompany.vue')
-              },
+                name: 'EmployerCompanies',
+                component: () => import('@/views/employer/Companies.vue')
+              }
             ]
           },
           {
@@ -270,7 +260,7 @@ const routes = [
               {
                 path: '',
                 name: 'EmployerCompany',
-                component: () => import('@/views/employer/Company.vue'),
+                component: () => import('@/views/employer/Company.vue')
               },
               {
                 path: 'jobs',
@@ -312,9 +302,9 @@ const routes = [
                     ],
                   }
                 ]
-              },
+              }
             ]
-          },
+          }
         ]
       }
     ]

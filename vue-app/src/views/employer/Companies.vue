@@ -3,30 +3,27 @@
     :title="`Welcome ${decoded.firstname} ${decoded.lastname}`"
     :employer="isEmployer"
   />
-  <div class="d-flex">
-    <h1>My company</h1>
-  </div>
   <v-card>
     <v-card-title>
-      <h2>{{ company.name }}</h2>
+      <h2 class="text-center">{{ company.name }}</h2>
     </v-card-title>
-    <v-card-text>
-      <p>{{ company.address }}</p>
-      <p>Website: {{ company.website }}</p>
-      <p>{{ company.creationDate }}</p>
+    <v-card-text class="text-center">
       <p>{{ company.description }}</p>
-      <p>{{ company?.revenue?.revenue }}</p>
-      <p>{{ company?.sector?.sector }}</p>
-      <p>{{ company?.size?.size }}</p>
-      <p>{{ company?.founder?.firstname }} {{ company?.founder?.lastname }}</p>
+      <p>Adresse: {{ company.address }}</p>
+      <p>Website: {{ company.website }}</p>
+      <p>Crée le: {{ convertDate(company.creationDate) }}</p>
+      <p> Chiffre d'affaire: {{ company?.revenue?.revenue }}</p>
+      <p>Secteur: {{ company?.sector?.sector }}</p>
+      <p>Nombre d'employé: {{ company?.size?.size }}</p>
+      <p>Fondateur: {{ company?.founder?.firstname }} {{ company?.founder?.lastname }}</p>
+      <div>
+        Candidatures: 
+        <v-btn
+        @click="this.$router.push(`/employer/company/${company.id}/jobs`)"
+        icon="mdi-briefcase"
+        />
+      </div>
     </v-card-text>
-    <div>
-      Candidatures: 
-      <v-btn
-      @click="this.$router.push(`/employer/company/${company.id}/jobs`)"
-      icon="mdi-briefcase"
-      />
-    </div>
   </v-card>
 </template>
 
@@ -70,5 +67,11 @@ const isEmployer = computed(() => {
 let companies = computed(() => {
   return me.value.companies;
 });
+
+const convertDate = (date) => {
+  const d = new Date(date)
+  d.setHours(d.getHours() - 1)
+  return d.toLocaleDateString('fr-FR')
+}
 
 </script>

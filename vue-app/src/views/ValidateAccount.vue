@@ -1,12 +1,15 @@
 <template>
-  <BaseNaveBar color="black"/>
-  <div class="text-center">
+  <BaseNaveBar color="black" />
+  <BaseStackedText v-if="loading">
+    <template #topText>
+      <v-progress-circular color="blue-lighten-3" indeterminate :size="80" :width="6" />
+    </template>
+  </BaseStackedText>
+  <div class="text-center" v-if="!loading">
     <div v-if="validToken">
       <BaseStackedText>
         <template #topText>
-          <h3>
-            Your account has been validated, you can now login
-          </h3>
+          <h3>Your account has been validated, you can now login</h3>
         </template>
         <template #bottomText>
           <div>
@@ -44,6 +47,7 @@ import HappyFace from '@/assets/happy_face.svg';
 import BaseStackedText from '@/components/BaseStackedText.vue';
 
 let validToken = ref(false);
+const loading = ref(true);
 
 onMounted(() => {
   const route = useRoute();
@@ -54,6 +58,9 @@ onMounted(() => {
     })
     .catch(() => {
       validToken.value = false;
+    })
+    .finally(() => {
+      loading.value = false;
     });
 });
 </script>

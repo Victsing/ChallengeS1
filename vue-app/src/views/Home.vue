@@ -53,9 +53,13 @@ import HomeImage from '@/assets/home_image.svg';
 import { computed, onMounted, ref } from 'vue';
 import AuthentificationApi from '@/backend/AuthentificationApi';
 import BaseSnackbar from '@/components/BaseSnackbar.vue';
+import { useRouter, useRoute } from 'vue-router';
 
 const token = localStorage.getItem('token');
 const decoded = jwt_decode(token);
+
+const router = useRouter();
+const route = useRoute();
 
 let snackbar = ref(false);
 let snackbarText = ref('');
@@ -64,12 +68,14 @@ let snackbarColor = ref('success');
 const me = ref({});
 
 const handleHasCompany = () => {
-  if (hasCompnany) {
+  console.log('has');
+  if (hasCompnany == true) {
     snackbar.value = true;
     snackbarText.value = 'Vous avez déjà enregistré une entreprise';
     snackbarColor.value = 'error';
   } else {
-    this.$router.push('/register-company')
+    console.log('no company');
+    router.push('/register-company')
   }
 };
 const isAdmin = computed(() => {
