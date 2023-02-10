@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20230207133721 extends AbstractMigration
+final class Version20230209192712 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -21,7 +21,7 @@ final class Version20230207133721 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE SEQUENCE appointment_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE TABLE appointment (id INT NOT NULL, candidate_id INT NOT NULL, job_id INT NOT NULL, time TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE appointment (id INT NOT NULL, candidate_id INT NOT NULL, job_id INT NOT NULL, time TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, accepted BOOLEAN DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_FE38F84491BD8781 ON appointment (candidate_id)');
         $this->addSql('CREATE INDEX IDX_FE38F844BE04EA9 ON appointment (job_id)');
         $this->addSql('ALTER TABLE appointment ADD CONSTRAINT FK_FE38F84491BD8781 FOREIGN KEY (candidate_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');

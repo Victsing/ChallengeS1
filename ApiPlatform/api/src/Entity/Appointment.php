@@ -14,7 +14,9 @@ use ApiPlatform\Metadata\GetCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AppointmentRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    normalizationContext: ['groups' => ['appointment:read']],
+)]
 #[GetCollection(
     normalizationContext: ['groups' => ['appointment:read']],
 )]

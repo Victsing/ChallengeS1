@@ -1,6 +1,8 @@
 // Composables
 import { createRouter, createWebHistory } from 'vue-router';
 
+import AuthentificationApi from '@/backend/AuthentificationApi';
+
 import Authentication from '@/views/UserAuthentification.vue';
 import LandingPage from '@/views/LandingPage.vue';
 import RegisterCompany from '@/views/RegisterCompany.vue';
@@ -31,6 +33,16 @@ const isEmployer = () => {
   if (tokenData.roles.includes('ROLE_EMPLOYER')) {
     return true;
   }
+  return false;
+};
+
+const hasCompany = async () => {
+  let tokenData = getDataFromToken();
+  await AuthentificationApi.getCompany(tokenData.id).then((response) => {
+    if (response.data.companies.length > 0) {
+      return true;
+    }
+  });
   return false;
 };
 
@@ -113,7 +125,11 @@ const routes = [
       {
         beforeEnter: (to, from, next) => {
           if (isAuthenticated()) {
-            next();
+            if (hasCompany()) {
+              next('/home');
+            } else {
+              next();
+            }
           } else {
             next('/authentication');
           }
@@ -138,6 +154,18 @@ const routes = [
         path: '/:token/email-verification',
         name: 'ValidateAccount',
         component: ValidateAccount
+      },
+      {
+        beforeEnter: (to, from, next) => {
+          if (isAuthenticated()) {
+            next();
+          } else {
+            next('/authentication');
+          }
+        },
+        path: '/appointments',
+        name: 'UserAppointments',
+        component: () => import('@/views/UserAppointments.vue')
       },
       {
         beforeEnter: (to, from, next) => {
@@ -222,7 +250,7 @@ const routes = [
             name: 'EmployerHome'
           },
           {
-            path: 'companies/',
+            path: 'company/',
             children: [
               {
                 path: '',

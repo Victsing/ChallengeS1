@@ -1,23 +1,8 @@
 import axios from "./axios";
 
 export default {
-  getJobs() {
-    return axios.get("/job_ads");
-  },
-  getJob(jobId) {
-    return axios.get(`/job_ads/${jobId}`);
-  },
-  updateJob(jobId, job) {
-    return axios.patch(`/job_ads/${jobId}`, job,
-    {
-      headers: {
-        "Content-Type": "application/merge-patch+json",
-        "Authorization": `Bearer ${localStorage.getItem("token")}`
-      }
-    });
-  },
-  deleteJob(jobId) {
-    return axios.delete(`/job_ads/${jobId}`,
+  create(appointment) {
+    return axios.post("/appointments", appointment,
     {
       headers: {
         "Content-Type": "application/json",
@@ -25,11 +10,17 @@ export default {
       }
     });
   },
-  deleteCandidate(newCandidates, jobId) {
-    return axios.patch(`/job_ads/${jobId}`,
+  delete(appointmentId) {
+    return axios.delete(`/appointments/${appointmentId}`,
     {
-      candidates: newCandidates,
-    },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    });
+  },
+  update(appointmentId, value) {
+    return axios.patch(`/appointments/${appointmentId}`, value,
     {
       headers: {
         "Content-Type": "application/merge-patch+json",

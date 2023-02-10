@@ -65,11 +65,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column()]
-    #[Groups(['user:read', 'company:read', 'job_ads:read', 'appointment:read'])]
+    #[Groups(['user:read', 'company:read', 'job_ads:read', 'appointment:read', 'job_ads:write'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Groups(['user:read', 'user:write', 'user:getToken', 'company:read', 'job_ads:read', 'appointment:read'])]
+    #[Groups(['user:read', 'user:write', 'user:getToken', 'company:read', 'job_ads:read', 'appointment:read', 'job_ads:write'])]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -91,11 +91,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $token = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:read', 'user:write', 'company:read', 'job_ads:read', 'appointment:read'])]
+    #[Groups(['user:read', 'user:write', 'company:read', 'job_ads:read', 'appointment:read', 'job_ads:write'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:read', 'user:write', 'company:read', 'job_ads:read', 'appointment:read'])]
+    #[Groups(['user:read', 'user:write', 'company:read', 'job_ads:read', 'appointment:read', 'job_ads:write'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
