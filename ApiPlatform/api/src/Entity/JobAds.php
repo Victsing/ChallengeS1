@@ -73,6 +73,7 @@ class JobAds
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'jobAds')]
+    #[ORM\JoinColumn(name: 'company_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[Groups(['job_ads:read', 'job_ads:write', 'company:read'])]
     private ?Company $company = null;
 
