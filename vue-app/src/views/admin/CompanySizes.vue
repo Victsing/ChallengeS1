@@ -151,7 +151,6 @@ const handleAction = (elem, status) => {
     editElement.value.title = elem.title;
     editElement.value.id = elem.id;
     if (!showForm.value) showForm.value = true;
-    console.log(editElement, 'ddd');
   }
 };
 
@@ -162,12 +161,9 @@ const closeEdit = (e) => {
 };
 
 const edit = async (e) => {
-  console.log(editElement.value);
-
   e.preventDefault();
   try {
     const response = await AdminApi.updateCompanySize(editElement.value.id, editElement.value.title);
-    console.log(response);
     if (response.status === 200) {
       snackbarText.value = 'La taille a bien été modifié';
       snackbarColor.value = 'success';

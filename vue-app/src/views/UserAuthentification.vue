@@ -131,10 +131,8 @@ import { getDataFromToken } from "@/mixins";
 
 const route = useRoute();
 
-// if route.query.tab exists, set tab to route.query.tab else set tab to "one"
 const tab = ref(route.query.tab ? route.query.tab : "one");
 
-// const tab = ref("one");
 let firstname = ref("");
 let lastname = ref("");
 let birthday = ref("");
@@ -166,7 +164,6 @@ const register = async (e) => {
     password.value,
     new Date().toISOString()
   ).then((response) => {
-    console.log(response.data);
     snackbar.value = true;
     snackbarText.value = "Inscription réussie, vous allez recevoir un email pour valider votre compte. Vous allez être redirigé vers la page d'accueil dans 3 secondes.";
     snackbarColor.value = "success";
@@ -190,8 +187,6 @@ const login = async (e) => {
   ).then((response) => {
     localStorage.setItem("token", response.data.token);
     let data = getDataFromToken();
-    console.log(data);
-    console.log(data.roles.includes("ROLE_ADMIN"));
     if (data.roles.includes("ROLE_ADMIN")) {
       router.push("/admin");
     } else {
@@ -211,7 +206,6 @@ const newPassword = async (e) => {
   AuthentificationApi.newPassword(
     forgottenPasswordEmail.value
   ).then((response) => {
-    console.log(response.data);
     snackbar.value = true;
     snackbarText.value = "Email envoyé, veuillez ouvrir le lien que vous allez recevoir afin de réinitialiser votre mot de passe. Vous allez être redirigé vers la page d'accueil dans 3 secondes.";
     snackbarColor.value = "success";

@@ -43,11 +43,16 @@
       required
     />
     <v-btn
-      @click="addJob"
+      @click="isEditRoute ? updateJob() : addJob()"
       color="primary"
       :disabled="disableButton"
     >
-      Create
+      <div v-if="isEditRoute">
+        Update
+      </div>
+      <div v-else>
+        Create
+      </div>
     </v-btn>
   </v-form>
 </template>
@@ -56,14 +61,15 @@
 import { ref, onMounted, computed } from 'vue';
 import CompanyApi from '@/backend/CompanyApi';
 import AuthentificationApi from '@/backend/AuthentificationApi';
+import JobsApi from '@/backend/JobsApi';
 import BaseNaveBar from '@/components/BaseNaveBar.vue'
 import jwt_decode from 'jwt-decode';
 import { useRoute, useRouter } from 'vue-router';
 
 let disableButton = ref(false);
 
-const route = useRoute();
 const router = useRouter();
+const route = useRoute();
 let me = ref({});
 const token = localStorage.getItem('token');
 const decoded = jwt_decode(token);
@@ -79,7 +85,19 @@ let job = ref({
   company: `/companies/${route.params.id}`,
 });
 
+const isEditRoute = computed(() => {
+  return route.name.includes('Edit');
+});
+
 onMounted(() => {
+  if (isEditRoute) {
+    const jobid = isEmployer ? route.params.jobId : route.params.id;
+    JobsApi.getJob(jobid).then((response) => {
+      job.value = response.data;
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
   AuthentificationApi.getMe(decoded.id).then((response) => {
     me.value = response.data;
   }).catch((error) => {
@@ -89,6 +107,12 @@ onMounted(() => {
 
 let isEmployer = computed(() => {
   return decoded.roles.includes('ROLE_EMPLOYER');
+});
+
+const isAdmin = computed(() => {
+  const token = localStorage.getItem('token');
+  const decoded = jwt_decode(token);
+  return decoded.roles.includes('ROLE_ADMIN');
 });
 
 let contractTypes = [
@@ -103,8 +127,30 @@ let contractTypes = [
 const addJob = () => {
   disableButton.value = true;
   CompanyApi.createJob(job.value).then((response) => {
-    console.log(response);
     router.push(`/employer/company/${route.params.id}/jobs`);
+  }).catch((error) => {
+    console.log(error);
+    disableButton.value = false;
+  });
+};
+
+const updateJob = () => {
+  disableButton.value = true;
+  const jobid = isEmployer ? route.params.jobId : route.params.id;
+  JobsApi.updateJob(jobid, {
+    title: job.value.title,
+    description: job.value.description,
+    city: job.value.city,
+    country: job.value.country,
+    contractType: job.value.contractType,
+    salary: job.value.salary,
+    missionDuration: job.value.missionDuration,
+  }).then((response) => {
+    if (isEmployer) {
+      router.push(`/employer/company/${route.params.id}/jobs`);
+    } else {
+      router.push(`/admin/jobs`);
+    }
   }).catch((error) => {
     console.log(error);
     disableButton.value = false;

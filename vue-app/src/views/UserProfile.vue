@@ -2,6 +2,7 @@
   <div>
     <BaseNaveBar
       :title="`Welcome ${decoded.firstname} ${decoded.lastname}`"
+      :employer="isEmployer"
     />
     <v-row class="align-center">
       <v-col>
@@ -102,7 +103,6 @@ let email = ref('');
 let me = ref({});
 onMounted(() => {
   AuthentificationApi.getMe(decoded.id).then((response) => {
-    console.log(response.data);
     me.value = response.data;
     firstname.value = response.data.firstname;
     lastname.value = response.data.lastname;
@@ -209,4 +209,7 @@ const updateProfile = async (e) => {
     });
   }
 };
+const isEmployer = computed(() => {
+  return decoded.roles.includes('ROLE_EMPLOYER');
+});
 </script>

@@ -22,6 +22,8 @@
         <th>City</th>
         <th>country</th>
         <th>Salary</th>
+        <th>Candidates</th>
+        <th>Appointments</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -33,7 +35,23 @@
         <td>{{ job.salary }}</td>
         <td>
           <v-btn
+            @click="this.$router.push(`/employer/company/${route.params.id}/jobs/${job.id}/candidates`)"
+            icon="mdi-account-multiple"
+          />
+        </td>
+        <td>
+          <v-btn
+            @click="this.$router.push(`/employer/company/${route.params.id}/jobs/${job.id}/appointments`)"
+            icon="mdi-calendar-clock"
+          />
+        </td>
+        <td>
+          <v-btn
             @click="this.$router.push(`/employer/company/${route.params.id}/jobs/${job.id}`)"
+            icon="mdi-eye"
+          />
+          <v-btn
+            @click="this.$router.push(`/employer/company/${route.params.id}/jobs/${job.id}/edit`)"
             icon="mdi-pencil"
           />
           <v-btn
@@ -48,13 +66,15 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import CompanyApi from '@/backend/CompanyApi'
+import CompanyApi from '@/backend/CompanyApi';
+import JobsApi from '@/backend/JobsApi';
 import AuthentificationApi from '@/backend/AuthentificationApi';
 import BaseNaveBar from '@/components/BaseNaveBar.vue';
 import jwt_decode from 'jwt-decode';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
+const router = useRouter();
 
 let me = ref({});
 let company = ref({});
@@ -65,14 +85,12 @@ const decoded = jwt_decode(token);
 onMounted(() => {
   AuthentificationApi.getMe(decoded.id).then((response) => {
     me.value = response.data;
-    console.log(me);
   }).catch((error) => {
     console.log(error);
   });
   CompanyApi.getCompany(route.params.id).then((response) => {
     company.value = response.data;
     jobs.value = company.value.jobAds;
-    console.log(company);
   }).catch((error) => {
     console.log(error);
   });
@@ -81,4 +99,12 @@ onMounted(() => {
 let isEmployer = computed(() => {
   return decoded.roles.includes('ROLE_EMPLOYER');
 });
+
+const deleteJob = (id) => {
+  JobsApi.deleteJob(id).then((response) => {
+    router.go(0);
+  }).catch((error) => {
+    console.log(error);
+  });
+};
 </script>
