@@ -35,3 +35,8 @@ docker-compose exec node npm i
 ```
 docker-compose exec node npm run dev
 ```
+
+### External server node (check compagny)
+```
+docker-compose exec node npm run server
+```

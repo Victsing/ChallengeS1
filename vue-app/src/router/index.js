@@ -12,10 +12,10 @@ import Home from '@/views/Home.vue';
 
 const isAuthenticated = () => {
   const token = localStorage.getItem('token');
-  if (token) {
-    return true;
-  }
-  return false;
+  const today = new Date().getTime();
+  if (!token) return false;
+  const data = getDataFromToken();
+  return today < data.exp * 1000;
 };
 
 const isAdmin = () => {
@@ -167,7 +167,7 @@ const routes = [
                 name: 'AdminJob',
                 component: () => import('@/views/Job.vue')
               }
-            ],
+            ]
           },
           {
             path: 'company/sizes',
@@ -216,9 +216,9 @@ const routes = [
             children: [
               {
                 path: '',
-              name: 'EmployerCompanies',
-              component: () => import('@/views/employer/Companies.vue')
-              },
+                name: 'EmployerCompanies',
+                component: () => import('@/views/employer/Companies.vue')
+              }
             ]
           },
           {
@@ -227,7 +227,7 @@ const routes = [
               {
                 path: '',
                 name: 'EmployerCompany',
-                component: () => import('@/views/employer/Company.vue'),
+                component: () => import('@/views/employer/Company.vue')
               },
               {
                 path: 'jobs',
@@ -243,9 +243,9 @@ const routes = [
                     component: () => import('@/views/employer/NewCompanyJob.vue')
                   }
                 ]
-              },
+              }
             ]
-          },
+          }
         ]
       }
     ]
