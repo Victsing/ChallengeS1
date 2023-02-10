@@ -19,7 +19,7 @@ jobs:
             cd ChallengeS1
             git pull
             cd ApiPlatform
-            docker compose exec php bin/console d:m:m -y
+            docker compose exec php bin/console d:s:u --force
 
   install:
     name: Installing new packages
