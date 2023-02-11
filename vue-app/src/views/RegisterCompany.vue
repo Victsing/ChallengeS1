@@ -1,15 +1,15 @@
 <template>
-  <BaseNaveBar :title="`Welcome ${user.firstname} ${user.lastname}`" />
+  <BaseNaveBar :title="`Bienvenu ${user.firstname} ${user.lastname}`" />
   <v-row class="align-center">
     <v-col>
-      <v-img :src="CompanyImage" alt="company_image" max-height="100vh" />
+      <v-img :src="CompanyImage" alt="company_image" max-height="100vh"  />
     </v-col>
     <v-col>
-      <h2 class="mb-4 text-center">Register your company</h2>
+      <h2 class="mb-4 mt-6 text-center">INSCRIRE SON ENTREPRISE</h2>
       <v-form>
-        <v-text-field label="Company name" variant="outlined" v-model="companyName" />
+        <v-text-field label="Nom de l'entreprise" variant="outlined" v-model="companyName" />
         <v-select
-          label="Company size"
+          label="Taille de l'entreprise"
           variant="outlined"
           required
           type="select"
@@ -19,14 +19,14 @@
           item-title="size"
         />
         <v-text-field
-          label="Company creation date"
+          label="Date de création"
           variant="outlined"
           v-model="companyCreationDate"
           type="date"
           required
         />
         <v-select
-          label="Company revenues"
+          label="Revenus"
           variant="outlined"
           v-model="companyRevenue"
           required
@@ -37,7 +37,7 @@
         />
         <v-text-field label="Company address" variant="outlined" v-model="companyAddress" required />
         <v-select
-          label="Company sector"
+          label="Secteur de l'entreprise"
           variant="outlined"
           v-model="companySector"
           required
@@ -46,17 +46,17 @@
           item-value="id"
           item-title="sector"
         />
-        <v-text-field label="Company website" variant="outlined" v-model="companyWebsite" />
-        <v-text-field label="Company description" variant="outlined" v-model="companyDescription" />
+        <v-text-field label="Site web de l'entreprise" variant="outlined" v-model="companyWebsite" />
+        <v-text-field label="Description de l'entreprise" variant="outlined" v-model="companyDescription" />
         <v-text-field
-          label="Company SIRET"
+          label="SIRET de l'entreprise"
           variant="outlined"
           v-model="companySiret"
           type="number"
           required
           :rules="rules"
         />
-        <v-btn color="primary" @click="registerCompany" :disabled="disableButton"> Register </v-btn>
+        <v-btn color="pink darken-3"   @click="registerCompany" :disabled="disableButton"> Inscrire </v-btn>
       </v-form>
     </v-col>
   </v-row>
@@ -74,7 +74,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import BaseNaveBar from '@/components/BaseNaveBar.vue';
 import BaseSnackbar from '@/components/BaseSnackbar.vue';
-import CompanyImage from '@/assets/company_image.svg';
+import CompanyImage from '@/assets/company_image.png';
 import CompanyApi from '@/backend/CompanyApi';
 import { getDataFromToken } from '@/mixins';
 import AuthentificationApi from '@/backend/AuthentificationApi';
