@@ -1,14 +1,16 @@
 <template>
-  <BaseNaveBar color="black" />
-  <v-row>
+  <BaseNaveBar color="#15202B" class="text-white mb-16" />
+  <v-row class="mt-16">
     <v-col>
-      <v-tabs v-model="tab" class="mb-6">
-        <v-tab value="one">Login</v-tab>
-        <v-tab value="two">Register</v-tab>
-        <v-tab value="three">Forgot Password</v-tab>
+      
+      <v-tabs v-model="tab" class="mt-16 mb-16">
+        <v-tab value="one">Se connecter</v-tab>
+        <v-tab value="two">S'inscrire</v-tab>
+        <v-tab value="three">Mot de passe oublié</v-tab>
       </v-tabs>
-      <v-window v-model="tab" class="pb-4">
-        <v-window-item value="one">
+
+      <v-window v-model="tab" class="mb-4">
+        <v-window-item value="one" class="mt-16">
           <v-form>
             <v-text-field
               label="Email"
@@ -19,7 +21,7 @@
               v-model="loginEmail"
             />
             <v-text-field
-              label="Password"
+              label="Mot de passe"
               type="password"
               prepend-icon="mdi-lock"
               variant="outlined"
@@ -27,23 +29,23 @@
               class="mb-16"
               v-model="loginPassword"
             />
-            <BaseRoundButton @click="login" type="submit" color="black" :disabled="disableButton"
+            <BaseRoundButton @click="login" type="submit" color="pink darken-3" :disabled="disableButton" class="ml-8 mb-16"
               >Se connecter</BaseRoundButton
             >
           </v-form>
         </v-window-item>
-        <v-window-item value="two">
+        <v-window-item value="two" class="mt-16">
           <v-form>
             <div class="d-flex">
               <v-text-field
-                label="Firstname"
+                label="Prénom"
                 variant="outlined"
                 required
                 prepend-icon="mdi-account"
                 v-model="firstname"
               />
               <v-text-field
-                label="Lastname"
+                label="Nom"
                 variant="outlined"
                 required
                 prepend-icon="mdi-account"
@@ -52,7 +54,7 @@
               />
             </div>
             <v-text-field
-              label="Birthday"
+              label="Date de naissance"
               type="date"
               prepend-icon="mdi-calendar"
               variant="outlined"
@@ -68,7 +70,7 @@
               v-model="email"
             />
             <v-text-field
-              label="Password"
+              label="Mot de passe"
               type="password"
               prepend-icon="mdi-lock"
               variant="outlined"
@@ -76,7 +78,7 @@
               v-model="password"
             />
             <v-text-field
-              label="Confirm Password"
+              label="Confirmation du mot de passe"
               type="password"
               prepend-icon="mdi-lock"
               variant="outlined"
@@ -84,12 +86,12 @@
               v-model="confirmPassword"
               class="mb-16"
             />
-            <BaseRoundButton @click="register" type="submit" color="black" :disabled="disableButton"
+            <BaseRoundButton @click="register" type="submit" color="pink darken-3" :disabled="disableButton" class="ml-8 mb-16"
               >S'inscrire</BaseRoundButton
             >
           </v-form>
         </v-window-item>
-        <v-window-item value="three">
+        <v-window-item value="three" class="mt-16">
           <v-form>
             <v-text-field
               label="Email"
@@ -99,14 +101,14 @@
               required
               v-model="forgottenPasswordEmail"
             />
-            <BaseRoundButton @click="newPassword" type="submit" color="black" :disabled="disableButton"
+            <BaseRoundButton @click="newPassword" type="submit" color="pink darken-3" :disabled="disableButton" class="ml-8 mb-16"
               >Continuer</BaseRoundButton
             >
           </v-form>
         </v-window-item>
       </v-window>
     </v-col>
-    <v-col>
+    <v-col class="mt-16 ml-16">
       <v-img :src="PersonalInfo" alt="personal_info" />
     </v-col>
   </v-row>
@@ -124,7 +126,7 @@ import { ref } from "vue";
 import BaseRoundButton from "../components/BaseRoundButton.vue";
 import AuthentificationApi from "../backend/AuthentificationApi";
 import BaseNaveBar from '@/components/BaseNaveBar.vue';
-import PersonalInfo from '@/assets/personal_info.svg';
+import PersonalInfo from '@/assets/personal_info.png';
 import BaseSnackbar from "@/components/BaseSnackbar.vue";
 import { useRouter, useRoute } from "vue-router";
 import { getDataFromToken } from "@/mixins";

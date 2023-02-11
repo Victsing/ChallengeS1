@@ -25,7 +25,7 @@ export default {
       }
     });
   },
-  deleteCandidate(newCandidates, jobId) {
+  removeCandidate(newCandidates, jobId) {
     return axios.patch(`/job_ads/${jobId}`,
     {
       candidates: newCandidates,
