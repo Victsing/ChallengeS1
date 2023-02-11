@@ -1,8 +1,5 @@
 <template>
-  <BaseNaveBar
-    :title="`Welcome ${decoded.firstname} ${decoded.lastname}`"
-    :employer="isEmployer"
-  />
+  <BaseNaveBar :title="`Welcome ${decoded.firstname} ${decoded.lastname}`" :employer="isEmployer" />
   <h1>Candidates</h1>
   <v-table v-if="candidates.length > 0">
     <thead>
@@ -18,24 +15,16 @@
         <td>{{ candidate.firstname }}</td>
         <td>{{ candidate.lastname }}</td>
         <td>
-          <v-btn
-          @click="handleAction(candidate, 'setAppointment')"
-          icon="mdi-calendar-clock"
-          color="success"
-          />
+          <v-btn @click="handleAction(candidate, 'setAppointment')" icon="mdi-calendar-clock" color="success" />
         </td>
-        <td> <v-btn
-          @click="handleAction(candidate, 'dismiss')"
-          icon="mdi-trash-can"
-          color="error"
-          /></td>
+        <td><v-btn @click="handleAction(candidate, 'dismiss')" icon="mdi-trash-can" color="error" /></td>
       </tr>
     </tbody>
     <v-dialog v-model="dialog" persistent>
       <v-card>
         <v-card-text>
-          Vous vous apprétez à <strong class="text-warning">supprimer</strong> cette candidature.
-          Cette action est irréversible. Êtes-vous sûr de vouloir continuer ?
+          Vous vous apprétez à <strong class="text-warning">supprimer</strong> cette candidature. Cette action est
+          irréversible. Êtes-vous sûr de vouloir continuer ?
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -48,40 +37,39 @@
       <v-card>
         <v-card-text>
           <v-form>
-            <v-text-field
-              label="Datetime"
-              type="datetime-local"
-              required
-              step="60"
-              v-model="appointment.time"
-            />
+            <v-text-field label="Datetime" type="datetime-local" required step="60" v-model="appointment.time" />
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn @click="newDialog = false">Annuler</v-btn>
-          <v-btn color="warning" @click="setAppointment(); newDialog = false">Ajouter</v-btn>
+          <v-btn
+            color="warning"
+            @click="
+              setAppointment();
+              newDialog = false;
+            "
+            >Ajouter</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <BaseSnackbar
-      v-model="snackbar"
-      :text="snackbarText"
-      :color="snackbarColor"
-      :timeout="30000"
-      @close-snackbar="snackbar = false"
-    />
   </v-table>
   <h2 v-else class="text-center">No candidates found</h2>
+  <BaseSnackBar
+    v-model="snackbar"
+    :text="snackbarText"
+    :color="snackbarColor"
+    :timeout="30000"
+    @close-snackbar="snackbar = false"
+  />
 </template>
 
 <script setup>
-import { ref, onMounted, computed, reactive } from 'vue'
-import CompanyApi from '@/backend/CompanyApi';
+import { ref, onMounted, computed, reactive } from 'vue';
 import JobsApi from '@/backend/JobsApi';
 import AppointmentApi from '@/backend/AppointmentApi';
-import BaseNaveBar from '@/components/BaseNaveBar.vue';
-import BaseSnackbar from '@/components/BaseSnackbar.vue';
+import { BaseSnackBar, BaseNaveBar } from '@/components';
 import { getDataFromToken } from '@/mixins';
 import jwt_decode from 'jwt-decode';
 import { useRoute, useRouter } from 'vue-router';
@@ -108,7 +96,7 @@ const appointment = ref({
   candidate: '',
   job: `/job_ads/${route.params.jobId}`,
   time: '',
-  accepted: null,
+  accepted: null
 });
 
 const handleAction = (elem, action) => {
@@ -135,22 +123,24 @@ const setAppointment = () => {
     return;
   } else if (checkDate(appointment.value.time)) {
     snackbar.value = true;
-    snackbarText.value = 'La date et l\'heure doivent être supérieures à la date et l\'heure actuelle';
+    snackbarText.value = "La date et l'heure doivent être supérieures à la date et l'heure actuelle";
     snackbarColor.value = 'error';
     return;
   }
   appointment.value.candidate = `/users/${dialogElement.id}`;
-  AppointmentApi.create(appointment.value).then((response) => {
-    snackbar.value = true;
-    snackbarText.value = 'Rendez-vous ajouté avec succès';
-    snackbarColor.value = 'success';
-    router.push({ name: 'EmployerCompanyJobAppointments' });
-  }).catch((error) => {
-    snackbar.value = true;
-    snackbarText.value = 'Une erreur est survenue, veuillez réessayer';
-    snackbarColor.value = 'error';
-    console.log(error);
-  });
+  AppointmentApi.create(appointment.value)
+    .then((response) => {
+      snackbar.value = true;
+      snackbarText.value = 'Rendez-vous ajouté avec succès';
+      snackbarColor.value = 'success';
+      router.push({ name: 'EmployerCompanyJobAppointments' });
+    })
+    .catch((error) => {
+      snackbar.value = true;
+      snackbarText.value = 'Une erreur est survenue, veuillez réessayer';
+      snackbarColor.value = 'error';
+      console.log(error);
+    });
 };
 
 const checkAppointment = (time) => {
@@ -174,26 +164,31 @@ const checkDate = (date) => {
 const remove = () => {
   const index = candidates.value.findIndex((candidate) => candidate.id === dialogElement.id);
   candidates.value.splice(index, 1);
-  // JobsApi.deleteCandidate(candidates.value, route.params.jobId).then((response) => {
-  //   snackbar.value = true;
-  //   snackbarText.value = 'Candidature supprimée avec succès';
-  //   snackbarColor.value = 'success';
-  // }).catch((error) => {
-  //   snackbar.value = true;
-  //   snackbarText.value = 'Une erreur est survenue, veuillez réessayer';
-  //   snackbarColor.value = 'error';
-  //   console.log(error);
-  // });
+  JobsApi.removeCandidate(candidates.value, route.params.jobId)
+    .then((response) => {
+      console.log(response);
+      snackbar.value = true;
+      snackbarText.value = 'Candidature supprimée avec succès';
+      snackbarColor.value = 'success';
+    })
+    .catch((error) => {
+      snackbar.value = true;
+      snackbarText.value = 'Une erreur est survenue, veuillez réessayer';
+      snackbarColor.value = 'error';
+      console.log(error);
+    });
   dialog.value = false;
 };
 
 onMounted(() => {
   const id = isEmployer.value ? route.params.jobId : route.params.id;
-  JobsApi.getJob(id).then((response) => {
-    candidates.value = response.data.candidates;
-    appointments.value = response.data.appointments;
-  }).catch((error) => {
-    console.log(error);
-  });
+  JobsApi.getJob(id)
+    .then((response) => {
+      candidates.value = response.data.candidates;
+      appointments.value = response.data.appointments;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 });
 </script>
