@@ -245,6 +245,12 @@ const routes = [
             name: 'EmployerHome'
           },
           {
+            path: 'subscription',
+            component: () => import('@/views/employer/SubscriptionRegister.vue'),
+            name: 'EmployerHome'
+          },
+
+          {
             path: 'company/',
             children: [
               {

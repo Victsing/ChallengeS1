@@ -8,6 +8,7 @@
     <v-btn
       @click="this.$router.push(`/employer/company/${route.params.id}/jobs/new`)"
       class="ml-4"
+      :disabled="(verificationNumber)"
     >
       Create a new job
     </v-btn>
@@ -17,61 +18,69 @@
   </div>
   <v-table v-else>
     <thead>
-      <tr>
-        <th>Title</th>
-        <th>City</th>
-        <th>country</th>
-        <th>Salary</th>
-        <th>Candidates</th>
-        <th>Appointments</th>
-        <th>Actions</th>
-      </tr>
+    <tr>
+      <th>Title</th>
+      <th>City</th>
+      <th>country</th>
+      <th>Salary</th>
+      <th>Candidates</th>
+      <th>Appointments</th>
+      <th>Actions</th>
+    </tr>
     </thead>
     <tbody>
-      <tr v-for="job in jobs" :key="job.id">
-        <td>{{ job.title }}</td>
-        <td>{{ job.city }}</td>
-        <td>{{ job.country }}</td>
-        <td>{{ job.salary }}</td>
-        <td>
-          <v-btn
-            @click="this.$router.push(`/employer/company/${route.params.id}/jobs/${job.id}/candidates`)"
-            icon="mdi-account-multiple"
-          />
-        </td>
-        <td>
-          <v-btn
-            @click="this.$router.push(`/employer/company/${route.params.id}/jobs/${job.id}/appointments`)"
-            icon="mdi-calendar-clock"
-          />
-        </td>
-        <td>
-          <v-btn
-            @click="this.$router.push(`/employer/company/${route.params.id}/jobs/${job.id}`)"
-            icon="mdi-eye"
-          />
-          <v-btn
-            @click="this.$router.push(`/employer/company/${route.params.id}/jobs/${job.id}/edit`)"
-            icon="mdi-pencil"
-          />
-          <v-btn
-            @click="deleteJob(job.id)"
-            icon="mdi-delete"
-          />
-        </td>
-      </tr>
+    <tr v-for="job in jobs" :key="job.id">
+      <td>{{ job.title }}</td>
+      <td>{{ job.city }}</td>
+      <td>{{ job.country }}</td>
+      <td>{{ job.salary }}</td>
+      <td>
+        <v-btn
+          @click="this.$router.push(`/employer/company/${route.params.id}/jobs/${job.id}/candidates`)"
+          icon="mdi-account-multiple"
+        />
+      </td>
+      <td>
+        <v-btn
+          @click="this.$router.push(`/employer/company/${route.params.id}/jobs/${job.id}/appointments`)"
+          icon="mdi-calendar-clock"
+        />
+      </td>
+      <td>
+        <v-btn
+          @click="this.$router.push(`/employer/company/${route.params.id}/jobs/${job.id}`)"
+          icon="mdi-eye"
+        />
+        <v-btn
+          @click="this.$router.push(`/employer/company/${route.params.id}/jobs/${job.id}/edit`)"
+          icon="mdi-pencil"
+        />
+        <v-btn
+          @click="deleteJob(job.id)"
+          icon="mdi-delete"
+        />
+      </td>
+    </tr>
     </tbody>
   </v-table>
+  <div v-if="verificationNumber">
+    <h2>You have exceed the number of jobAdd that you can add, in order to add more adds <br/>
+      <v-btn @click="this.$router.push(`/employer/subscription`)">Subscribe to our premium membership</v-btn>
+
+
+    </h2>
+  </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+
+import {ref, onMounted, computed} from 'vue'
 import CompanyApi from '@/backend/CompanyApi';
 import JobsApi from '@/backend/JobsApi';
 import AuthentificationApi from '@/backend/AuthentificationApi';
 import BaseNaveBar from '@/components/BaseNaveBar.vue';
 import jwt_decode from 'jwt-decode';
-import { useRoute, useRouter } from 'vue-router';
+import {useRoute, useRouter} from 'vue-router';
 
 const route = useRoute();
 const router = useRouter();
@@ -102,6 +111,9 @@ onMounted(() => {
 let isEmployer = computed(() => {
   return decoded.roles.includes('ROLE_EMPLOYER');
 });
+const verificationNumber = computed(() => {
+  return jobs.value.length === 2;
+})
 
 const deleteJob = (id) => {
   JobsApi.deleteJob(id).then((response) => {

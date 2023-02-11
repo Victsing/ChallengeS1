@@ -51,6 +51,11 @@ app.post('/api/check-compagny', async (req, res) => {
   }
 });
 
+app.post('/premium', express.json({type: 'application/json'}),(req, res) =>{
+  const event = req.body()
+
+})
+
 app.listen(5111, async () => {
   console.log('Server listening on port 5111');
 });
