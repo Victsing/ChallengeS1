@@ -156,8 +156,27 @@ let snackbarColor = ref("");
 const router = useRouter();
 
 const register = async (e) => {
-  disableButton.value = true;
   e.preventDefault();
+  if (password.value !== confirmPassword.value) {
+    snackbar.value = true;
+    snackbarText.value = "Les mots de passe ne correspondent pas.";
+    snackbarColor.value = "error";
+    disableButton.value = false;
+    return;
+  } else if (password.value.length < 8) {
+    snackbar.value = true;
+    snackbarText.value = "Le mot de passe doit contenir au moins 8 caractères.";
+    snackbarColor.value = "error";
+    disableButton.value = false;
+    return;
+  } else if (checkBirthday(birthday.value) === false) {
+    snackbar.value = true;
+    snackbarText.value = "Vous devez avoir plus de 18 ans pour vous inscrire.";
+    snackbarColor.value = "error";
+    disableButton.value = false;
+    return;
+  }
+  disableButton.value = true;
   AuthentificationApi.register(
     firstname.value,
     lastname.value,
@@ -220,5 +239,16 @@ const newPassword = async (e) => {
     snackbarColor.value = "error";
     disableButton.value = false;
   });
+};
+
+const checkBirthday = (birthday) => {
+  let today = new Date();
+  let birthDate = new Date(birthday);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  let m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age >= 18 && age <= 100;
 };
 </script>

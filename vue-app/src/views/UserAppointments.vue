@@ -28,13 +28,13 @@
         </td>
         <td>
           <v-btn
-            @click="handleAction(appointment.id, true)"
+            @click="handleAction(appointment, true)"
             icon="mdi-check"
             color="success"
             :disabled="appointment.accepted === true || appointment.accepted === false"
           />
           <v-btn
-            @click="handleAction(appointment.id, false)"
+            @click="handleAction(appointment, false)"
             icon="mdi-close"
             color="error"
             :disabled="appointment.accepted === true || appointment.accepted === false"
@@ -102,11 +102,11 @@ const isUser = computed(() => decoded.roles.includes("ROLE_USER"));
 let appointments = ref([]);
 let me = ref({});
 
-const appointmentId = ref(null);
+const appointment = ref(null);
 const appointmentStatus = ref(null);
 
-const handleAction = (id, accepted) => {
-  appointmentId.value = id;
+const handleAction = (app, accepted) => {
+  appointment.value = app;
   appointmentStatus.value = accepted;
   if (accepted) {
     acceptDialog.value = true;
@@ -128,12 +128,35 @@ const my_appointments = computed(() => {
   return me.value.appointments;
 });
 
+const checkAppointment = (time) => {
+  time = time + ':00+00:00';
+  const index = appointments.value.findIndex((appointment) => appointment.time === time);
+  if (index !== -1) {
+    return true;
+  }
+  return false;
+};
+
+const checkAppointmentAccepted = (time) => {
+  const index = appointments.value.findIndex((appointment) => appointment.time == time && appointment.accepted == true);
+  if (index !== -1) {
+    return true;
+  }
+  return false;
+};
+
 const setAppointment = () => {
-  AppointmentApi.update(appointmentId.value, {
+  if (checkAppointmentAccepted(appointment.value.time)) {
+    snackbar.value = true;
+    snackbarText.value = "You already have an appointment at this time";
+    snackbarColor.value = "error";
+    return;
+  }
+  AppointmentApi.update(appointment.value.id, {
     accepted: appointmentStatus.value,
   }).then((response) => {
     const index = appointments.value.findIndex(
-      (appointment) => appointment.id === appointmentId.value
+      (appointment) => appointment.id === appointment.value.id
     );
     if (appointmentStatus.value) {
       appointments.value[index].accepted = true;

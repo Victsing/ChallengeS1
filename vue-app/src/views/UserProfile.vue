@@ -153,6 +153,13 @@ const checkCurrentPassword = async () => {
 const updateProfile = async (e) => {
   e.preventDefault();
   disableButton.value = true;
+  if (checkBirthday(birthday.value) === false) {
+    snackbar.value = true;
+    snackbarColor.value = 'error';
+    snackbarText.value = 'You must be between 18 and 100 years old to use this website';
+    disableButton.value = false;
+    return;
+  }
   if (!emptyCurrentPassword.value) {
     await checkCurrentPassword();
     if (validCurrentPassword.value && validPasswords.value) {
@@ -212,4 +219,14 @@ const updateProfile = async (e) => {
 const isEmployer = computed(() => {
   return decoded.roles.includes('ROLE_EMPLOYER');
 });
+const checkBirthday = (birthday) => {
+  let today = new Date();
+  let birthDate = new Date(birthday);
+  let age = today.getFullYear() - birthDate.getFullYear();
+  let m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age >= 18 && age <= 100;
+};
 </script>

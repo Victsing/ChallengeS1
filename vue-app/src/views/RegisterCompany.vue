@@ -64,7 +64,6 @@
     v-model="snackbar"
     :text="snackbarText"
     :color="snackbarColor"
-    :timeout="30000"
     @close-snackbar="snackbar = false"
   />
 </template>

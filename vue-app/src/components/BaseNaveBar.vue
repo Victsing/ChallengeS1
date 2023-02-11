@@ -2,6 +2,7 @@
   <v-app-bar flat :color="props.color">
     <!-- <img :src="AppLogo" alt="logo" class="ml-4" @click="logoRedirect" /> -->
     <v-app-bar-title>
+      <v-btn icon="mdi-home" @click="redirectHome" />
       {{ props.title }}
     </v-app-bar-title>
     <template v-slot:append>
@@ -16,7 +17,7 @@
           icon="mdi-domain"
           />
       </div>
-      <div v-if="props.user">
+      <div v-if="props.user && !props.admin && !props.employer">
         <v-btn
           @click="this.$router.push('/appointments')"
           icon="mdi-calendar-clock"
@@ -83,6 +84,14 @@ const logout = () => {
 const isLoggedIn = computed(() => {
   return localStorage.getItem('token') !== null;
 })
+
+const redirectHome = () => {
+  if (props.admin) {
+    router.push('/admin');
+  } else {
+    router.push('/home');
+  }
+}
 
 const logoRedirect = () => {
   if (props.admin) {
