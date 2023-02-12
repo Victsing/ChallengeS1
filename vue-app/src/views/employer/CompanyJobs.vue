@@ -78,46 +78,35 @@
       <v-card-title
         class="bg-blue text-center"
       >
-        Informations de paiement
+        Informations de paiement utilisateur
       </v-card-title>
       <v-card-text>
         <v-row>
           <v-col cols='12'>
-            <v-list-subheader class="grey--text text--lighten-1 pl-0 subheader">CARD NUMBER</v-list-subheader>
+            <v-list-subheader class="grey--text text--lighten-1 pl-0 subheader">Name</v-list-subheader>
             <v-text-field
-                single-line outlined label="**** **** **** ****" hide-details v-model="cardNumber"
+                single-line outlined label="Name" v-model="name"
             />
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols='6'>
-            <v-list-subheader class="grey--text text--lighten-1 pl-0 subheader">EXPIRATION DATE</v-list-subheader>
-            <v-select
-                :items="months"
-                item-title="name"
-                item-value="id"
-                outlined
-                label="Month"
-                v-model="month"
+          <v-col cols='12'>
+            <v-list-subheader class="grey--text text--lighten-1 pl-0 subheader">Email</v-list-subheader>
+            <v-text-field
+              single-line outlined label="Email" v-model="email"
             />
           </v-col>
-          <v-col cols='6'>
-            <v-list-subheader class="grey--text text--lighten-1 pl-0 subheader">EXPIRATION DATE</v-list-subheader>
-            <v-select
-                :items="years"
-                item-title="name"
-                item-value="id"
-                outlined
-                label="Year"
-                v-model="year"
-            />
+        </v-row>
+        <v-row>
+          <v-col cols='12'>
+            <div class="grey--text text--lighten-1 pl-0 subheader" id="card-element">CARD NUMBER</div>
           </v-col>
         </v-row>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn @click="handleClose">Annuler</v-btn>
-        <v-btn color="white" class="bg-blue" @click="becomePremium">Payer</v-btn>
+        <v-btn color="white" class="bg-blue" @click="">Payer</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -129,8 +118,9 @@
   />
 </template>
 
+
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import {ref, onMounted, computed, reactive} from 'vue'
 import CompanyApi from '@/backend/CompanyApi';
 import JobsApi from '@/backend/JobsApi';
 import AuthentificationApi from '@/backend/AuthentificationApi';
@@ -138,9 +128,13 @@ import BaseNaveBar from '@/components/BaseNaveBar.vue';
 import jwt_decode from 'jwt-decode';
 import { useRoute, useRouter } from 'vue-router';
 import BaseSnackbar from '@/components/BaseSnackbar.vue';
+import { loadStripe } from "@stripe/stripe-js";
 
 const route = useRoute();
 const router = useRouter();
+let stripe = null;
+let loading = ref(true);
+let elements = null;
 
 let me = ref({});
 let company = ref({});
@@ -154,39 +148,70 @@ let snackbarColor = ref('');
 
 let premiumDialog = ref(false);
 let cardNumber = ref('');
-let month = ref('');
-let year = ref('');
-
+let name = ref('');
+let email = ref('');
+let cardElement = reactive({});
 const handleClose = () => {
   premiumDialog.value = false;
   cardNumber.value = '';
-  month.value = '';
-  year.value = '';
+  name.value =''
 }
 
-let months = [
-  { id: 1, name: 'January' },
-  { id: 2, name: 'February' },
-  { id: 3, name: 'March' },
-  { id: 4, name: 'April' },
-  { id: 5, name: 'May' },
-  { id: 6, name: 'June' },
-  { id: 7, name: 'July' },
-  { id: 8, name: 'August' },
-  { id: 9, name: 'September' },
-  { id: 10, name: 'October' },
-  { id: 11, name: 'November' },
-  { id: 12, name: 'December' }
-];
+onMounted(async () => {
+  stripe = await loadStripe(import.meta.env.VITE_STRIPE_KEY);
+  let elements = stripe.elements()
 
-let years = [];
-let currentYear = new Date().getFullYear();
-for (let i = 0; i < 10; i++) {
-  years.push({ id: currentYear + i, name: currentYear + i });
-}
+  loading.value = false;
+
+  async function handleSubmit(event) {
+    if (loading.value) return;
+    loading.value = true;
+    const { name, email } = Object.fromEntries(
+      new FormData(event.target)
+    );
+    console.log("here", name, email);
+
+    const billingDetails = {
+      name,
+      email
+    };
+
+    const cardElement = elements.getElement("card");
+
+    cardElement.mount("#card-element");
+    try {
+
+      const response = await fetch("http://localhost:5111/stripe", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ amount: 1999 })
+      });
+      const { secret } = await response.json();
+      console.log("secret", secret);
+
+      const paymentMethodReq = await stripe.createPaymentMethod({
+        type: "card",
+        card: cardElement,
+        billing_details: billingDetails
+      });
+
+      console.log("error?", paymentMethodReq);
+
+      const { error } = await stripe.confirmCardPayment(secret, {
+        payment_method: paymentMethodReq.paymentMethod.id
+      });
+      loading.value = false;
+      console.log("error?", error);
+      await router.push("/success");
+    } catch (error) {
+      console.log("error", error);
+      loading.value = false;
+    }
+  }
 
 
-onMounted(() => {
   AuthentificationApi.getMe(decoded.id).then((response) => {
     me.value = response.data;
   }).catch((error) => {
@@ -205,39 +230,8 @@ let isEmployer = computed(() => {
 });
 
 const displayPremium = computed(() => {
-  return !me.value.premium && jobs.value.length == 2;
+  return !me.value.premium && jobs.value.length === 2;
 });
-
-const isCardNumberValid = computed(() => {
-  return cardNumber.value.length == 16 && !isNaN(cardNumber.value);
-});
-
-const isDateValid = computed(() => {
-  let currentDate = new Date();
-  let selectedDate = new Date(year.value, month.value);
-  return selectedDate > currentDate;
-});
-
-
-const becomePremium = () => {
-  cardNumber.value = cardNumber.value.replace(/\s/g, '');
-  if (!isCardNumberValid.value) {
-    snackbarText.value = 'Card number is not valid';
-    snackbarColor.value = 'error';
-    snackbar.value = true;
-    return;
-  } else if (!isDateValid.value) {
-    snackbarText.value = 'Card is expired';
-    snackbarColor.value = 'error';
-    snackbar.value = true;
-    return;
-  } else {
-    snackbarText.value = 'Payment successful';
-    snackbarColor.value = 'success';
-    snackbar.value = true;
-    handleClose();
-  }
-}
 
 const deleteJob = (id) => {
   JobsApi.deleteJob(id).then((response) => {

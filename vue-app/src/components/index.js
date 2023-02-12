@@ -1,5 +1,5 @@
 import BaseNaveBar from './BaseNaveBar.vue'
-import BaseSnackBar from './BaseSnackBar.vue'
+import BaseSnackBar from './BaseSnackbar.vue'
 import BaseRoundButton from './BaseRoundButton.vue'
 import BaseTitle from './BaseTitle.vue'
 import BaseTitleWithDescription from './BaseTitleWithDescription.vue'
