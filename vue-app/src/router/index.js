@@ -12,6 +12,8 @@ import ValidateAccount from '@/views/ValidateAccount.vue';
 import { getDataFromToken } from '@/mixins';
 import Home from '@/views/Home.vue';
 
+import HomeAdmin from "@/views/admin/Home.vue";
+
 const isAuthenticated = () => {
   const token = localStorage.getItem('token');
   const today = new Date().getTime();
@@ -179,7 +181,7 @@ const routes = [
         children: [
           {
             path: '',
-            component: () => import('@/views/admin/Home.vue'),
+            component: HomeAdmin,
             name: 'AdminHome'
           },
           {
@@ -199,8 +201,8 @@ const routes = [
                 path: 'candidates',
                 name: 'AdminJobCandidates',
                 component: () => import('@/views/Candidates.vue')
-              },
-            ],
+              }
+            ]
           },
           {
             path: 'company/sizes',
@@ -226,7 +228,12 @@ const routes = [
             path: 'company/revenue/new',
             name: 'AdminNewCompanyRevenue',
             component: () => import('@/views/admin/NewCompanyRevenue.vue')
-          }
+          },
+          {
+            path: 'users',
+            name: 'AdminListUsers',
+            component: () => import('@/views/admin/ListUsers.vue')
+          },
         ]
       },
       {
@@ -299,13 +306,18 @@ const routes = [
                         name: 'EmployerCompanyJobAppointments',
                         component: () => import('@/views/employer/Appointments.vue')
                       }
-                    ],
+                    ]
                   }
                 ]
               }
             ]
           }
         ]
+      },
+      {
+        path: '/:pathMatch(.*)*',
+        name: 'NotFound',
+        component: () => import('@/views/404.vue')
       }
     ]
   }
