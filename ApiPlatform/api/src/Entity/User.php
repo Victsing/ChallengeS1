@@ -118,6 +118,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read', 'user:write', 'appointment:read'])]
     private Collection $appointments;
 
+    #[ORM\Column(nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
+    private ?bool $premium = null;
+
     public function __construct()
     {
         $this->roles = array('ROLE_USER');
@@ -350,6 +354,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $appointment->setCandidate(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isPremium(): ?bool
+    {
+        return $this->premium;
+    }
+
+    public function setPremium(?bool $premium): self
+    {
+        $this->premium = $premium;
 
         return $this;
     }
