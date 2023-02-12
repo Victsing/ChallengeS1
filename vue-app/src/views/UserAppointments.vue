@@ -39,6 +39,10 @@
             color="error"
             :disabled="appointment.accepted === true || appointment.accepted === false"
           />
+          <v-btn
+            @click="this.$router.push(`/jobs/${appointment.job.id}`)"
+            icon="mdi-eye"
+          />
         </td>
       </tr>
     </tbody>

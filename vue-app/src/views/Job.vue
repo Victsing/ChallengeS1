@@ -2,6 +2,7 @@
   <BaseNaveBar
     title="Job"
     :employer="isEmployer"
+    :user="isUser"
   />
   <v-card class="mb-4 mx-auto" max-width="800">
     <v-card-title>
@@ -123,9 +124,13 @@ const isAdmin = computed(() => {
 });
 
 const candidate = () => {
-  if (isCandidate === true) {
+  if (isCandidate.value) {
     snackbar.value = true;
     snackbarText = 'Vous avez déjà postulé pour ce job';
+    snackbarColor = 'error';
+  } else if (appointments.value.includes(decoded.id)) {
+    snackbar.value = true;
+    snackbarText = 'Vous avez déjà un entretien pour ce job';
     snackbarColor = 'error';
   } else {
     UserApi.apply(decoded.id, route.params.id).then((response) => {
@@ -147,6 +152,10 @@ const deleteJob = (id) => {
     console.log(error);
   });
 };
+
+const appointments = computed(() => {
+  return job.value.appointments.map((appointment) => appointment.candidate.id);
+});
 
 onMounted(() => {
   const id = (isAdmin.value || isUser.value) ? route.params.id : route.params.jobId;

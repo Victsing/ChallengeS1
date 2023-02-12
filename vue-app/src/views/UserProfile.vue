@@ -3,6 +3,7 @@
     <BaseNaveBar
       :title="`Welcome ${decoded.firstname} ${decoded.lastname}`"
       :employer="isEmployer"
+      :user="isUser"
     />
     <v-row class="align-center">
       <v-col>
@@ -218,6 +219,9 @@ const updateProfile = async (e) => {
 };
 const isEmployer = computed(() => {
   return decoded.roles.includes('ROLE_EMPLOYER');
+});
+const isUser = computed(() => {
+  return decoded.roles.includes('ROLE_USER');
 });
 const checkBirthday = (birthday) => {
   let today = new Date();
