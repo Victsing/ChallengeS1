@@ -55,6 +55,12 @@
       </div>
     </v-btn>
   </v-form>
+  <BaseSnackbar
+    v-model="snackbar"
+    :text="snackbarText"
+    :color="snackbarColor"
+    @close-snackbar="snackbar = false"
+  />
 </template>
 
 <script setup>
@@ -65,14 +71,20 @@ import JobsApi from '@/backend/JobsApi';
 import BaseNaveBar from '@/components/BaseNaveBar.vue'
 import jwt_decode from 'jwt-decode';
 import { useRoute, useRouter } from 'vue-router';
+import BaseSnackbar from '@/components/BaseSnackbar.vue';
 
 let disableButton = ref(false);
+
+let snackbar = ref(false);
+let snackbarText = ref('');
+let snackbarColor = ref('success');
 
 const router = useRouter();
 const route = useRoute();
 let me = ref({});
 const token = localStorage.getItem('token');
 const decoded = jwt_decode(token);
+let jobsCount = ref(0);
 
 let job = ref({
   title: '',
@@ -85,12 +97,16 @@ let job = ref({
   company: `/companies/${route.params.id}`,
 });
 
+const displayPremium = computed(() => {
+  return !me.value.premium && jobsCount == 2;
+});
+
 const isEditRoute = computed(() => {
   return route.name.includes('Edit');
 });
 
 onMounted(() => {
-  if (isEditRoute) {
+  if (route.name.includes('Edit')) {
     const jobid = isEmployer ? route.params.jobId : route.params.id;
     JobsApi.getJob(jobid).then((response) => {
       job.value = response.data;
@@ -100,6 +116,11 @@ onMounted(() => {
   }
   AuthentificationApi.getMe(decoded.id).then((response) => {
     me.value = response.data;
+  }).catch((error) => {
+    console.log(error);
+  });
+  CompanyApi.getCompany(route.params.id).then((response) => {
+    jobsCount.value = response.data.jobAds.length;
   }).catch((error) => {
     console.log(error);
   });
@@ -115,6 +136,11 @@ const isAdmin = computed(() => {
   return decoded.roles.includes('ROLE_ADMIN');
 });
 
+const isNumber = computed(() => {
+  return /^\d+$/.test(job.value.salary);
+});
+
+
 let contractTypes = [
   'Full Time',
   'Part Time',
@@ -126,12 +152,26 @@ let contractTypes = [
 
 const addJob = () => {
   disableButton.value = true;
-  CompanyApi.createJob(job.value).then((response) => {
-    router.push(`/employer/company/${route.params.id}/jobs`);
-  }).catch((error) => {
-    console.log(error);
+  if (displayPremium) {
+    snackbar.value = true;
+    snackbarText.value = 'You need to be premium to add more than 2 jobs';
+    snackbarColor.value = 'error';
     disableButton.value = false;
-  });
+    return;
+  } else if (isNumber) {
+    snackbar.value = true;
+    snackbarText.value = 'Salary must be a number';
+    snackbarColor.value = 'error';
+    disableButton.value = false;
+    return;
+  } else {
+    CompanyApi.createJob(job.value).then((response) => {
+      router.push(`/employer/company/${route.params.id}/jobs`);
+    }).catch((error) => {
+      console.log(error);
+      disableButton.value = false;
+    });
+  }
 };
 
 const updateJob = () => {
