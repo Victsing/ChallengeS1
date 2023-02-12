@@ -1,29 +1,17 @@
 <template>
-  <BaseNaveBar
-    :title="`Welcome ${decoded.firstname} ${decoded.lastname}`"
-    :employer="isEmployer"
-  />
-  <div class="d-flex">
+  <BaseNaveBar :title="`Welcome ${decoded.firstname} ${decoded.lastname}`" :employer="isEmployer" />
+  <div class="d-flex" v-if="!loading">
     <h1>Company Jobs</h1>
     <div v-if="displayPremium" class="d-flex align-center">
-      <v-btn
-      @click="premiumDialog = true"
-      class="ml-4"
-      color="success"
-      >
-      Become Premium
-    </v-btn>
-    <b class="ml-4">Pour poster plus de deux annonces, vous devez devenir premium</b>
-  </div>
-    <v-btn
-      @click="this.$router.push(`/employer/company/${route.params.id}/jobs/new`)"
-      class="ml-4"
-      v-else
-    >
+      <v-btn @click="premiumDialog = true" class="ml-4" color="success"> Become Premium </v-btn>
+      <b class="ml-4">Pour poster plus de deux annonces, vous devez devenir premium</b>
+    </div>
+    <v-btn @click="this.$router.push(`/employer/company/${route.params.id}/jobs/new`)" class="ml-4" v-else>
       Create a new job
     </v-btn>
   </div>
-  <div v-if="jobs.length === 0">
+  <v-progress-linear v-if="loading" color="blue-lighten-3" indeterminate :size="80" :width="6" />
+  <div v-else-if="jobs.length === 0">
     <h2 class="text-center">No jobs found</h2>
   </div>
   <v-table v-else>
@@ -57,60 +45,34 @@
           />
         </td>
         <td>
-          <v-btn
-            @click="this.$router.push(`/employer/company/${route.params.id}/jobs/${job.id}`)"
-            icon="mdi-eye"
-          />
+          <v-btn @click="this.$router.push(`/employer/company/${route.params.id}/jobs/${job.id}`)" icon="mdi-eye" />
           <v-btn
             @click="this.$router.push(`/employer/company/${route.params.id}/jobs/${job.id}/edit`)"
             icon="mdi-pencil"
           />
-          <v-btn
-            @click="deleteJob(job.id)"
-            icon="mdi-delete"
-          />
+          <v-btn @click="deleteJob(job.id)" icon="mdi-delete" />
         </td>
       </tr>
     </tbody>
   </v-table>
   <v-dialog v-model="premiumDialog" persistent max-width="680">
     <v-card>
-      <v-card-title
-        class="bg-blue text-center"
-      >
-        Informations de paiement
-      </v-card-title>
+      <v-card-title class="bg-blue text-center"> Informations de paiement </v-card-title>
       <v-card-text>
         <v-row>
-          <v-col cols='12'>
+          <v-col cols="12">
             <v-list-subheader class="grey--text text--lighten-1 pl-0 subheader">CARD NUMBER</v-list-subheader>
-            <v-text-field
-                single-line outlined label="**** **** **** ****" hide-details v-model="cardNumber"
-            />
+            <v-text-field single-line outlined label="**** **** **** ****" hide-details v-model="cardNumber" />
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols='6'>
+          <v-col cols="6">
             <v-list-subheader class="grey--text text--lighten-1 pl-0 subheader">EXPIRATION DATE</v-list-subheader>
-            <v-select
-                :items="months"
-                item-title="name"
-                item-value="id"
-                outlined
-                label="Month"
-                v-model="month"
-            />
+            <v-select :items="months" item-title="name" item-value="id" outlined label="Month" v-model="month" />
           </v-col>
-          <v-col cols='6'>
+          <v-col cols="6">
             <v-list-subheader class="grey--text text--lighten-1 pl-0 subheader">EXPIRATION DATE</v-list-subheader>
-            <v-select
-                :items="years"
-                item-title="name"
-                item-value="id"
-                outlined
-                label="Year"
-                v-model="year"
-            />
+            <v-select :items="years" item-title="name" item-value="id" outlined label="Year" v-model="year" />
           </v-col>
         </v-row>
       </v-card-text>
@@ -121,16 +83,11 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
-  <BaseSnackbar
-    v-model="snackbar"
-    :text="snackbarText"
-    :color="snackbarColor"
-    @close-snackbar="snackbar = false"
-  />
+  <BaseSnackbar v-model="snackbar" :text="snackbarText" :color="snackbarColor" @close-snackbar="snackbar = false" />
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue';
 import CompanyApi from '@/backend/CompanyApi';
 import JobsApi from '@/backend/JobsApi';
 import AuthentificationApi from '@/backend/AuthentificationApi';
@@ -156,13 +113,14 @@ let premiumDialog = ref(false);
 let cardNumber = ref('');
 let month = ref('');
 let year = ref('');
+const loading = ref(true);
 
 const handleClose = () => {
   premiumDialog.value = false;
   cardNumber.value = '';
   month.value = '';
   year.value = '';
-}
+};
 
 let months = [
   { id: 1, name: 'January' },
@@ -185,19 +143,22 @@ for (let i = 0; i < 10; i++) {
   years.push({ id: currentYear + i, name: currentYear + i });
 }
 
-
 onMounted(() => {
-  AuthentificationApi.getMe(decoded.id).then((response) => {
-    me.value = response.data;
-  }).catch((error) => {
-    console.log(error);
-  });
-  CompanyApi.getCompany(route.params.id).then((response) => {
-    company.value = response.data;
-    jobs.value = company.value.jobAds;
-  }).catch((error) => {
-    console.log(error);
-  });
+  AuthentificationApi.getMe(decoded.id)
+    .then((response) => {
+      me.value = response.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  CompanyApi.getCompany(route.params.id)
+    .then((response) => {
+      company.value = response.data;
+      jobs.value = company.value.jobAds;
+    })
+    .catch((error) => {
+      console.log(error);
+    }).finally(() => loading.value = false);
 });
 
 let isEmployer = computed(() => {
@@ -218,7 +179,6 @@ const isDateValid = computed(() => {
   return selectedDate > currentDate;
 });
 
-
 const becomePremium = () => {
   cardNumber.value = cardNumber.value.replace(/\s/g, '');
   if (!isCardNumberValid.value) {
@@ -237,13 +197,15 @@ const becomePremium = () => {
     snackbar.value = true;
     handleClose();
   }
-}
+};
 
 const deleteJob = (id) => {
-  JobsApi.deleteJob(id).then((response) => {
-    router.go(0);
-  }).catch((error) => {
-    console.log(error);
-  });
+  JobsApi.deleteJob(id)
+    .then((response) => {
+      router.go(0);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 </script>
