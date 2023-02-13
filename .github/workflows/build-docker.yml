@@ -47,3 +47,4 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: clarenceptl/api-platform:latest
           context: ./ApiPlatform/api
+          file: ./ApiPlatform/api/Dockerfile
