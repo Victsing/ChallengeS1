@@ -1,16 +1,16 @@
 <template>
   <BaseNavBar :title="title" :employer="isEmployer" />
   <div v-if="hasNoApplications">
-    <h2>You have not applied for any job yet.</h2>
+    <h2>Vous n'avez postulé à aucun poste pour l'instant.</h2>
   </div>
   <v-table v-else>
     <thead>
       <tr>
-        <th>Job Title</th>
-        <th>Job City</th>
-        <th>Job Country</th>
-        <th>Job Salary</th>
-        <th>Job Contract Type</th>
+        <th>Intitulé du poste</th>
+        <th>Ville du poste</th>
+        <th>Pays du poste</th>
+        <th>Salaire du poste</th>
+        <th>Type de contrat</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -51,7 +51,7 @@ export default {
   },
   computed: {
     title() {
-      return 'Job Applications';
+      return 'Mes candidatures';
     },
     isEmployer() {
       return this.decoded.roles.includes('ROLE_EMPLOYER');
