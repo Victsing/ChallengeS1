@@ -2,11 +2,14 @@ version: '3.7'
 
 services:
   node:
-    image: node:18.0.0-alpine
-    user: node
-    tty: true
-    stdin_open: true
-    entrypoint: node
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # image: node:18.0.0-alpine 
+    # user: node
+    # tty: true
+    # stdin_open: true
+    # entrypoint: node
     working_dir: /home/node
     ports:
       - 3000:3000
