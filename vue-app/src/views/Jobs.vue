@@ -116,3 +116,22 @@ let isAdmin = computed(() => {
   return decoded.roles.includes('ROLE_ADMIN');
 });
 </script>
+<style scoped>
+.v-table {
+  width: 100%;
+  margin-top: 20px;
+}
+
+th {
+  font-weight: bold;
+}
+
+td, th {
+  padding: 12px;
+  text-align: center;
+}
+
+td {
+  border-bottom: 1px solid #ddd;
+}
+</style>
