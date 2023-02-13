@@ -18,10 +18,8 @@ jobs:
           password: ${{ secrets.HOST_PWD }}
           script: |
             cd ChallengeS1/vue-app
-            docker compose down
-            git pull
-            npm install
             docker compose up -d
             docker compose exec -d node npm run dev
             docker compose exec -d node npm run server
+            npm install
             npx cypress run
