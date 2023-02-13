@@ -228,3 +228,9 @@ const newPassword = async (e) => {
   });
 };
 </script>
+
+<style scoped>
+  .d-flex {
+    display: flex;
+  }
+</style>

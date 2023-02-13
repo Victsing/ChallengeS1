@@ -166,3 +166,28 @@ onMounted(async () => {
 
 
 </script>
+
+<style>
+
+
+  h1 {
+    text-align: center;
+    color: blue;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px;
+  }
+
+  .btn {
+    background-color: blue;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+  }
+</style>
