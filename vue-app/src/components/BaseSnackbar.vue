@@ -31,3 +31,28 @@ const props = defineProps({
   },
 });
 </script>
+
+<style scoped>
+.v-snackbar {
+  background-color: var(--v-snackbar-background-color, #323232);
+  color: var(--v-snackbar-color, #ffffff);
+  border-radius: var(--v-snackbar-border-radius, 4px);
+  box-shadow: var(--v-snackbar-box-shadow, 0px 3px 5px rgba(0, 0, 0, 0.2));
+  font-size: var(--v-snackbar-font-size, 14px);
+  padding: var(--v-snackbar-padding, 12px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.v-btn {
+  font-size: var(--v-btn-font-size, 14px);
+  color: var(--v-btn-color, #ffffff);
+  background-color: var(--v-btn-background-color, #0275d8);
+  border-radius: var(--v-btn-border-radius, 4px);
+  padding: var(--v-btn-padding, 6px 12px);
+  text-transform: uppercase;
+  letter-spacing: var(--v-btn-letter-spacing, 1px);
+  box-shadow: var(--v-btn-box-shadow, 0px 2px 4px rgba(0, 0, 0, 0.1));
+}
+</style>
