@@ -64,3 +64,16 @@ onMounted(() => {
     });
 });
 </script>
+
+<style scoped>
+.text-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+v-img {
+  max-width: 50%;
+}
+</style>
