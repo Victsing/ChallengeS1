@@ -74,7 +74,41 @@ const cardsContent = [
 
 </script>
 <style lang="scss" scoped>
-a {
-  text-decoration: none;
+.text-center {
+  text-align: center;
+}
+
+v-img {
+  margin: 30px 0;
+}
+
+v-hover {
+  cursor: pointer;
+
+  &:hover .on-hover {
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-out;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  .on-hover {
+    transition: all 0.3s ease-out;
+  }
+}
+
+v-card-title {
+  font-weight: bold;
+  padding: 20px;
+}
+
+v-card-text {
+  padding: 20px;
+}
+
+v-card {
+  margin: 20px;
 }
 </style>
