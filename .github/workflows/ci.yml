@@ -5,6 +5,7 @@ on:
       - automationTest
     
 jobs:
+
   E2eTest:
     name: Executing e2e test
     runs-on: ubuntu-latest
@@ -17,6 +18,8 @@ jobs:
           password: ${{ secrets.HOST_PWD }}
           script: |
             cd ChallengeS1/vue-app
+            docker compose down
+            docker compose exec -d node npm install
             docker compose exec -d node npm run dev
             docker compose exec -d node npm run server
             npx cypress run
