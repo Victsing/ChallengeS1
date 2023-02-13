@@ -45,4 +45,5 @@ jobs:
         with:
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: clarenceptl/challenge:latest
+          tags: clarenceptl/api-platform:latest
+          path: ../../ApiPlatform/api
