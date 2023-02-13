@@ -161,3 +161,21 @@ const updateJob = () => {
   });
 };
 </script>
+
+<style>
+  h1 {
+    text-align: center;
+    margin-top: 50px;
+  }
+
+  .form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .form-wrapper {
+    width: 500px;
+  }
+</style>
