@@ -23,4 +23,4 @@ jobs:
             docker compose exec -d node npm install
             docker compose exec -d node npm run dev
             docker compose exec -d node npm run server
-            docker compose exec node npx cypress run
+            npx cypress run
