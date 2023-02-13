@@ -72,7 +72,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import BaseNaveBar from '@/components/BaseNaveBar.vue';
-import BaseSnackbar from '@/components/BaseSnackbar.vue';
+import BaseSnackbar from '@/components/BaseSnackBar.vue';
 import CompanyImage from '@/assets/company_image.svg';
 import CompanyApi from '@/backend/CompanyApi';
 import { getDataFromToken } from '@/mixins';

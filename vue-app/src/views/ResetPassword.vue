@@ -42,7 +42,7 @@ import BaseRoundButton from '../components/BaseRoundButton.vue';
 import BaseNaveBar from '@/components/BaseNaveBar.vue';
 import AuthentificationApi from '../backend/AuthentificationApi';
 import FluFace from '@/assets/flu_face.svg';
-import BaseSnackbar from '@/components/BaseSnackbar.vue';
+import BaseSnackbar from '@/components/BaseSnackBar.vue';
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 

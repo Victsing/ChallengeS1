@@ -127,7 +127,7 @@ import BaseRoundButton from "../components/BaseRoundButton.vue";
 import AuthentificationApi from "../backend/AuthentificationApi";
 import BaseNaveBar from '@/components/BaseNaveBar.vue';
 import PersonalInfo from '@/assets/personal_info.png';
-import BaseSnackbar from "@/components/BaseSnackbar.vue";
+import BaseSnackbar from "@/components/BaseSnackBar.vue";
 import { useRouter, useRoute } from "vue-router";
 import { getDataFromToken } from "@/mixins";
 

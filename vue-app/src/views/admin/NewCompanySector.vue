@@ -19,7 +19,7 @@
 <script setup>
 import BaseNaveBar from '@/components/BaseNaveBar.vue';
 import BaseRoundButton from "@/components/BaseRoundButton.vue";
-import BaseSnackbar from '@/components/BaseSnackbar.vue';
+import BaseSnackbar from '@/components/BaseSnackBar.vue';
 import AdminApi from '@/backend/AdminApi';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';

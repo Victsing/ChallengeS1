@@ -137,7 +137,7 @@ import AuthentificationApi from '@/backend/AuthentificationApi';
 import BaseNaveBar from '@/components/BaseNaveBar.vue';
 import jwt_decode from 'jwt-decode';
 import { useRoute, useRouter } from 'vue-router';
-import BaseSnackbar from '@/components/BaseSnackbar.vue';
+import BaseSnackbar from '@/components/BaseSnackBar.vue';
 
 const route = useRoute();
 const router = useRouter();
