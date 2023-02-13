@@ -1,5 +1,5 @@
 <template>
-  <BaseNavBar :title="title" :employer="isEmployer" />
+  <BaseNavBar :title="title" :employer="isEmployer"/>
   <div v-if="hasNoApplications">
     <h2>Vous n'avez postulé à aucun poste pour l'instant.</h2>
   </div>
@@ -24,53 +24,49 @@
         <td>
           <v-btn
             @click="viewApplication(application.id)"
-            icon="mdi-eye"
-          />
+            icon="mdi-eye"/>
         </td>
       </tr>
     </tbody>
   </v-table>
 </template>
 <script>
-import { onMounted, ref, computed } from 'vue';
+import { ref, computed } from 'vue';
 import AuthentificationApi from '@/backend/AuthentificationApi';
-import JobsApi from '@/backend/JobsApi';
-import jwt_decode from 'jwt-decode';
-import { useRouter } from 'vue-router';
 import { BaseNavBar } from '@/components';
+import { useRouter } from 'vue-router';
+import jwt_decode from 'jwt-decode';
 
 const router = useRouter();
+const jobApplications = ref([]);
+const decoded = jwt_decode(localStorage.getItem('token'));
+
+const title = computed(() => 'Mes candidatures');
+const isEmployer = computed(() => decoded.roles.includes('ROLE_EMPLOYER'));
+const hasNoApplications = computed(() => jobApplications.value.length === 0);
+
+async function fetchApplications() {
+  const response = await AuthentificationApi.getMe(decoded.id);
+  jobApplications.value = response.data.jobApplications;
+}
+
+async function viewApplication(id) {
+  router.push(`/jobs/${id}`);
+}
 
 export default {
-  data() {
-    return {
-      jobApplications: [],
-      token: localStorage.getItem('token'),
-      decoded: jwt_decode(localStorage.getItem('token')),
-    };
-  },
   computed: {
-    title() {
-      return 'Mes candidatures';
-    },
-    isEmployer() {
-      return this.decoded.roles.includes('ROLE_EMPLOYER');
-    },
-    hasNoApplications() {
-      return this.jobApplications.length === 0;
-    },
+    title,
+    isEmployer,
+    hasNoApplications,
   },
-  mounted() {
-    this.fetchApplications();
-  },
-  methods: {
-    async fetchApplications() {
-      const response = await AuthentificationApi.getMe(this.decoded.id);
-      this.jobApplications = response.data.jobApplications;
-    },
-    viewApplication(id) {
-      router.push(`/jobs/${id}`);
-    },
+  setup() {
+    fetchApplications();
+
+    return {
+      jobApplications,
+      viewApplication,
+    };
   },
 };
 </script>
