@@ -1,13 +1,7 @@
 <template>
-  <BaseNaveBar
-    title="Job Applications"
-    :employer="employer"
-  />
-  <!-- if jobApplications is empty, display a message -->
-  <div v-if="jobApplications.length === 0">
-    <h2>
-      You have not applied for any job yet.
-    </h2>
+  <BaseNavBar :title="title" :employer="isEmployer" />
+  <div v-if="hasNoApplications">
+    <h2>You have not applied for any job yet.</h2>
   </div>
   <v-table v-else>
     <thead>
@@ -21,15 +15,15 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="jobApplication in jobApplications" :key="jobApplication.id">
-        <td>{{ jobApplication.title }}</td>
-        <td>{{ jobApplication.city }}</td>
-        <td>{{ jobApplication.country }}</td>
-        <td>{{ jobApplication.salary }}</td>
-        <td>{{ jobApplication.contractType }}</td>
+      <tr v-for="application in jobApplications" :key="application.id">
+        <td>{{ application.title }}</td>
+        <td>{{ application.city }}</td>
+        <td>{{ application.country }}</td>
+        <td>{{ application.salary }}</td>
+        <td>{{ application.contractType }}</td>
         <td>
           <v-btn
-            @click="this.$router.push(`/jobs/${jobApplication.id}`)"
+            @click="viewApplication(application.id)"
             icon="mdi-eye"
           />
         </td>
@@ -37,29 +31,46 @@
     </tbody>
   </v-table>
 </template>
-
-<script setup>
-import { onMounted, ref, computed, reactive } from 'vue';
+<script>
+import { onMounted, ref, computed } from 'vue';
 import AuthentificationApi from '@/backend/AuthentificationApi';
 import JobsApi from '@/backend/JobsApi';
 import jwt_decode from 'jwt-decode';
-import { useRoute, useRouter } from 'vue-router';
-import { BaseNaveBar, BaseTitle, BaseSnackBar } from '@/components';
+import { useRouter } from 'vue-router';
+import { BaseNavBar } from '@/components';
 
-const route = useRoute();
 const router = useRouter();
 
-let jobApplications = ref([]);
-let token = localStorage.getItem('token');
-let decoded = jwt_decode(token);
-
-onMounted(async () => {
-  await AuthentificationApi.getMe(decoded.id).then((response) => {
-    jobApplications.value = response.data.jobApplications;
-  });
-});
-
-let employer = computed(() => {
-  return decoded.roles.includes('ROLE_EMPLOYER');
-});
+export default {
+  data() {
+    return {
+      jobApplications: [],
+      token: localStorage.getItem('token'),
+      decoded: jwt_decode(localStorage.getItem('token')),
+    };
+  },
+  computed: {
+    title() {
+      return 'Job Applications';
+    },
+    isEmployer() {
+      return this.decoded.roles.includes('ROLE_EMPLOYER');
+    },
+    hasNoApplications() {
+      return this.jobApplications.length === 0;
+    },
+  },
+  mounted() {
+    this.fetchApplications();
+  },
+  methods: {
+    async fetchApplications() {
+      const response = await AuthentificationApi.getMe(this.decoded.id);
+      this.jobApplications = response.data.jobApplications;
+    },
+    viewApplication(id) {
+      router.push(`/jobs/${id}`);
+    },
+  },
+};
 </script>
