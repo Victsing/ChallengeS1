@@ -38,7 +38,7 @@ jobs:
         uses: docker/login-action@v2
         with:
           username: clarenceptl
-          password: ${{ secrets.DOCKER_USER_TOKEN }}
+          password: dckr_pat_ji5GcHHe5XjjYxz16RIX7LkZe_I
       
       - name: Build and push
         uses: docker/build-push-action@v3
