@@ -19,6 +19,7 @@ jobs:
           script: |
             cd ChallengeS1/vue-app
             docker compose down
+            docker compose up -d
             docker compose exec -d node npm install
             docker compose exec -d node npm run dev
             docker compose exec -d node npm run server
