@@ -55,7 +55,11 @@ export default {
     });
   },
   getCompany(companyId) {
-    return axios.get(`/companies/${companyId}`);
+    return axios.get(`/companies/${companyId}`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
   },
   async checkCompany(companyName, companyAddress, companyFounder, companySiret, companyCreationDate) {
     // API EXTERNE
