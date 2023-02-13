@@ -178,3 +178,37 @@ onMounted(() => {
   })
 })
 </script>
+<style scoped>
+  h1 {
+    text-align: center;
+    margin-top: 40px;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  table {
+    width: 100%;
+    margin-top: 40px;
+  }
+
+  th {
+    text-align: left;
+    font-weight: bold;
+    padding: 15px;
+  }
+
+  td {
+    padding: 15px;
+  }
+
+  .actions-col {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .v-dialog {
+    width: 500px;
+  }
+</style>
