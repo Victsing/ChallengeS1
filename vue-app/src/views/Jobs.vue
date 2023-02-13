@@ -2,6 +2,8 @@
   <BaseNaveBar
     title="List of jobs"
     :employer="isEmployer"
+    :user="isUser"
+    :admin="isAdmin"
   />
   <h1>Jobs</h1>
   <v-table>
@@ -90,6 +92,10 @@ const candidate = () => {
     snackbar.value = true;
     snackbarText = 'Vous avez déjà postulé pour ce job';
     snackbarColor = 'error';
+  } else if (appointments.value.includes(decoded.id)) {
+    snackbar.value = true;
+    snackbarText = 'Vous avez déjà un entretien pour ce job';
+    snackbarColor = 'error';
   } else {
     UserApi.apply(decoded.id, selectedJob.value.id).then(() => {
       router.push('/job-applications');
@@ -103,6 +109,10 @@ const isCandidate = (() => {
   return selectedJob.value.candidates.some((candidate) => candidate.id === decoded.id);
 });
 
+const appointments = computed(() => {
+  return selectedJob.value.appointments.map((appointment) => appointment.candidate.id);
+});
+
 let isEmployer = computed(() => {
   const token = localStorage.getItem('token');
   const decoded = jwt_decode(token);
@@ -113,5 +123,9 @@ let isAdmin = computed(() => {
   const token = localStorage.getItem('token');
   const decoded = jwt_decode(token);
   return decoded.roles.includes('ROLE_ADMIN');
+});
+
+const isUser = computed(() => {
+  return decoded.roles.includes('ROLE_USER');
 });
 </script>

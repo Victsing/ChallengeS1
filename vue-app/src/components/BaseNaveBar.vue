@@ -1,22 +1,17 @@
 <template>
   <v-app-bar flat :color="props.color">
-    <!-- <img :src="AppLogo" alt="logo" class="ml-4" @click="logoRedirect" /> -->
     <v-app-bar-title>
+      <v-btn icon="mdi-home" @click="redirectHome" />
       {{ props.title }}
     </v-app-bar-title>
     <template v-slot:append>
-      <div v-if="props.admin">
-        <v-btn
-          @click="this.$router.push('/admin/companies')"
-          >Gérer les entreprises</v-btn>
-      </div>
       <div v-if="props.employer">
         <v-btn
           @click="this.$router.push('/employer/company')"
           icon="mdi-domain"
           />
       </div>
-      <div v-if="props.user">
+      <div v-if="props.user && !props.admin && !props.employer">
         <v-btn
           @click="this.$router.push('/appointments')"
           icon="mdi-calendar-clock"
@@ -41,7 +36,6 @@
 </template>
 
 <script setup>
-import AppLogo from '../assets/app_logo.svg'
 import { useRouter } from 'vue-router'
 import { computed } from 'vue'
 
@@ -83,6 +77,14 @@ const logout = () => {
 const isLoggedIn = computed(() => {
   return localStorage.getItem('token') !== null;
 })
+
+const redirectHome = () => {
+  if (props.admin) {
+    router.push('/admin');
+  } else {
+    router.push('/home');
+  }
+}
 
 const logoRedirect = () => {
   if (props.admin) {
