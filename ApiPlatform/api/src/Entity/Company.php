@@ -26,7 +26,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[Post(
     denormalizationContext: ['groups' => ['company:write']],
 )]
-#[Get()]
+#[Get(
+    security: 'is_granted("ROLE_ADMIN") or object.getFounder() == user',
+)]
 #[GetCollection(
     security: 'is_granted("ROLE_ADMIN") or object.getFounder() == user',
     normalizationContext: ['groups' => ['company:read']],
@@ -63,7 +65,7 @@ class Company
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'companies')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[Groups(['company:read', 'company:write'])]
     private ?User $founder = null;
 

@@ -195,7 +195,18 @@ const routes = [
               {
                 path: ':id',
                 name: 'AdminJob',
-                component: () => import('@/views/Job.vue')
+                children: [
+                  {
+                    path: '',
+                    name: 'AdminJobDetails',
+                    component: () => import('@/views/Job.vue')
+                  },
+                  {
+                    path: 'edit',
+                    name: 'AdminJobEdit',
+                    component: () => import('@/views/employer/NewCompanyJob.vue')
+                  },
+                ]
               },
               {
                 path: 'candidates',
@@ -232,13 +243,24 @@ const routes = [
           {
             path: 'users',
             name: 'AdminListUsers',
-            component: () => import('@/views/admin/ListUsers.vue')
+            children: [
+              {
+                path: '',
+                name: 'AdminListUsers',
+                component: () => import('@/views/admin/ListUsers.vue')
+              },
+              {
+                path: ':id/edit',
+                name: 'AdminEditUser',
+                component: () => UserProfile
+              }
+            ]
           },
         ]
       },
       {
         beforeEnter: (to, from, next) => {
-          if (isEmployer()) {
+          if (isEmployer() || isAdmin()) {
             next();
           } else {
             next('/authentication');

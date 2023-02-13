@@ -51,11 +51,6 @@ const cardsContent = [
     link: '/admin/jobs'
   },
   {
-    title: "Panel d'administration des entreprises",
-    text: 'Vous pouvez accéder à la liste des entreprises, les modifier ou les supprimer.',
-    link: '/admin/companies'
-  },
-  {
     title: "Panel d'administration des secteurs d'activité",
     text: 'Vous pouvez accéder à la liste des secteurs d\'activité, les modifier ou les supprimer.',
     link: '/admin/company/sectors'

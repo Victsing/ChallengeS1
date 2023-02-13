@@ -41,12 +41,12 @@ class Appointment
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'appointments')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[Groups(['appointment:read', 'user:read', 'job_ads:read'])]
     private ?User $candidate = null;
 
     #[ORM\ManyToOne(inversedBy: 'appointments')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[Groups(['appointment:read', 'user:read', 'job_ads:read'])]
     private ?JobAds $job = null;
 

@@ -60,8 +60,11 @@ const isEditRoute = computed(() => {
 });
 
 onMounted(() => {
+  console.log(route.name);
   if (route.name.includes('Edit')) {
-    const jobid = isEmployer ? route.params.jobId : route.params.id;
+    console.log('edit');
+    const jobid = isEmployer.value ? route.params.jobId : route.params.id;
+    console.log(jobid);
     JobsApi.getJob(jobid)
       .then((response) => {
         job.value = response.data;
@@ -148,7 +151,7 @@ const addJob = () => {
 
 const updateJob = () => {
   disableButton.value = true;
-  const jobid = isEmployer ? route.params.jobId : route.params.id;
+  const jobid = isEmployer.value ? route.params.jobId : route.params.id;
   JobsApi.updateJob(jobid, {
     title: job.value.title,
     description: job.value.description,
@@ -159,9 +162,9 @@ const updateJob = () => {
     missionDuration: job.value.missionDuration
   })
     .then((response) => {
-      if (isEmployer) {
+      if (isEmployer.value) {
         router.push(`/employer/company/${route.params.id}/jobs`);
-      } else {
+      } else if (isAdmin.value) {
         router.push(`/admin/jobs`);
       }
     })
