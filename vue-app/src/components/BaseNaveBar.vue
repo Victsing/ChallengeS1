@@ -1,94 +1,79 @@
 <template>
-  <v-app-bar flat :color="props.color">
-    <!-- <img :src="AppLogo" alt="logo" class="ml-4" @click="logoRedirect" /> -->
-    <v-app-bar-title>
-      {{ props.title }}
-    </v-app-bar-title>
+  <v-app-bar flat :color="color" class="app-bar">
+    <!-- <img :src="AppLogo" alt="logo" class="ml-4" @click="handleLogoClick"/> -->
+    <v-app-bar-title>{{ title }}</v-app-bar-title>
     <template v-slot:append>
-      <div v-if="props.admin">
-        <v-btn
-          @click="this.$router.push('/admin/companies')"
-          >Gérer les entreprises</v-btn>
+      <div v-if="isAdmin">
+        <v-btn @click="goToAdminCompanies">Gérer les entreprises</v-btn>
       </div>
-      <div v-if="props.employer">
-        <v-btn
-          @click="this.$router.push('/employer/company')"
-          icon="mdi-domain"
-          />
+      <div v-if="isEmployer">
+        <v-btn @click="goToEmployerCompany" icon="mdi-domain"/>
       </div>
-      <div v-if="props.user">
-        <v-btn
-          @click="this.$router.push('/appointments')"
-          icon="mdi-calendar-clock"
-          />
+      <div v-if="isUser">
+        <v-btn @click="goToAppointments" icon="mdi-calendar-clock"/>
       </div>
       <div v-if="isLoggedIn">
-        <v-btn
-          icon="mdi-email"
-          @click="this.$router.push('/job-applications')"
-        />
-        <v-btn
-          icon="mdi-account"
-          @click="this.$router.push('/profile')"
-        />
-        <v-btn
-          icon="mdi-logout"
-          @click="logout"
-        />
+        <v-btn @click="goToJobApplications" icon="mdi-email"/>
+        <v-btn @click="goToProfile" icon="mdi-account"/>
+        <v-btn @click="logout" icon="mdi-logout"/>
       </div>
     </template>
   </v-app-bar>
 </template>
 
-<script setup>
-import AppLogo from '../assets/app_logo.svg'
-import { useRouter } from 'vue-router'
-import { computed } from 'vue'
+<script>
+import { mapGetters, mapActions } from 'vuex'
 
-const router = useRouter()
-
-defineEmits(['navbarHome']);
-
-const props = defineProps({
-  title: {
-    type: String,
-    default: 'Larudakoté'
+export default {
+  computed: {
+    ...mapGetters({
+      isLoggedIn: 'isLoggedIn'
+    }),
+    isAdmin() {
+      return this.admin
+    },
+    isEmployer() {
+      return this.employer
+    },
+    isUser() {
+      return this.user
+    }
   },
-  color: {
-    type: String,
-    default: 'black'
+  data() {
+    return {
+      title: 'Larudakoté',
+      color: 'black',
+      admin: false,
+      employer: false,
+      user: false
+    }
   },
-  admin:
-  {
-    type: Boolean,
-    default: false
-  },
-  employer:
-  {
-    type: Boolean,
-    default: false
-  },
-  user:
-  {
-    type: Boolean,
-    default: false
-  }
-})
-
-const logout = () => {
-  localStorage.removeItem('token');
-  router.push('/');
-}
-
-const isLoggedIn = computed(() => {
-  return localStorage.getItem('token') !== null;
-})
-
-const logoRedirect = () => {
-  if (props.admin) {
-    router.push('/admin');
-  } else {
-    router.push('/home');
+  methods: {
+    ...mapActions({
+      logout: 'logout'
+    }),
+    handleLogoClick() {
+      if (this.isAdmin) {
+        this.$router.push('/admin')
+      } else {
+        this.$router.push('/home')
+      }
+    },
+    goToAdminCompanies() {
+      this.$router.push('/admin/companies')
+    },
+    goToEmployerCompany() {
+      this.$router.push('/employer/company')
+    },
+    goToAppointments() {
+      this.$router.push('/appointments')
+    },
+    goToJobApplications() {
+      this.$router.push('/job-applications')
+    },
+    goToProfile() {
+      this.$router.push('/profile')
+    }
   }
 }
 </script>
