@@ -2,9 +2,9 @@
   <BaseNaveBar color="#15202B" class="text-white mb-16" />
   <v-row class="mt-16">
     <v-col>
-      
+
       <v-tabs v-model="tab" class="mt-16 mb-16">
-        <v-tab value="one">Se connecter</v-tab>
+        <v-tab value="one" data-id="loginButton">Se connecter</v-tab>
         <v-tab value="two">S'inscrire</v-tab>
         <v-tab value="three">Mot de passe oublié</v-tab>
       </v-tabs>

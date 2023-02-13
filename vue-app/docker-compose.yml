@@ -8,8 +8,14 @@ services:
     stdin_open: true
     entrypoint: node
     working_dir: /home/node
+    networks:
+      - e2e
     ports:
       - 3000:3000
       - 5111:5111
     volumes:
       - .:/home/node
+
+networks:
+  e2e:
+    external: true

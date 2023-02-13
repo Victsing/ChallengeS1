@@ -14,6 +14,7 @@
           required
           type="select"
           :items="companySizes"
+          data-id="companySize"
           v-model="companySize"
           item-value="id"
           item-title="size"

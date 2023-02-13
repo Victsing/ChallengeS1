@@ -1,0 +1,18 @@
+version: '3.7'
+services:
+  e2e:
+    image: cypress/included
+    build: .
+    container_name: vue-cypress
+    environment:
+      - CYPRESS_baseUrl=http://localhost:3000
+    command: npx cypress run
+    networks:
+      - e2e
+    volumes:
+      - ./cypress:/app/cypress
+      - ./cypress.config.js:/app/cypress.config.js
+
+networks:
+  e2e:
+    driver: bridge
