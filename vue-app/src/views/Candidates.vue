@@ -40,7 +40,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn @click="handleDialog(false)">Non</v-btn>
-          <v-btn color="warning" @click="remove">Oui</v-btn>
+          <v-btn color="pink darken-3"  @click="remove">Oui</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -60,7 +60,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn @click="newDialog = false">Annuler</v-btn>
-          <v-btn color="warning" @click="setAppointment(); newDialog = false">Ajouter</v-btn>
+          <v-btn color="pink darken-3" @click="setAppointment(); newDialog = false">Ajouter</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
