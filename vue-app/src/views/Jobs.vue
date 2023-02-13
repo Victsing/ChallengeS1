@@ -3,6 +3,7 @@
     title="List of jobs"
     :employer="isEmployer"
     :user="isUser"
+    :admin="isAdmin"
   />
   <h1>Jobs</h1>
   <v-table>

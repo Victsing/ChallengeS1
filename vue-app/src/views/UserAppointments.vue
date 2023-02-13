@@ -84,7 +84,7 @@
 import { ref, computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import BaseNaveBar from "@/components/BaseNaveBar.vue";
-import BaseSnackbar from "@/components/BaseSnackbar.vue";
+import BaseSnackbar from "@/components/BaseSnackBar.vue";
 import jwt_decode from "jwt-decode";
 import AuthentificationApi from "@/backend/AuthentificationApi";
 import AppointmentApi from "@/backend/AppointmentApi";

@@ -45,6 +45,7 @@
             prepend-icon="mdi-lock"
             variant="outlined"
             v-model="currentPassword"
+            :disabled="isAdmin"
           />
           <v-text-field
             label="Change Password"
@@ -93,7 +94,7 @@ import ProfileInfo from '@/assets/profile_info.svg';
 import BaseRoundButton from '@/components/BaseRoundButton.vue';
 import { ref, computed, onMounted } from 'vue';
 import AuthentificationApi from '@/backend/AuthentificationApi';
-import BaseSnackbar from '@/components/BaseSnackbar.vue';
+import BaseSnackbar from '@/components/BaseSnackBar.vue';
 import { useRouter } from 'vue-router';
 
 
@@ -151,6 +152,12 @@ const checkCurrentPassword = async () => {
   });
 };
 
+const isAdmin = computed(() => {
+  const token = localStorage.getItem('token');
+  const decoded = jwt_decode(token);
+  return decoded.roles.includes('ROLE_ADMIN');
+});
+
 const updateProfile = async (e) => {
   e.preventDefault();
   disableButton.value = true;
@@ -177,10 +184,6 @@ const updateProfile = async (e) => {
         snackbarColor.value = 'success';
         snackbarText.value = 'Your profile has been updated, you will be redirected to the login page in 3 seconds';
         currentPassword.value = '';
-        setTimeout(() => {
-          localStorage.removeItem('token');
-          router.push('/authentication');
-        }, 3000);
       }).catch(() => {
         snackbar.value = true;
         snackbarColor.value = 'error';
@@ -206,9 +209,14 @@ const updateProfile = async (e) => {
       snackbarColor.value = 'success';
       snackbarText.value = 'Your profile has been updated';
       currentPassword.value = '';
-      setTimeout(() => {
-        router.push('/home');
-      }, 3000);
+      if (isAdmin.value) {
+        router.push('/admin/users');
+      } else {
+        setTimeout(() => {
+          localStorage.removeItem('token');
+          router.push('/authentication');
+        }, 3000);
+      }
     }).catch(() => {
       snackbar.value = true;
       snackbarColor.value = 'error';

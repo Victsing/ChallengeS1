@@ -93,7 +93,7 @@ import jwt_decode from 'jwt-decode'
 import { getDataFromToken } from '@/mixins'
 import BaseNaveBar from '@/components/BaseNaveBar.vue'
 import JobsApi from '@/backend/JobsApi'
-import BaseSnackbar from '@/components/BaseSnackbar.vue'
+import BaseSnackbar from '@/components/BaseSnackBar.vue'
 import AppointmentApi from '@/backend/AppointmentApi'
 
 const token = localStorage.getItem('token')

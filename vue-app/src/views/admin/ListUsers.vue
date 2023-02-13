@@ -4,13 +4,6 @@
     <v-row>
       <v-col>
         <base-title>Voici la page de gestion des users</base-title>
-
-        <h2>Vous pouvez éditer / ajouter / supprimer un utilisateur</h2>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <v-btn color="primary" to="/admin/users/create">Ajouter un utilisateur</v-btn>
       </v-col>
     </v-row>
     <v-row class="h-100">
@@ -34,6 +27,14 @@
               variant="flat"
               color="error"
               >Supprimer</v-btn
+            >
+            <v-btn
+              @click="
+                this.$router.push(`/admin/users/${item.id}/edit`);
+              "
+              variant="flat"
+              color="primary"
+              >Editer</v-btn
             >
           </v-card-actions>
         </v-card>
@@ -71,11 +72,15 @@
 import { BaseNaveBar, BaseTitle, BaseSnackBar } from '@/components';
 import UserApi from '@/backend/UserApi';
 import { onMounted, reactive, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 let users = reactive([]);
 const loading = ref(true);
 const dialog = ref(false);
 const selected = ref(null);
+
+const route = useRoute();
+const router = useRouter();
 
 const snackbar = ref(false);
 const snackbarText = ref('');

@@ -10,6 +10,7 @@
 /public/bundles/
 /var/
 /vendor/
+**.secrets.*
 ###< symfony/framework-bundle ###
 
 ###> friendsofphp/php-cs-fixer ###
