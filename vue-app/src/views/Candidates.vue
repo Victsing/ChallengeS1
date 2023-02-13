@@ -202,3 +202,42 @@ onMounted(() => {
   });
 });
 </script>
+
+<style scoped>
+  h1 {
+    font-size: 2em;
+    margin-bottom: 1.5em;
+    text-align: center;
+  }
+  
+  h2 {
+    font-size: 1.5em;
+    text-align: center;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .text-warning {
+    color: #ff9800;
+  }
+  
+  table {
+    width: 100%;
+    margin: 1.5em auto;
+  }
+  
+  th, td {
+    padding: 0.5em 1em;
+    text-align: left;
+  }
+  
+  th {
+    font-weight: bold;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+</style>
