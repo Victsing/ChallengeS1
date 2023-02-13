@@ -44,3 +44,25 @@ let createSize =async (e) => {
     });
 };
 </script>
+
+<style scoped>
+  h1 {
+    text-align: center;
+    margin: 2rem 0;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .v-text-field {
+    margin: 1rem 0;
+    width: 40%;
+  }
+
+  .submit-button {
+    margin-top: 2rem;
+  }
+</style>
