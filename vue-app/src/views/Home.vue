@@ -51,7 +51,7 @@ import jwt_decode from 'jwt-decode';
 import HomeImage from '@/assets/home_image.svg';
 import { computed, onMounted, ref } from 'vue';
 import AuthentificationApi from '@/backend/AuthentificationApi';
-import BaseSnackbar from '@/components/BaseSnackbar.vue';
+import BaseSnackbar from '@/components/BaseSnackBar.vue';
 import { useRouter, useRoute } from 'vue-router';
 
 const token = localStorage.getItem('token');

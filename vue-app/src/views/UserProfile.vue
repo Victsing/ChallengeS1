@@ -94,7 +94,7 @@ import ProfileInfo from '@/assets/profile_info.svg';
 import BaseRoundButton from '@/components/BaseRoundButton.vue';
 import { ref, computed, onMounted } from 'vue';
 import AuthentificationApi from '@/backend/AuthentificationApi';
-import BaseSnackbar from '@/components/BaseSnackbar.vue';
+import BaseSnackbar from '@/components/BaseSnackBar.vue';
 import { useRouter } from 'vue-router';
 
 
