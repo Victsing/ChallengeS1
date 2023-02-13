@@ -6,13 +6,13 @@
         color="blue"
         variant="text"
         @click="$emit('closeSnackbar')"
+        style="margin-left: 10px;"
       >
         Close
       </v-btn>
     </template>
   </v-snackbar>
 </template>
-
 <script setup>
 
 defineEmits(['closeSnackbar']);
