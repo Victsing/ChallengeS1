@@ -233,4 +233,5 @@ const newPassword = async (e) => {
   .d-flex {
     display: flex;
   }
+  
 </style>
