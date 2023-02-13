@@ -1,0 +1,25 @@
+name: test
+on:
+  push:
+    branches:
+      - automationTest
+
+jobs:
+
+  E2eTest:
+    name: Executing e2e test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Executing e2e test
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_IP }}
+          username: ${{ secrets.HOST_USERNAME }}
+          password: ${{ secrets.HOST_PWD }}
+          script: |
+            cd ChallengeS1/vue-app
+            docker compose up -d
+            docker compose exec -d node npm run dev
+            docker compose exec -d node npm run server
+            docker compose exec -d node npm install
+            docker compose exec -d node npx cypress run
