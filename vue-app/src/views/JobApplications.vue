@@ -69,4 +69,33 @@ export default {
     };
   },
 };
-</script>
+</script> 
+
+<style>
+  h2 {
+    text-align: center;
+    margin-top: 2em;
+    font-size: 1.5em;
+  }
+  table {
+    margin: 2em auto;
+    border-collapse: collapse;
+    width: 80%;
+  }
+  th, td {
+    border: 1px solid #dddddd;
+    padding: 8px;
+    text-align: left;
+  }
+  th {
+    background-color: #dddddd;
+  }
+  td {
+    text-align: center;
+  }
+  td button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+</style>
