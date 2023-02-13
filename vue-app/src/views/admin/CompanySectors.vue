@@ -227,8 +227,9 @@ const companySectorsList = computed(() => {
   });
 });
 </script>
-<style scoped lang="scss">
-.disabled {
-  pointer-events: none;
-}
+<style>
+  .disabled {
+    pointer-events: none;
+    color: rgba(0, 0, 0, 0.3);
+  }
 </style>

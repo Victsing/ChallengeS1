@@ -34,3 +34,9 @@
 <script setup>
 import { BaseNaveBar, BaseTitle } from '@/components';
 </script>
+<style scoped>
+.container {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+</style>
