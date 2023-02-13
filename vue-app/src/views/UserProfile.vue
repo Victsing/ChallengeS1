@@ -214,3 +214,22 @@ const isEmployer = computed(() => {
   return decoded.roles.includes('ROLE_EMPLOYER');
 });
 </script>
+
+<style>
+  .d-flex {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .ml-4 {
+    margin-left: 1rem;
+  }
+
+  .mb-16 {
+    margin-bottom: 1rem;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+</style>
