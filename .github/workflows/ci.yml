@@ -18,6 +18,6 @@ jobs:
           password: ${{ secrets.HOST_PWD }}
           script: |
             cd ChallengeS1/vue-app
-            apt-get install -y npm
+            sudo apt-get install -y npm
             npm install
             npx cypress run
